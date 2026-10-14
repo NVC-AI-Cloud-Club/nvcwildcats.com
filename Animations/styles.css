@@ -1,0 +1,432 @@
+/* ============================================================
+   Wildcats AI & Cloud Club — Vault  |  styles.css
+   ============================================================ */
+
+/* --- CSS Variables --- */
+:root {
+    --cyan:   #00f0ff;
+    --purple: #7c3aed;
+    --dark:   #0b0f1a;
+    --panel:  #131a2b;
+    --text:   #f0f9ff;
+    --muted:  #cbd5e1;
+    --border: rgba(124, 58, 237, 0.3);
+}
+
+/* --- Base Styles --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+a { text-decoration: none; color: var(--cyan); transition: 0.3s; }
+a:hover { color: #fff; }
+ul { list-style: none; }
+
+/* --- Navigation --- */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background: rgba(19, 26, 43, 0.95);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid var(--border);
+}
+
+nav .logo {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--cyan);
+    letter-spacing: 1px;
+}
+
+nav ul { display: flex; }
+nav ul li { margin-left: 30px; }
+
+nav ul li a {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--muted);
+}
+
+nav ul li a:hover { color: var(--cyan); }
+
+/* --- Hero --- */
+@keyframes gradientBG {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 120px 20px;
+    background: linear-gradient(-45deg, #131a2b, #0b0f1a, #00f0ff, #7c3aed);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+
+.hero h1 {
+    font-family: 'Roboto', sans-serif;
+    color: var(--cyan);
+    font-size: clamp(1.8rem, 5vw, 3.2rem);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
+}
+
+.hero-subtitle {
+    color: var(--muted);
+    margin-top: 8px;
+    font-size: 1rem;
+}
+
+.hero-text {
+    max-width: 850px;
+    margin: 25px auto 0;
+    padding: 0 20px;
+    text-align: left;
+}
+
+.hero-text p {
+    color: #e2e8f0;
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 14px;
+}
+
+.hero-text strong { color: var(--cyan); }
+
+/* --- Section Headers --- */
+.section-title {
+    font-family: 'Roboto', sans-serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    color: var(--cyan);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.section-divider {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--cyan), var(--purple));
+    margin: 0 auto 30px;
+    border-radius: 2px;
+}
+
+/* --- History Grid --- */
+.history-section {
+    padding: 70px 20px;
+    background: var(--panel);
+    text-align: center;
+}
+
+.history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 40px auto 0;
+}
+
+.history-card {
+    background: rgba(255, 255, 255, 0.04);
+    padding: 25px;
+    border-radius: 12px;
+    border-left: 4px solid var(--cyan);
+    cursor: pointer;
+    transition: transform 0.3s, background 0.3s, border-color 0.3s;
+    text-align: left;
+    height: 100%;
+}
+
+.history-card:hover {
+    transform: translateY(-8px);
+    background: rgba(124, 58, 237, 0.12);
+    border-left-color: var(--purple);
+}
+
+.device-thumb {
+    width: 100%;
+    height: 130px;
+    object-fit: contain;
+    margin-bottom: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.history-card h4 {
+    font-family: 'Roboto', sans-serif;
+    color: var(--cyan);
+    margin-bottom: 10px;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.history-card p { font-size: 0.88rem; color: var(--muted); }
+
+/* --- Info Card --- */
+.ai-info-card {
+    background: rgba(0, 240, 255, 0.04);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    border-radius: 14px;
+    padding: 30px 35px;
+    max-width: 900px;
+    margin: 0 auto 50px;
+    text-align: left;
+}
+
+.ai-info-card p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #e2e8f0;
+    margin-bottom: 14px;
+}
+
+.ai-info-card p:last-child { margin-bottom: 0; }
+
+.ai-info-card a { color: var(--cyan); font-weight: 600; }
+.ai-info-card a:hover { text-decoration: underline; }
+
+.source-label {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+/* --- Video Vault / Section --- */
+.section {
+    padding: 80px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 28px;
+    margin-top: 40px;
+}
+
+.card {
+    background: rgba(19, 26, 43, 0.9);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 12px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 12px 35px rgba(0, 240, 255, 0.18);
+}
+
+.card video {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    background: #000;
+    display: block;
+    cursor: pointer;
+}
+
+.card h3 {
+    margin-top: 12px;
+    padding: 0 5px 5px;
+    font-family: 'Roboto', sans-serif;
+    color: var(--cyan);
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+/* --- Video Play Overlay --- */
+.video-wrapper {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #000;
+}
+
+.play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 54px;
+    height: 54px;
+    background: rgba(0, 240, 255, 0.85);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.play-btn i { color: #0b0f1a; font-size: 1.3rem; margin-left: 3px; }
+
+.video-wrapper.playing .play-btn { opacity: 0; }
+.video-wrapper:hover .play-btn   { opacity: 1; background: rgba(124, 58, 237, 0.9); }
+
+/* --- Modal --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(11, 15, 26, 0.93);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    padding: 20px;
+}
+
+.modal-overlay.active { display: flex; }
+
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+.modal-content {
+    background: var(--panel);
+    border: 2px solid var(--cyan);
+    border-radius: 20px;
+    max-width: 700px;
+    width: 100%;
+    padding: 40px;
+    position: relative;
+    text-align: left;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalIn 0.3s ease;
+}
+
+.modal-img {
+    width: 100%;
+    max-height: 280px;
+    object-fit: contain;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    background: #000;
+}
+
+.close-btn {
+    position: absolute;
+    top: 12px; right: 18px;
+    font-size: 2.2rem;
+    color: var(--purple);
+    cursor: pointer;
+    background: none;
+    border: none;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.close-btn:hover { color: var(--cyan); }
+
+.modal-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    background: var(--cyan);
+    color: var(--dark);
+    font-weight: 700;
+    border-radius: 4px;
+    margin-top: 20px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.modal-badge:hover { background: var(--purple); color: #fff; }
+
+.modal-content p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #e2e8f0;
+}
+
+.modal-content h3 {
+    font-family: 'Roboto', sans-serif;
+    margin-bottom: 15px;
+    color: var(--cyan);
+    font-size: 1.5rem;
+}
+
+/* --- Willie Bubble --- */
+@keyframes pulse {
+    0%,  100% { box-shadow: 0 0 15px var(--purple); }
+    50%        { box-shadow: 0 0 35px var(--cyan);   }
+}
+
+#willie-bubble {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 80px;
+    height: 80px;
+    background: url('https://nvcwildcats-willie-chat-bubble.s3.us-east-1.amazonaws.com/NVC-Bublble.png') center/cover no-repeat;
+    border-radius: 50%;
+    box-shadow: 0 0 20px var(--purple);
+    cursor: pointer;
+    z-index: 999999;
+    animation: pulse 2s infinite;
+    transition: transform 0.3s;
+}
+
+#willie-bubble:hover { transform: scale(1.12) rotate(5deg); }
+
+/* --- Footer --- */
+footer {
+    text-align: center;
+    padding: 40px 20px;
+    background: var(--panel);
+    border-top: 2px solid var(--purple);
+    width: 100%;
+}
+
+.counter-label {
+    margin-bottom: 10px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--cyan);
+}
+
+.footer-copy {
+    font-size: 0.88rem;
+    color: #94f0ff;
+    opacity: 0.8;
+    margin-top: 16px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+    nav { padding: 15px 20px; }
+    nav .logo { font-size: 1rem; }
+    .modal-content { padding: 25px 20px; }
+}

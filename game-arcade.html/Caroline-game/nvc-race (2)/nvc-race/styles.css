@@ -1,0 +1,13 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    background-color: #0d0d0d; /* matches neon theme */
+}
+
+#gameCanvas {
+    width: 100vw;
+    height: 100vh;
+    display: block;
+}

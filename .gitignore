@@ -1,0 +1,7 @@
+*.mp4
+*.mov
+*.zip
+.DS_Store
+Thumbs.db
+desktop.ini
+feedback-data/

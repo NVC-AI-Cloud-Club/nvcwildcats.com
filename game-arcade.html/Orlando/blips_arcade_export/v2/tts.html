@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLIP's Playground</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="cyber-dark">
+    <h1>BLIP's Playground</h1>
+    
+    <!-- Glitch Overlay for Bad BLIP Effects -->
+    <div class="glitch-overlay" id="glitchOverlay"></div>
+    
+    <!-- Robot BLIP Character -->
+    <div class="robot-container">
+        <!-- Particle Effects Container -->
+        <div class="particles-container" id="particlesContainer">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="robot-head">
+            <div class="horn"></div>
+            <div class="eye left-eye"></div>
+            <div class="eye right-eye"></div>
+            <div class="face-details">
+                <div class="muzzle"></div>
+                <div class="whiskers"></div>
+                <div class="mouth"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="arcadeMenu" class="arcade-menu" aria-label="Arcade menu">
+        <button id="minigamesBtn" class="menu-btn">Minigames</button>
+    </div>
+
+    <div id="minigamesScene" class="minigames-scene" style="display:none;" aria-label="Minigames Menu">
+        <div class="minigames-panel">
+            <h2>Pick A Minigame</h2>
+            <p class="minigames-subtitle">Three arcade challenges. All are live.</p>
+
+            <div class="minigame-card-list">
+                <article class="minigame-card playable">
+                    <h3>Firewall Frenzy</h3>
+                    <p>Type incoming minion words before they break BLIP's firewall.</p>
+                    <button id="playFirewallMinigameBtn" class="menu-btn primary">Play Now</button>
+                </article>
+
+                <article class="minigame-card playable">
+                    <h3>Packet Runner</h3>
+                    <p>Dodge corrupted packets in fast lanes while collecting clean data.</p>
+                    <button id="playPacketRunnerMinigameBtn" class="menu-btn primary">Play Now</button>
+                </article>
+
+                <article class="minigame-card playable">
+                    <h3>Cipher Match</h3>
+                    <p>Match symbol pairs to crack codes before the timer depletes.</p>
+                    <button id="playCipherMatchMinigameBtn" class="menu-btn primary">Play Now</button>
+                </article>
+            </div>
+
+            <button id="closeMinigamesBtn" class="return-btn">Back To Arcade</button>
+        </div>
+    </div>
+
+    <div id="packetRunnerScene" class="packet-runner-scene" style="display:none;" aria-label="Packet Runner Minigame">
+        <div class="packet-runner-panel">
+            <div class="packet-runner-header">
+                <div class="packet-runner-title">Packet Runner</div>
+                <div class="packet-runner-hud">
+                    <span>Score: <strong id="packetRunnerScore">0</strong></span>
+                    <span>Lives: <strong id="packetRunnerLives">3</strong></span>
+                </div>
+            </div>
+            <p class="packet-runner-tip">Move with A/D or Left/Right. Dodge red packets, collect green data.</p>
+            <div id="packetRunnerTrack" class="packet-runner-track">
+                <div class="packet-lane lane-1"></div>
+                <div class="packet-lane lane-2"></div>
+                <div class="packet-lane lane-3"></div>
+                <div id="packetRunnerPlayer" class="packet-runner-player"></div>
+            </div>
+            <div class="packet-runner-footer">
+                <div id="packetRunnerBanner" class="packet-runner-banner" style="display:none;"></div>
+                <button id="closePacketRunnerBtn" class="return-btn">Back To Minigames</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cipherMatchScene" class="cipher-match-scene" style="display:none;" aria-label="Cipher Match Minigame">
+        <div class="cipher-match-panel">
+            <div class="cipher-match-header">
+                <div class="cipher-match-title">Cipher Match</div>
+                <div class="cipher-match-hud">
+                    <span>Pairs: <strong id="cipherPairsLeft">6</strong></span>
+                    <span>Time: <strong id="cipherTimeLeft">60</strong>s</span>
+                </div>
+            </div>
+            <p class="cipher-match-tip">Flip two tiles. Match all pairs before time runs out.</p>
+            <div id="cipherGrid" class="cipher-grid"></div>
+            <div class="cipher-match-footer">
+                <div id="cipherBanner" class="cipher-banner" style="display:none;"></div>
+                <button id="closeCipherMatchBtn" class="return-btn">Back To Minigames</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="blip-instruction">Tip: Click BLIP, then open Minigames.</div>
+
+    <!-- removed old text-entry controls, BLIP click now launches typing minigame -->
+    <div class="mode-control">
+        <button onclick="toggleBadBoyMode()" class="bad-boy-btn" id="badBoyBtn">Switch to Evil</button>
+    </div>
+
+    <div id="platformerScene" class="platformer-scene" style="display:none;" aria-label="BLIP Platformer">
+        <div class="platformer-parallax back"></div>
+        <div class="platformer-parallax mid"></div>
+        <div id="platformerWorld" class="platformer-world">
+            <div id="platformerPlayer" class="platformer-player">
+                <div class="eye-left"></div>
+                <div class="eye-right"></div>
+            </div>
+        </div>
+        <div class="platformer-ui">
+            <div class="platformer-title">BLIP PLATFORMER - LEVEL 1</div>
+            <div class="platformer-tip">Move: A/D or Left/Right | Jump: Space or W</div>
+            <button id="exitPlatformerBtn" class="return-btn">Exit to Arcade</button>
+        </div>
+    </div>
+
+    <!-- Return button shown in game mode -->
+    <button id="returnBtn" class="return-btn" style="display:none;" onclick="toggleGameMode()">Return</button>
+
+    <!-- Typing input for BLIP minigame -->
+    <div class="typing-wrapper" style="display:none;" id="typingWrapper">
+        <input id="textInput" type="text" placeholder="Type minion words..." autocomplete="off" />
+    </div>
+
+    <!-- Test screen placeholder -->
+    <div id="testScreen" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); color: #fff; z-index: 9999; align-items: center; justify-content: center; flex-direction: column; font-size: 3rem;">
+        <div>TEST</div>
+        <button onclick="hideTestScreen()" style="margin-top: 30px; padding: 14px 26px; font-size: 1rem; border-radius: 12px;">Back</button>
+    </div>
+
+    <!-- Game Mode Score Display -->
+    <div class="game-score" id="gameScore">
+        <span class="score-label">SCORE:</span>
+        <span class="score-value" id="scoreValue">000000000</span>
+    </div>
+    
+    <!-- Game Mode Clock Display -->
+    <div class="game-clock" id="gameClock">
+        <span class="clock-label">TIME:</span>
+        <span class="clock-value" id="clockValue">00:00</span>
+    </div>
+    
+    <!-- Evil BLIP Invasion (hidden by default) -->
+    <div id="evilBlip" class="evil-blip" style="display:none;">
+        <div class="evil-horn"></div>
+        <div class="evil-eye left"></div>
+        <div class="evil-eye right"></div>
+    </div>
+
+    <!-- Defensive Words Container (pop-up words to type for spot barricades) -->
+    <div class="defensive-words-container" id="defensiveWordsContainer"></div>
+    
+    <!-- BRET Minions Container -->
+    <div class="minions-container" id="minionsContainer"></div>
+    
+    <!-- Wave Warning Overlay -->
+    <div id="waveWarning" class="wave-warning" style="display:none;">WAVE 1</div>
+    
+    <!-- Game Mode Firewall -->
+    <div class="game-firewall" id="gameFirewall">
+        <div class="firewall-bars"></div>
+        <div class="scan-row row1"></div>
+        <div class="scan-row row2"></div>
+        <div class="scan-row row3"></div>
+        <div class="scan-row row4"></div>
+        <div class="scan-row row5"></div>
+        <div class="scan-row row6"></div>
+        <div class="firewall-title">DIGITAL FIREWALL</div>
+        <div class="firewall-health-container">
+            <div class="firewall-health-bar" id="firewallHealthBar"></div>
+        </div>
+        <div class="firewall-health-text" id="firewallHealthText">100%</div>
+        <div class="firewall-eye left"></div>
+        <div class="firewall-eye right"></div>
+        <div class="firewall-mouth"></div>
+    </div>
+
+    <!-- Barricade Layer (appears when defensive words are typed) -->
+    <div id="barricadeLayer" class="barricade-layer" style="display:none;"></div>
+    
+    <!-- Graphics System -->
+    <script src="graphics.js"></script>
+    <!-- Main Game Logic -->
+    <script src="game.js"></script>
+</body>
+</html>

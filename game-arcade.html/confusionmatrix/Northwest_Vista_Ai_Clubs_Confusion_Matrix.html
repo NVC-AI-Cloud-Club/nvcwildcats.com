@@ -1,0 +1,2570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WildCats Confusion Matrix Game</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════I DECIDED TO SaaS DESIGN SYSTEM ═══════════════════════ */
+:root {
+--bg: #f4f6fb;
+--surface: #ffffff;
+--surface2: #f8fafc;
+--surface3: #eef1f7;
+--panel: #ffffff;
+--accent: #5b6ef5;
+--accent2: #8b5cf6;
+--accent-soft: rgba(91,110,245,0.08);
+--accent-glow: rgba(91,110,245,0.18);
+--green: #10b981;
+--red: #ef4444;
+--amber: #f59e0b;
+--tp-bg: rgba(16,185,129,0.07); --tp-border: rgba(16,185,129,0.35); --tp-text: #059669;
+--tn-bg: rgba(91,110,245,0.07); --tn-border: rgba(91,110,245,0.35); --tn-text: #4f46e5;
+--fp-bg: rgba(245,158,11,0.07); --fp-border: rgba(245,158,11,0.35); --fp-text: #d97706;
+--fn-bg: rgba(239,68,68,0.07); --fn-border: rgba(239,68,68,0.35); --fn-text: #dc2626;
+--text: #0f172a;
+--muted: #64748b;
+--subtle: #94a3b8;
+--border: #e2e8f0;
+--border-focus: #5b6ef5;
+--font-display: 'Plus Jakarta Sans', sans-serif;
+--font-body: 'Plus Jakarta Sans', sans-serif;
+--font-mono: 'JetBrains Mono', monospace;
+--radius: 8px;
+--radius-lg: 14px;
+--radius-xl: 20px;
+--shadow-xs: 0 1px 2px rgba(15,23,42,0.06);
+--shadow-sm: 0 1px 3px rgba(15,23,42,0.08), 0 1px 2px rgba(15,23,42,0.04);
+--shadow-md: 0 4px 6px rgba(15,23,42,0.06), 0 2px 4px rgba(15,23,42,0.04);
+--shadow-lg: 0 10px 25px rgba(15,23,42,0.08), 0 4px 10px rgba(15,23,42,0.04);
+--shadow-accent: 0 4px 20px rgba(91,110,245,0.22);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+background: var(--bg);
+color: var(--text);
+font-family: var(--font-body);
+min-height: 100vh;
+overflow-x: hidden;
+-webkit-font-smoothing: antialiased;
+}
+
+body::before {
+content: '';
+position: fixed; inset: 0;
+background-image: radial-gradient(circle, rgba(91,110,245,0.07) 1px, transparent 1px);
+background-size: 28px 28px;
+pointer-events: none;
+z-index: 0;
+}
+
+body::after {
+content: '';
+position: fixed;
+top: 0; left: 0; right: 0;
+height: 3px;
+background: linear-gradient(90deg, var(--accent), var(--accent2), #ec4899);
+z-index: 9999;
+}
+
+.phase-nav {
+position: sticky; top: 0; z-index: 100;
+background: rgba(255,255,255,0.92);
+backdrop-filter: blur(16px);
+border-bottom: 1px solid var(--border);
+padding: 0 24px;
+display: flex; align-items: center; justify-content: center; gap: 4px;
+height: 56px;
+box-shadow: var(--shadow-xs);
+flex-wrap: wrap;
+}
+.pnav-logo {
+font-family: var(--font-mono);
+font-size: 10px;
+color: var(--muted);
+letter-spacing: 0.1em;
+margin-right: 16px;
+white-space: nowrap;
+text-transform: uppercase;
+}
+.pnav-btn {
+font-family: var(--font-display);
+font-size: 12px;
+font-weight: 600;
+letter-spacing: 0.01em;
+padding: 6px 16px;
+border-radius: 99px;
+border: 1px solid var(--border);
+background: transparent;
+color: var(--muted);
+cursor: pointer;
+transition: all 0.15s ease;
+white-space: nowrap;
+}
+.pnav-btn:hover { color: var(--text); background: var(--surface3); border-color: var(--border); }
+.pnav-btn.active {
+background: var(--accent);
+border-color: var(--accent);
+color: #fff;
+box-shadow: var(--shadow-accent);
+}
+.pnav-btn.done {
+border-color: var(--green);
+color: var(--green);
+background: rgba(16,185,129,0.06);
+}
+.pnav-divider { width: 20px; height: 1px; background: var(--border); }
+
+.wrapper {
+position: relative; z-index: 1;
+max-width: 760px;
+margin: 0 auto;
+padding: 32px 20px 100px;
+}
+
+.game-credits {
+text-align: center;
+padding: 32px 0 20px;
+font-family: var(--font-mono);
+font-size: 11px;
+letter-spacing: 0.05em;
+color: var(--subtle);
+border-top: 1px solid var(--border);
+margin-top: 40px;
+text-transform: uppercase;
+}
+.game-credits span { color: var(--accent); font-weight: 700; }
+
+h1 {
+font-family: var(--font-display);
+font-size: clamp(24px,4vw,34px);
+font-weight: 800;
+letter-spacing: -0.5px;
+color: var(--text);
+line-height: 1.2;
+}
+h2 { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--text); }
+h3 { font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+
+.card {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 22px;
+box-shadow: var(--shadow-sm);
+}
+
+.badge {
+display: inline-flex;
+align-items: center;
+font-family: var(--font-mono);
+font-size: 10px;
+font-weight: 700;
+letter-spacing: 0.06em;
+padding: 3px 10px;
+border-radius: 99px;
+border: 1px solid;
+text-transform: uppercase;
+}
+.badge-blue { color: var(--accent); border-color: rgba(91,110,245,0.3); background: var(--accent-soft); }
+.badge-green { color: var(--green); border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.07); }
+.badge-amber { color: var(--amber); border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.07); }
+.badge-red { color: var(--red); border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.07); }
+.badge-purple { color: #7c3aed; border-color: rgba(124,58,237,0.3); background: rgba(124,58,237,0.07); }
+.badge-pink { color: #db2777; border-color: rgba(219,39,119,0.3); background: rgba(219,39,119,0.07); }
+
+.btn {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+font-family: var(--font-display);
+font-size: 13px;
+font-weight: 600;
+padding: 9px 20px;
+border-radius: var(--radius);
+border: 1px solid var(--border);
+background: var(--surface);
+color: var(--text);
+cursor: pointer;
+transition: all 0.15s ease;
+box-shadow: var(--shadow-xs);
+letter-spacing: 0.01em;
+}
+.btn:hover { background: var(--surface3); border-color: #cbd5e1; transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.btn:active { transform: scale(0.98); box-shadow: none; }
+.btn-primary {
+background: var(--accent);
+border-color: var(--accent);
+color: #fff;
+box-shadow: var(--shadow-accent);
+}
+.btn-primary:hover { background: #4a5ce0; border-color: #4a5ce0; box-shadow: 0 6px 24px rgba(91,110,245,0.28); }
+.btn-success {
+background: var(--green);
+border-color: var(--green);
+color: #fff;
+box-shadow: 0 4px 16px rgba(16,185,129,0.22);
+}
+.btn-success:hover { background: #0da271; border-color: #0da271; }
+.btn-pink {
+background: #db2777;
+border-color: #db2777;
+color: #fff;
+box-shadow: 0 4px 16px rgba(219,39,119,0.22);
+}
+.btn-pink:hover { background: #be185d; border-color: #be185d; }
+.btn-full { width: 100%; padding: 13px; font-size: 14px; }
+
+hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+.view { display: none; }
+.view.active { display: block; }
+
+.game-header {
+display: flex; align-items: center; justify-content: space-between;
+margin-bottom: 16px; flex-wrap: wrap; gap: 10px;
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 14px 18px;
+box-shadow: var(--shadow-sm);
+}
+.progress-wrap { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 160px; }
+.progress-bar {
+flex: 1; height: 6px;
+background: var(--surface3);
+border-radius: 99px;
+overflow: hidden;
+border: 1px solid var(--border);
+}
+.progress-fill {
+height: 100%;
+background: linear-gradient(90deg, var(--accent), var(--accent2));
+border-radius: 99px;
+transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.q-text {
+font-family: var(--font-mono);
+font-size: 11px;
+color: var(--muted);
+white-space: nowrap;
+font-weight: 500;
+}
+
+.scenario-card {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 22px 24px;
+margin: 14px 0;
+position: relative;
+overflow: hidden;
+box-shadow: var(--shadow-sm);
+}
+.scenario-card::before {
+content: '';
+position: absolute; top: 0; left: 0;
+width: 3px; height: 100%;
+background: linear-gradient(180deg, var(--accent), var(--accent2));
+border-radius: 3px 0 0 3px;
+}
+.s-topic {
+font-family: var(--font-mono);
+font-size: 10px;
+letter-spacing: 0.1em;
+color: var(--accent);
+margin-bottom: 10px;
+text-transform: uppercase;
+font-weight: 700;
+}
+
+.tab-row { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; background: var(--surface3); border-radius: 99px; padding: 4px; width: fit-content; }
+.tab-btn {
+font-family: var(--font-display);
+font-size: 11px;
+font-weight: 600;
+letter-spacing: 0.02em;
+padding: 6px 16px;
+border-radius: 99px;
+border: none;
+background: transparent;
+color: var(--muted);
+cursor: pointer;
+transition: all 0.15s ease;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { background: var(--surface); color: var(--accent); box-shadow: var(--shadow-xs); }
+
+.feedback-box {
+border-radius: var(--radius);
+padding: 14px 18px;
+font-size: 14px;
+line-height: 1.65;
+margin: 14px 0;
+border: 1px solid;
+animation: slideIn 0.2s ease;
+font-weight: 400;
+}
+@keyframes slideIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
+.feedback-correct { background: rgba(16,185,129,0.06); border-color: rgba(16,185,129,0.3); color: #065f46; }
+.feedback-partial { background: rgba(245,158,11,0.06); border-color: rgba(245,158,11,0.3); color: #92400e; }
+.feedback-wrong { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.3); color: #7f1d1d; }
+
+.eq-box {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 18px 20px;
+margin-bottom: 12px;
+box-shadow: var(--shadow-xs);
+}
+.eq-title {
+font-family: var(--font-mono);
+font-size: 9px;
+color: var(--accent);
+letter-spacing: 0.12em;
+margin-bottom: 14px;
+text-transform: uppercase;
+font-weight: 700;
+}
+.eq-row { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; font-size: 13px; }
+.eq-row:last-child { margin-bottom: 0; }
+.eq-name {
+font-family: var(--font-display);
+font-size: 11px;
+font-weight: 600;
+color: var(--muted);
+min-width: 110px;
+}
+code {
+font-family: var(--font-mono);
+font-size: 11px;
+background: var(--surface3);
+border: 1px solid var(--border);
+color: var(--accent);
+padding: 3px 8px;
+border-radius: 6px;
+font-weight: 500;
+}
+
+.result-hero { text-align: center; padding: 32px 0 22px; }
+.score-big {
+font-family: var(--font-display);
+font-size: clamp(52px,13vw,76px);
+font-weight: 800;
+background: linear-gradient(135deg, var(--accent), var(--accent2));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+line-height: 1;
+margin: 10px 0;
+letter-spacing: -2px;
+}
+.result-label { font-size: 13px; color: var(--muted); font-weight: 500; }
+.insight-box {
+background: linear-gradient(135deg, rgba(91,110,245,0.04), rgba(139,92,246,0.04));
+border: 1px solid rgba(91,110,245,0.15);
+border-radius: var(--radius-lg);
+padding: 20px 22px;
+margin: 16px 0;
+}
+.insight-box .i-title {
+font-family: var(--font-mono);
+font-size: 9px;
+color: var(--accent);
+letter-spacing: 0.12em;
+margin-bottom: 8px;
+text-transform: uppercase;
+font-weight: 700;
+}
+.insight-box p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.result-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.result-actions .btn { flex: 1; min-width: 130px; }
+
+.metric-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+@media(max-width:480px){ .metric-row { grid-template-columns: repeat(2,1fr); } }
+.metric-card {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 14px;
+text-align: center;
+box-shadow: var(--shadow-xs);
+transition: box-shadow 0.2s, transform 0.2s;
+}
+.metric-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.metric-card .m-label {
+font-family: var(--font-mono);
+font-size: 9px;
+color: var(--subtle);
+letter-spacing: 0.1em;
+margin-bottom: 6px;
+text-transform: uppercase;
+}
+.metric-card .m-val {
+font-family: var(--font-display);
+font-size: 22px;
+font-weight: 800;
+color: var(--accent);
+}
+
+/* ══════ Phase 1 ══════ */
+.howto-header { text-align: center; padding: 36px 0 28px; }
+.howto-header .chip {
+display: inline-block;
+font-family: var(--font-mono);
+font-size: 10px;
+color: var(--accent);
+letter-spacing: 0.12em;
+margin-bottom: 14px;
+background: var(--accent-soft);
+padding: 5px 14px;
+border-radius: 99px;
+border: 1px solid rgba(91,110,245,0.2);
+text-transform: uppercase;
+font-weight: 700;
+}
+.howto-header h1 { margin-bottom: 12px; }
+.howto-header p { color: var(--muted); font-size: 15px; line-height: 1.7; max-width: 480px; margin: 0 auto; }
+
+.steps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+@media(max-width:520px){ .steps-grid { grid-template-columns: 1fr; } }
+.step-card {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 18px;
+box-shadow: var(--shadow-xs);
+transition: box-shadow 0.2s, transform 0.2s;
+}
+.step-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.step-num {
+width: 30px; height: 30px;
+border-radius: 99px;
+background: linear-gradient(135deg, var(--accent), var(--accent2));
+color: #fff;
+font-family: var(--font-mono);
+font-size: 12px;
+font-weight: 700;
+display: flex; align-items: center; justify-content: center;
+margin-bottom: 12px;
+box-shadow: 0 3px 10px rgba(91,110,245,0.3);
+}
+.step-card h3 { color: var(--text); margin-bottom: 6px; text-transform: none; font-size: 13px; letter-spacing: 0; }
+.step-card p { font-size: 13px; color: var(--muted); line-height: 1.55; margin-top: 4px; }
+
+.ref-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
+@media(max-width:520px){ .ref-grid { grid-template-columns: 1fr; } }
+.ref-cell {
+border-radius: var(--radius-lg);
+padding: 16px 18px;
+border: 1px solid;
+box-shadow: var(--shadow-xs);
+transition: transform 0.15s;
+}
+.ref-cell:hover { transform: translateY(-2px); }
+.ref-cell.tp { background: var(--tp-bg); border-color: var(--tp-border); }
+.ref-cell.tn { background: var(--tn-bg); border-color: var(--tn-border); }
+.ref-cell.fp { background: var(--fp-bg); border-color: var(--fp-border); }
+.ref-cell.fn { background: var(--fn-bg); border-color: var(--fn-border); }
+.ref-cell .label {
+font-family: var(--font-display);
+font-size: 14px;
+font-weight: 800;
+margin-bottom: 6px;
+letter-spacing: -0.2px;
+}
+.ref-cell .desc { font-size: 12px; color: var(--muted); line-height: 1.55; }
+.ref-cell.tp .label { color: var(--tp-text); }
+.ref-cell.tn .label { color: var(--tn-text); }
+.ref-cell.fp .label { color: var(--fp-text); }
+.ref-cell.fn .label { color: var(--fn-text); }
+
+.matrix-section { margin: 18px 0; }
+.axis-label-top {
+font-size: 11px;
+color: var(--subtle);
+text-align: center;
+margin-bottom: 6px;
+font-family: var(--font-mono);
+font-weight: 500;
+letter-spacing: 0.04em;
+}
+.matrix-layout {
+display: grid;
+grid-template-columns: 30px 1fr 1fr;
+grid-template-rows: 30px 1fr 1fr;
+gap: 8px;
+}
+.axis-side {
+display: flex; align-items: center; justify-content: center;
+font-size: 10px; color: var(--subtle);
+font-family: var(--font-mono);
+writing-mode: vertical-lr;
+transform: rotate(180deg);
+line-height: 1;
+font-weight: 500;
+}
+.axis-top {
+display: flex; align-items: center; justify-content: center;
+font-size: 10px; color: var(--subtle);
+font-family: var(--font-mono);
+letter-spacing: 0.04em;
+font-weight: 500;
+}
+.cell-btn {
+border-radius: var(--radius-lg);
+border: 2px solid var(--border);
+background: var(--surface);
+color: var(--text);
+cursor: pointer;
+padding: 20px 10px;
+text-align: center;
+transition: all 0.18s ease;
+display: flex; flex-direction: column; align-items: center; justify-content: center;
+gap: 5px;
+min-height: 86px;
+box-shadow: var(--shadow-xs);
+}
+.cell-btn:hover {
+background: var(--surface2);
+border-color: var(--accent);
+transform: translateY(-3px);
+box-shadow: var(--shadow-md);
+}
+.cell-btn:active { transform: scale(0.97); }
+.cell-btn .cell-key {
+font-family: var(--font-display);
+font-size: 22px;
+font-weight: 800;
+line-height: 1;
+}
+.cell-btn .cell-name { font-size: 10px; color: var(--muted); font-weight: 500; }
+.cell-btn.state-correct-answer {
+border-color: var(--green) !important;
+background: rgba(16,185,129,0.06) !important;
+box-shadow: 0 0 0 3px rgba(16,185,129,0.12) !important;
+}
+.cell-btn.state-correct-answer .cell-key { color: var(--green); }
+.cell-btn.state-wrong-pick {
+border-color: var(--red) !important;
+background: rgba(239,68,68,0.06) !important;
+}
+.cell-btn.state-wrong-pick .cell-key { color: var(--red); }
+
+.live-matrix {
+display: grid;
+grid-template-columns: 64px 1fr 1fr;
+grid-template-rows: 26px 1fr 1fr;
+gap: 6px;
+font-family: var(--font-mono);
+}
+.lm-label {
+display: flex; align-items: center; justify-content: center;
+font-size: 9px; color: var(--subtle);
+letter-spacing: 0.06em;
+font-weight: 600;
+text-transform: uppercase;
+}
+.lm-label.side { writing-mode: vertical-lr; transform: rotate(180deg); }
+.lm-cell {
+border-radius: var(--radius-lg);
+padding: 14px 10px;
+text-align: center;
+border: 1px solid;
+box-shadow: var(--shadow-xs);
+transition: transform 0.15s;
+}
+.lm-cell:hover { transform: scale(1.02); }
+.lm-cell .lm-val { font-size: 26px; font-weight: 800; margin-bottom: 3px; }
+.lm-cell .lm-name { font-size: 9px; opacity: 0.65; text-transform: uppercase; letter-spacing: 0.06em; }
+.lm-tp { background: var(--tp-bg); border-color: var(--tp-border); color: var(--tp-text); }
+.lm-fn { background: var(--fn-bg); border-color: var(--fn-border); color: var(--fn-text); }
+.lm-fp { background: var(--fp-bg); border-color: var(--fp-border); color: var(--fp-text); }
+.lm-tn { background: var(--tn-bg); border-color: var(--tn-border); color: var(--tn-text); }
+
+.result-lm {
+display: grid;
+grid-template-columns: 64px 1fr 1fr;
+grid-template-rows: 26px 1fr 1fr;
+gap: 6px;
+font-family: var(--font-mono);
+margin: 16px 0;
+}
+
+/* ══════ Phase 2 ══════ */
+.phase-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0; }
+@media(max-width:500px){ .phase-compare { grid-template-columns: 1fr; } }
+.phase-box {
+border-radius: var(--radius-lg);
+padding: 20px;
+border: 1px solid var(--border);
+background: var(--surface);
+box-shadow: var(--shadow-xs);
+}
+.phase-box.active-phase {
+border-color: rgba(91,110,245,0.4);
+background: var(--accent-soft);
+box-shadow: 0 0 0 3px rgba(91,110,245,0.08);
+}
+.phase-box .ph-label {
+font-family: var(--font-mono);
+font-size: 9px;
+letter-spacing: 0.1em;
+margin-bottom: 8px;
+text-transform: uppercase;
+font-weight: 700;
+}
+.phase-box p { font-size: 13px; color: var(--muted); line-height: 1.55; }
+.phase-box h3 { color: var(--text); text-transform: none; letter-spacing: 0; font-size: 14px; margin-bottom: 6px; }
+
+.matrix-display {
+display: grid;
+grid-template-columns: 64px 1fr 1fr;
+grid-template-rows: 28px 1fr 1fr;
+gap: 6px;
+margin: 16px 0;
+}
+.md-label {
+display: flex; align-items: center; justify-content: center;
+font-family: var(--font-mono);
+font-size: 9px; color: var(--subtle);
+letter-spacing: 0.06em;
+text-transform: uppercase;
+font-weight: 600;
+}
+.md-label.side { writing-mode: vertical-lr; transform: rotate(180deg); }
+.md-cell {
+border-radius: var(--radius-lg);
+padding: 16px 10px;
+text-align: center;
+border: 1px solid;
+box-shadow: var(--shadow-xs);
+transition: transform 0.15s;
+}
+.md-cell:hover { transform: scale(1.02); }
+.md-cell .md-val { font-family: var(--font-display); font-size: 30px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.md-cell .md-key { font-size: 10px; opacity: 0.75; font-family: var(--font-mono); font-weight: 700; }
+.md-cell .md-name { font-size: 10px; opacity: 0.55; margin-top: 2px; }
+.md-tp { background: var(--tp-bg); border-color: var(--tp-border); color: var(--tp-text); }
+.md-fn { background: var(--fn-bg); border-color: var(--fn-border); color: var(--fn-text); }
+.md-fp { background: var(--fp-bg); border-color: var(--fp-border); color: var(--fp-text); }
+.md-tn { background: var(--tn-bg); border-color: var(--tn-border); color: var(--tn-text); }
+
+.totals-strip { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.total-pill {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 99px;
+padding: 5px 14px;
+font-size: 11px;
+font-family: var(--font-mono);
+color: var(--muted);
+box-shadow: var(--shadow-xs);
+font-weight: 500;
+}
+.total-pill span { color: var(--text); font-weight: 700; }
+
+.challenge-section { margin: 16px 0; }
+.challenge-title {
+font-family: var(--font-mono);
+font-size: 10px;
+color: var(--muted);
+letter-spacing: 0.07em;
+margin-bottom: 14px;
+text-transform: uppercase;
+font-weight: 600;
+}
+.metric-challenges { display: flex; flex-direction: column; gap: 10px; }
+
+.mc-card {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 16px 18px;
+transition: border-color 0.2s, background 0.2s;
+box-shadow: var(--shadow-xs);
+}
+.mc-card.answered-correct {
+border-color: rgba(16,185,129,0.4);
+background: rgba(16,185,129,0.03);
+box-shadow: 0 0 0 3px rgba(16,185,129,0.08);
+}
+.mc-card.answered-wrong {
+border-color: rgba(239,68,68,0.4);
+background: rgba(239,68,68,0.03);
+}
+.mc-card.answered-skipped {
+border-color: rgba(245,158,11,0.4);
+background: rgba(245,158,11,0.03);
+}
+.mc-header {
+display: flex; align-items: center; justify-content: space-between;
+gap: 10px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.mc-name { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--text); }
+.mc-formula { font-size: 11px; color: var(--muted); font-family: var(--font-mono); }
+.mc-input-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.mc-input {
+font-family: var(--font-mono);
+font-size: 17px;
+font-weight: 700;
+background: var(--surface3);
+border: 2px solid var(--border);
+border-radius: var(--radius);
+color: var(--text);
+padding: 10px 16px;
+width: 110px;
+text-align: center;
+transition: border-color 0.15s, box-shadow 0.15s;
+-moz-appearance: textfield;
+}
+.mc-input::-webkit-inner-spin-button,
+.mc-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+.mc-input:focus {
+outline: none;
+border-color: var(--accent);
+box-shadow: 0 0 0 3px rgba(91,110,245,0.12);
+background: var(--surface);
+}
+.mc-input.correct { border-color: var(--green); color: var(--green); background: rgba(16,185,129,0.04); }
+.mc-input.wrong { border-color: var(--red); color: var(--red); background: rgba(239,68,68,0.04); }
+.mc-pct { font-family: var(--font-mono); font-size: 17px; color: var(--muted); font-weight: 700; }
+.mc-hint {
+font-size: 12px;
+color: var(--muted);
+margin-top: 10px;
+line-height: 1.6;
+display: none;
+padding: 10px 12px;
+background: var(--surface3);
+border-radius: var(--radius);
+border-left: 3px solid var(--border);
+}
+.mc-hint.visible { display: block; }
+.mc-hint.correct-hint { color: #065f46; background: rgba(16,185,129,0.06); border-left-color: var(--green); }
+.mc-hint.wrong-hint { color: #7f1d1d; background: rgba(239,68,68,0.06); border-left-color: var(--red); }
+.mc-result-tag {
+font-family: var(--font-mono);
+font-size: 10px;
+font-weight: 700;
+padding: 3px 10px;
+border-radius: 99px;
+border: 1px solid;
+display: none;
+text-transform: uppercase;
+letter-spacing: 0.06em;
+}
+.mc-result-tag.visible { display: inline-block; }
+.mc-result-tag.correct { color: var(--green); border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.07); }
+.mc-result-tag.wrong { color: var(--red); border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.07); }
+.mc-result-tag.skipped { color: var(--amber); border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.07); }
+.action-row { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.action-row .btn { flex: 1; min-width: 120px; }
+.tolerance-note { font-size: 11px; color: var(--subtle); font-style: italic; }
+
+.scoreboard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.sb-card {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 16px;
+text-align: center;
+box-shadow: var(--shadow-xs);
+transition: transform 0.15s, box-shadow 0.15s;
+}
+.sb-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.sb-label {
+font-family: var(--font-mono);
+font-size: 9px;
+color: var(--subtle);
+letter-spacing: 0.1em;
+margin-bottom: 8px;
+text-transform: uppercase;
+font-weight: 600;
+}
+.sb-val { font-family: var(--font-display); font-size: 26px; font-weight: 800; color: var(--accent); }
+
+.result-breakdown { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
+.rb-row {
+display: flex; align-items: flex-start; justify-content: space-between;
+padding: 12px 16px;
+background: var(--surface);
+border-radius: var(--radius);
+border: 1px solid var(--border);
+font-size: 13px;
+flex-wrap: wrap; gap: 8px;
+box-shadow: var(--shadow-xs);
+}
+.rb-label { font-family: var(--font-display); font-size: 12px; font-weight: 600; color: var(--muted); min-width: 140px; }
+.rb-vals { display: flex; gap: 12px; font-family: var(--font-mono); font-size: 11px; flex-wrap: wrap; font-weight: 600; }
+
+/* ── Landing ── */
+.landing-hero { text-align: center; padding: 48px 0 32px; }
+.landing-hero .chip {
+display: inline-block;
+font-family: var(--font-mono);
+font-size: 10px;
+color: var(--accent);
+letter-spacing: 0.14em;
+margin-bottom: 18px;
+background: var(--accent-soft);
+padding: 5px 16px;
+border-radius: 99px;
+border: 1px solid rgba(91,110,245,0.22);
+text-transform: uppercase;
+font-weight: 700;
+}
+.landing-hero h1 { margin-bottom: 16px; }
+.landing-hero p { color: var(--muted); font-size: 15px; line-height: 1.75; max-width: 480px; margin: 0 auto 32px; }
+
+.phase-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 30px; }
+@media(max-width:600px){ .phase-cards { grid-template-columns: 1fr; } }
+.phase-card {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--radius-xl);
+padding: 24px;
+text-align: left;
+transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+box-shadow: var(--shadow-sm);
+}
+.phase-card:hover { border-color: rgba(91,110,245,0.35); box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+.phase-card .pc-num {
+font-family: var(--font-mono);
+font-size: 9px;
+color: var(--accent);
+letter-spacing: 0.12em;
+margin-bottom: 12px;
+text-transform: uppercase;
+font-weight: 700;
+background: var(--accent-soft);
+display: inline-block;
+padding: 3px 10px;
+border-radius: 99px;
+border: 1px solid rgba(91,110,245,0.2);
+}
+.phase-card.p3-card .pc-num {
+color: #db2777;
+background: rgba(219,39,119,0.07);
+border-color: rgba(219,39,119,0.2);
+}
+.phase-card h2 { font-size: 17px; margin-bottom: 8px; font-weight: 800; }
+.phase-card p { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 16px; }
+.phase-card ul { list-style: none; }
+.phase-card ul li {
+font-size: 12px;
+color: var(--muted);
+padding: 3px 0;
+display: flex;
+gap: 8px;
+font-weight: 500;
+}
+.phase-card ul li::before { content: '→'; color: var(--accent); font-weight: 700; }
+
+@media(max-width:480px) { .md-cell .md-val { font-size: 22px; } }
+
+.section-label {
+font-family: var(--font-mono);
+font-size: 10px;
+color: var(--subtle);
+text-transform: uppercase;
+letter-spacing: 0.12em;
+font-weight: 600;
+margin-bottom: 12px;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+.section-label::after {
+content: '';
+flex: 1;
+height: 1px;
+background: var(--border);
+}
+
+/* ═══════════════════════════════════════════════════════════
+PHASE 3 — CONFUSION MATRIX & BAYES THEOREM — DRAG & DROP
+═══════════════════════════════════════════════════════════ */
+
+/* P3 howto */
+.p3-chip {
+display: inline-block;
+font-family: var(--font-mono);
+font-size: 10px;
+color: #db2777;
+letter-spacing: 0.12em;
+margin-bottom: 14px;
+background: rgba(219,39,119,0.07);
+padding: 5px 14px;
+border-radius: 99px;
+border: 1px solid rgba(219,39,119,0.2);
+text-transform: uppercase;
+font-weight: 700;
+}
+
+/* P3 game header */
+.p3-header {
+background: linear-gradient(135deg, rgba(219,39,119,0.04), rgba(139,92,246,0.04));
+border: 1px solid rgba(219,39,119,0.15);
+border-radius: var(--radius-lg);
+padding: 14px 18px;
+margin-bottom: 16px;
+display: flex; align-items: center; justify-content: space-between;
+flex-wrap: wrap; gap: 10px;
+box-shadow: var(--shadow-sm);
+}
+
+/* P3 scenario card with pink accent */
+.p3-scenario {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 22px 24px;
+margin: 14px 0;
+position: relative;
+overflow: hidden;
+box-shadow: var(--shadow-sm);
+}
+.p3-scenario::before {
+content: '';
+position: absolute; top: 0; left: 0;
+width: 3px; height: 100%;
+background: linear-gradient(180deg, #db2777, #8b5cf6);
+border-radius: 3px 0 0 3px;
+}
+.p3-topic {
+font-family: var(--font-mono);
+font-size: 10px;
+letter-spacing: 0.1em;
+color: #db2777;
+margin-bottom: 10px;
+text-transform: uppercase;
+font-weight: 700;
+}
+
+/* Number tokens bank */
+.number-bank {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 16px 18px;
+margin-bottom: 16px;
+box-shadow: var(--shadow-xs);
+}
+.number-bank-title {
+font-family: var(--font-mono);
+font-size: 9px;
+color: #db2777;
+letter-spacing: 0.12em;
+margin-bottom: 12px;
+text-transform: uppercase;
+font-weight: 700;
+}
+.number-bank-title span {
+color: var(--muted);
+font-weight: 400;
+text-transform: none;
+letter-spacing: 0;
+font-size: 10px;
+font-family: var(--font-body);
+margin-left: 8px;
+}
+.tokens-row {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+min-height: 44px;
+}
+
+/* Draggable token */
+.num-token {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+font-family: var(--font-mono);
+font-size: 14px;
+font-weight: 700;
+padding: 8px 14px;
+border-radius: var(--radius);
+background: var(--surface);
+border: 2px solid var(--accent);
+color: var(--accent);
+cursor: grab;
+user-select: none;
+transition: transform 0.12s, box-shadow 0.12s, opacity 0.2s;
+box-shadow: var(--shadow-xs);
+min-width: 44px;
+text-align: center;
+}
+.num-token:hover {
+transform: translateY(-2px) scale(1.06);
+box-shadow: var(--shadow-md);
+}
+.num-token.dragging {
+opacity: 0.4;
+cursor: grabbing;
+}
+.num-token.used {
+opacity: 0.25;
+pointer-events: none;
+filter: grayscale(1);
+}
+.num-token.pink-token {
+border-color: #db2777;
+color: #db2777;
+}
+
+/* Equation builder */
+.eq-builder {
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: var(--radius-lg);
+padding: 18px 20px;
+margin-bottom: 14px;
+box-shadow: var(--shadow-xs);
+}
+.eq-builder-title {
+font-family: var(--font-mono);
+font-size: 9px;
+color: var(--muted);
+letter-spacing: 0.1em;
+margin-bottom: 16px;
+text-transform: uppercase;
+font-weight: 700;
+}
+.eq-problem {
+display: flex;
+flex-direction: column;
+gap: 18px;
+}
+.eq-line {
+display: flex;
+align-items: center;
+flex-wrap: wrap;
+gap: 8px;
+padding: 12px 16px;
+background: var(--surface3);
+border-radius: var(--radius);
+border: 1px solid var(--border);
+}
+.eq-line-label {
+font-family: var(--font-display);
+font-size: 12px;
+font-weight: 700;
+color: var(--text);
+min-width: 120px;
+flex-shrink: 0;
+}
+.eq-sym {
+font-family: var(--font-mono);
+font-size: 14px;
+font-weight: 600;
+color: var(--muted);
+}
+.eq-sym.op {
+color: var(--text);
+}
+
+/* Drop zone */
+.drop-zone {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+min-width: 54px;
+height: 38px;
+border: 2px dashed var(--border);
+border-radius: var(--radius);
+background: var(--surface2);
+font-family: var(--font-mono);
+font-size: 13px;
+font-weight: 700;
+color: var(--subtle);
+cursor: default;
+transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+position: relative;
+padding: 0 8px;
+}
+.drop-zone.drag-over {
+border-color: var(--accent);
+background: var(--accent-soft);
+box-shadow: 0 0 0 3px rgba(91,110,245,0.12);
+}
+.drop-zone.filled {
+border-style: solid;
+border-color: var(--accent);
+background: var(--accent-soft);
+color: var(--accent);
+cursor: pointer;
+}
+.drop-zone.filled:hover {
+border-color: var(--red);
+background: rgba(239,68,68,0.06);
+color: var(--red);
+}
+.drop-zone.correct-zone {
+border-color: var(--green) !important;
+background: rgba(16,185,129,0.06) !important;
+color: var(--green) !important;
+}
+.drop-zone.wrong-zone {
+border-color: var(--red) !important;
+background: rgba(239,68,68,0.06) !important;
+color: var(--red) !important;
+}
+.drop-zone .dz-placeholder {
+font-size: 11px;
+font-weight: 400;
+color: var(--subtle);
+font-family: var(--font-body);
+}
+
+/* Solved answer display */
+.eq-line.solved {
+background: rgba(16,185,129,0.04);
+border-color: rgba(16,185,129,0.3);
+}
+.solved-answer {
+font-family: var(--font-mono);
+font-size: 15px;
+font-weight: 800;
+color: var(--green);
+background: rgba(16,185,129,0.08);
+padding: 5px 12px;
+border-radius: var(--radius);
+border: 1px solid rgba(16,185,129,0.3);
+}
+.solved-answer.wrong-answer {
+color: var(--red);
+background: rgba(239,68,68,0.06);
+border-color: rgba(239,68,68,0.3);
+}
+
+/* P3 hint box */
+.p3-hint-box {
+background: linear-gradient(135deg, rgba(219,39,119,0.04), rgba(139,92,246,0.04));
+border: 1px solid rgba(219,39,119,0.2);
+border-radius: var(--radius);
+padding: 14px 16px;
+margin-top: 10px;
+font-size: 13px;
+color: var(--muted);
+line-height: 1.7;
+display: none;
+animation: slideIn 0.2s ease;
+}
+.p3-hint-box.visible { display: block; }
+.p3-hint-box strong { color: var(--text); }
+
+/* P3 step solve panel */
+.p3-solve-panel {
+background: var(--surface);
+border: 1px solid rgba(16,185,129,0.25);
+border-radius: var(--radius-lg);
+padding: 18px 20px;
+margin-top: 14px;
+display: none;
+animation: slideIn 0.25s ease;
+}
+.p3-solve-panel.visible { display: block; }
+.p3-solve-title {
+font-family: var(--font-mono);
+font-size: 9px;
+color: var(--green);
+letter-spacing: 0.12em;
+margin-bottom: 12px;
+text-transform: uppercase;
+font-weight: 700;
+}
+.p3-step {
+font-size: 13px;
+color: var(--muted);
+line-height: 1.8;
+padding: 6px 0;
+border-bottom: 1px solid var(--border);
+}
+.p3-step:last-child { border-bottom: none; }
+.p3-step strong { color: var(--text); font-family: var(--font-mono); }
+
+/* Bayes section */
+.bayes-intro {
+background: linear-gradient(135deg, rgba(219,39,119,0.04), rgba(139,92,246,0.04));
+border: 1px solid rgba(219,39,119,0.15);
+border-radius: var(--radius-lg);
+padding: 20px 22px;
+margin: 16px 0;
+}
+.bayes-intro .bi-title {
+font-family: var(--font-mono);
+font-size: 9px;
+color: #db2777;
+letter-spacing: 0.12em;
+margin-bottom: 10px;
+text-transform: uppercase;
+font-weight: 700;
+}
+.bayes-intro p { font-size: 13px; color: var(--muted); line-height: 1.75; margin-bottom: 8px; }
+.bayes-intro p:last-child { margin-bottom: 0; }
+
+/* P3 matrix mini display */
+.p3-matrix-display {
+display: grid;
+grid-template-columns: 60px 1fr 1fr;
+grid-template-rows: 24px 1fr 1fr;
+gap: 5px;
+margin: 12px 0;
+}
+.p3md-label {
+display: flex; align-items: center; justify-content: center;
+font-family: var(--font-mono);
+font-size: 8px; color: var(--subtle);
+letter-spacing: 0.06em;
+text-transform: uppercase;
+font-weight: 600;
+}
+.p3md-label.side { writing-mode: vertical-lr; transform: rotate(180deg); }
+.p3md-cell {
+border-radius: var(--radius);
+padding: 10px 8px;
+text-align: center;
+border: 1px solid;
+}
+.p3md-cell .p3md-val { font-family: var(--font-display); font-size: 20px; font-weight: 800; line-height: 1; margin-bottom: 2px; }
+.p3md-cell .p3md-key { font-size: 9px; opacity: 0.7; font-family: var(--font-mono); font-weight: 700; }
+.p3md-tp { background: var(--tp-bg); border-color: var(--tp-border); color: var(--tp-text); }
+.p3md-fn { background: var(--fn-bg); border-color: var(--fn-border); color: var(--fn-text); }
+.p3md-fp { background: var(--fp-bg); border-color: var(--fp-border); color: var(--fp-text); }
+.p3md-tn { background: var(--tn-bg); border-color: var(--tn-border); color: var(--tn-text); }
+
+/* P3 progress tracker */
+.p3-eq-tracker {
+display: flex;
+gap: 6px;
+flex-wrap: wrap;
+margin-bottom: 14px;
+}
+.p3-eq-dot {
+width: 8px; height: 8px;
+border-radius: 99px;
+background: var(--border);
+transition: background 0.2s;
+}
+.p3-eq-dot.done { background: var(--green); }
+.p3-eq-dot.active { background: #db2777; }
+
+/* Confetti mini */
+@keyframes pop { 0% { transform: scale(0.5); opacity: 0; } 60% { transform: scale(1.2); } 100% { transform: scale(1); opacity: 1; } }
+.pop-anim { animation: pop 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+
+/* P3 results */
+.p3-result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+@media(max-width:480px){ .p3-result-grid { grid-template-columns: repeat(2,1fr); } }
+
+/* Mobile touch support */
+.num-token { touch-action: none; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ PHASE NAV BAR ═══════════════════ -->
+<nav class="phase-nav">
+<span class="pnav-logo">NVCWILDCATS · CM Game</span>
+<button class="pnav-btn active" id="nav-home" onclick="goHome()">Home</button>
+<div class="pnav-divider"></div>
+<button class="pnav-btn" id="nav-p1" onclick="goPhase1()">Phase 1 — Classify</button>
+<div class="pnav-divider"></div>
+<button class="pnav-btn" id="nav-p2" onclick="goPhase2()">Phase 2 — Calculate</button>
+<div class="pnav-divider"></div>
+<button class="pnav-btn" id="nav-p3" onclick="goPhase3()">Phase 3 — Bayes</button>
+</nav>
+
+<div class="wrapper">
+
+<!-- ═══════════════════════════════════════════════════
+LANDING
+═══════════════════════════════════════════════════════ -->
+<div class="view active" id="view-landing">
+<div class="landing-hero">
+<p class="chip">Learn and Test Your Knowledge</p>
+<h1>Confusion Matrix<br>Game</h1>
+<p>Three phases. One complete understanding. Classify outcomes, calculate metrics, then master Bayes Theorem.</p>
+</div>
+
+<div class="phase-cards">
+<div class="phase-card">
+<div class="pc-num">Phase 1</div>
+<h2>Cell Classification</h2>
+<p>Read real-world scenarios and identify TP, TN, FP, or FN by clicking the matrix.</p>
+<ul>
+<li>12 real-world scenarios</li>
+<li>3 difficulty levels</li>
+<li>Live confusion matrix</li>
+<li>Accuracy, Precision, Recall & F1</li>
+</ul>
+<br>
+<button class="btn btn-primary btn-full" onclick="goPhase1()">Start Phase 1 →</button>
+</div>
+<div class="phase-card">
+<div class="pc-num">Phase 2</div>
+<h2>Metric Calculation</h2>
+<p>Given a filled confusion matrix, calculate metrics like Accuracy and F1 as percentages.</p>
+<ul>
+<li>8 numeric scenarios</li>
+<li>Up to 5 metrics per round</li>
+<li>GeeksforGeeks example</li>
+<li>Hints & step-by-step answers</li>
+</ul>
+<br>
+<button class="btn btn-full" onclick="goPhase2()">Start Phase 2 →</button>
+</div>
+<div class="phase-card p3-card">
+<div class="pc-num">Phase 3 — NEW</div>
+<h2>Confusion Matrix & Bayes</h2>
+<p>Drag numbers into equations. Solve real Bayes Theorem problems step by step.</p>
+<ul>
+<li>Drag-and-drop number tokens</li>
+<li>Confusion matrix → Bayes bridge</li>
+<li>Guided hints for each step</li>
+<li>5 progressive scenarios</li>
+</ul>
+<br>
+<button class="btn btn-pink btn-full" onclick="goPhase3()">Start Phase 3 →</button>
+</div>
+</div>
+
+<div class="eq-box">
+<div class="eq-title">Formulas Reference</div>
+<div class="eq-row"><span class="eq-name">Accuracy</span> <code>(TP+TN) / (TP+TN+FP+FN)</code></div>
+<div class="eq-row"><span class="eq-name">Precision</span> <code>TP / (TP+FP)</code></div>
+<div class="eq-row"><span class="eq-name">Recall</span> <code>TP / (TP+FN)</code></div>
+<div class="eq-row"><span class="eq-name">Specificity</span> <code>TN / (TN+FP)</code></div>
+<div class="eq-row"><span class="eq-name">F1 Score</span> <code>2 × Precision × Recall / (Precision + Recall)</code></div>
+<div class="eq-row"><span class="eq-name">Bayes Theorem</span> <code>P(A|B) = P(B|A) × P(A) / P(B)</code></div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+PHASE 1 — HOW TO PLAY
+════════════════════════════════════════════════════════ -->
+<div class="view" id="view-p1-howto">
+<div class="howto-header">
+<p class="chip">Phase 1 — Cell Classification</p>
+<h1>Confusion<br>Matrix Game</h1>
+<p style="margin-top:12px;">Real-world scenarios that build your intuition for TP, TN, FP, and FN.</p>
+</div>
+<div class="section-label">How to Play</div>
+<div class="steps-grid">
+<div class="step-card"><div class="step-num">1</div><h3>Read the scenario</h3><p>A real-world model made a prediction. Read what the model predicted and what actually happened.</p></div>
+<div class="step-card"><div class="step-num">2</div><h3>Click the right cell</h3><p>Tap TP, TN, FP, or FN on the interactive matrix. Each click is your answer.</p></div>
+<div class="step-card"><div class="step-num">3</div><h3>See the explanation</h3><p>Instant feedback with a plain-English reason. The live matrix updates in real time.</p></div>
+<div class="step-card"><div class="step-num">4</div><h3>Level up</h3><p>Scenarios get harder every 4 questions — and unlock Phase 2 when complete.</p></div>
+</div>
+<hr>
+<div class="section-label">Quick Reference</div>
+<div class="ref-grid">
+<div class="ref-cell tp"><div class="label">TP — True Positive</div><div class="desc">Reality: YES &nbsp;·&nbsp; Prediction: YES<br>Correct detection. The model caught it.</div></div>
+<div class="ref-cell tn"><div class="label">TN — True Negative</div><div class="desc">Reality: NO &nbsp;·&nbsp; Prediction: NO<br>Correct rejection. Nothing to detect.</div></div>
+<div class="ref-cell fp"><div class="label">FP — False Positive</div><div class="desc">Reality: NO &nbsp;·&nbsp; Prediction: YES<br>False alarm. The model fired wrongly.</div></div>
+<div class="ref-cell fn"><div class="label">FN — False Negative</div><div class="desc">Reality: YES &nbsp;·&nbsp; Prediction: NO<br>Missed it. The model failed to detect.</div></div>
+</div>
+<hr>
+<div class="eq-box">
+<div class="eq-title">Key Equations</div>
+<div class="eq-row"><span class="eq-name">Accuracy</span> <code>(TP+TN) / (TP+TN+FP+FN)</code></div>
+<div class="eq-row"><span class="eq-name">Precision</span> <code>TP / (TP+FP)</code></div>
+<div class="eq-row"><span class="eq-name">Recall</span> <code>TP / (TP+FN)</code></div>
+<div class="eq-row"><span class="eq-name">F1 Score</span> <code>2×P×R / (P+R)</code></div>
+</div>
+<button class="btn btn-primary btn-full" style="margin-top:8px;" onclick="p1Start()">Start Phase 1 →</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+PHASE 1 — GAME
+════════════════════════════════════════════════════════ -->
+<div class="view" id="view-p1-game">
+<div class="game-header">
+<div class="progress-wrap">
+<span class="q-text" id="p1-q-counter">1 / 12</span>
+<div class="progress-bar"><div class="progress-fill" id="p1-prog" style="width:0%"></div></div>
+</div>
+<div style="display:flex; gap:8px; align-items:center;">
+<span class="badge badge-purple" id="p1-level-badge">LVL 1</span>
+<span class="badge badge-blue" id="p1-score-badge">0 pts</span>
+</div>
+</div>
+<div class="scenario-card">
+<div class="s-topic" id="p1-topic">—</div>
+<div style="font-size:15px; line-height:1.75; margin-bottom:12px; font-weight:400;" id="p1-text">—</div>
+<div style="font-size:13px; color:var(--muted); font-style:italic; font-weight:500;" id="p1-question">—</div>
+</div>
+<div class="matrix-section">
+<div class="axis-label-top">← Predicted →</div>
+<div class="matrix-layout">
+<div></div>
+<div class="axis-top">Predicted YES</div>
+<div class="axis-top">Predicted NO</div>
+<div class="axis-side">Actual YES</div>
+<button class="cell-btn" id="cell-TP" onclick="p1Select('TP')"><span class="cell-key" style="color:var(--tp-text)">TP</span><span class="cell-name">True Positive</span></button>
+<button class="cell-btn" id="cell-FN" onclick="p1Select('FN')"><span class="cell-key" style="color:var(--fn-text)">FN</span><span class="cell-name">False Negative</span></button>
+<div class="axis-side">Actual NO</div>
+<button class="cell-btn" id="cell-FP" onclick="p1Select('FP')"><span class="cell-key" style="color:var(--fp-text)">FP</span><span class="cell-name">False Positive</span></button>
+<button class="cell-btn" id="cell-TN" onclick="p1Select('TN')"><span class="cell-key" style="color:var(--tn-text)">TN</span><span class="cell-name">True Negative</span></button>
+</div>
+</div>
+<div id="p1-feedback-wrap" style="display:none;">
+<div class="feedback-box" id="p1-feedback"></div>
+<button class="btn btn-primary btn-full" id="p1-next-btn" onclick="p1Next()">Next question →</button>
+</div>
+<hr>
+<div class="tab-row">
+<button class="tab-btn active" onclick="p1Tab('p1-tab-matrix')">Live Matrix</button>
+<button class="tab-btn" onclick="p1Tab('p1-tab-metrics')">Metrics</button>
+<button class="tab-btn" onclick="p1Tab('p1-tab-eq')">Equations</button>
+</div>
+<div id="p1-tab-matrix">
+<div class="live-matrix">
+<div class="lm-label"></div><div class="lm-label">Pred YES</div><div class="lm-label">Pred NO</div>
+<div class="lm-label side">Act YES</div>
+<div class="lm-cell lm-tp"><div class="lm-val" id="lm-TP">0</div><div class="lm-name">True Positive</div></div>
+<div class="lm-cell lm-fn"><div class="lm-val" id="lm-FN">0</div><div class="lm-name">False Negative</div></div>
+<div class="lm-label side">Act NO</div>
+<div class="lm-cell lm-fp"><div class="lm-val" id="lm-FP">0</div><div class="lm-name">False Positive</div></div>
+<div class="lm-cell lm-tn"><div class="lm-val" id="lm-TN">0</div><div class="lm-name">True Negative</div></div>
+</div>
+</div>
+<div id="p1-tab-metrics" style="display:none;">
+<div class="metric-row">
+<div class="metric-card"><div class="m-label">Accuracy</div><div class="m-val" id="m1-acc">—</div></div>
+<div class="metric-card"><div class="m-label">Precision</div><div class="m-val" id="m1-prec">—</div></div>
+<div class="metric-card"><div class="m-label">Recall</div><div class="m-val" id="m1-rec">—</div></div>
+<div class="metric-card"><div class="m-label">F1</div><div class="m-val" id="m1-f1">—</div></div>
+</div>
+<div class="eq-box" style="font-size:13px; color:var(--muted);">Metrics computed from your answers this session.</div>
+</div>
+<div id="p1-tab-eq" style="display:none;">
+<div class="eq-box">
+<div class="eq-title">Equations</div>
+<div class="eq-row"><span class="eq-name">Accuracy</span> <code>(TP+TN)/(TP+TN+FP+FN)</code></div>
+<div class="eq-row"><span class="eq-name">Precision</span> <code>TP/(TP+FP)</code></div>
+<div class="eq-row"><span class="eq-name">Recall</span> <code>TP/(TP+FN)</code></div>
+<div class="eq-row"><span class="eq-name">Specificity</span><code>TN/(TN+FP)</code></div>
+<div class="eq-row"><span class="eq-name">F1 Score</span> <code>2×P×R/(P+R)</code></div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+PHASE 1 — RESULTS
+═══════════════════════════════════════════════════════ -->
+<div class="view" id="view-p1-results">
+<div class="result-hero">
+<p class="badge badge-green" style="margin-bottom:14px;">Phase 1 Complete</p>
+<div class="score-big" id="p1-r-score">0</div>
+<p class="result-label">points earned</p>
+</div>
+<div class="metric-row">
+<div class="metric-card"><div class="m-label">Accuracy</div><div class="m-val" id="p1-r-acc">—</div></div>
+<div class="metric-card"><div class="m-label">Precision</div><div class="m-val" id="p1-r-prec">—</div></div>
+<div class="metric-card"><div class="m-label">Recall</div><div class="m-val" id="p1-r-rec">—</div></div>
+<div class="metric-card"><div class="m-label">F1</div><div class="m-val" id="p1-r-f1">—</div></div>
+</div>
+<div class="card" style="margin-bottom:14px;">
+<h3 style="margin-bottom:16px;">Your Confusion Matrix</h3>
+<div class="result-lm">
+<div class="lm-label"></div><div class="lm-label">Pred YES</div><div class="lm-label">Pred NO</div>
+<div class="lm-label side">Act YES</div>
+<div class="lm-cell lm-tp"><div class="lm-val" id="p1-r-tp">0</div><div class="lm-name">True Positive</div></div>
+<div class="lm-cell lm-fn"><div class="lm-val" id="p1-r-fn">0</div><div class="lm-name">False Negative</div></div>
+<div class="lm-label side">Act NO</div>
+<div class="lm-cell lm-fp"><div class="lm-val" id="p1-r-fp">0</div><div class="lm-name">False Positive</div></div>
+<div class="lm-cell lm-tn"><div class="lm-val" id="p1-r-tn">0</div><div class="lm-name">True Negative</div></div>
+</div>
+</div>
+<div class="insight-box"><div class="i-title">Performance Insight</div><p id="p1-r-insight">—</p></div>
+<div class="result-actions">
+<button class="btn btn-success" onclick="goPhase2(); p2Start()">Continue to Phase 2 →</button>
+<button class="btn btn-primary" onclick="p1Start()">Replay Phase 1</button>
+<button class="btn" onclick="goHome()">Home</button>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+PHASE 2 — HOW TO PLAY
+═══════════════════════════════════════════════════════ -->
+<div class="view" id="view-p2-howto">
+<div class="howto-header">
+<p class="chip">Phase 2 — Metrics Challenge</p>
+<h1>Confusion Matrix<br>Numbers Game</h1>
+<p style="margin-top:12px;">Given a filled confusion matrix, calculate the metrics — just like a real data scientist.</p>
+</div>
+<div class="phase-compare">
+<div class="phase-box">
+<div class="ph-label" style="color:var(--green);">Phase 1 — Complete</div>
+<h3 style="color:var(--text); text-transform:none; letter-spacing:0; font-size:14px; margin-bottom:6px;">Cell Classification</h3>
+<p>Given a scenario, identify whether the outcome is TP, TN, FP, or FN.</p>
+</div>
+<div class="phase-box active-phase">
+<div class="ph-label" style="color:var(--accent);">Phase 2 — You Are Here</div>
+<h3 style="color:var(--text); text-transform:none; letter-spacing:0; font-size:14px; margin-bottom:6px;">Metric Calculation</h3>
+<p>Given a filled matrix with real numbers, calculate Accuracy, Precision, Recall, F1, and Specificity.</p>
+</div>
+</div>
+<hr>
+<div class="section-label">How to Play</div>
+<div class="steps-grid">
+<div class="step-card"><div class="step-num">1</div><h3>Read the scenario</h3><p>Each round shows a real-world context with its confusion matrix.</p></div>
+<div class="step-card"><div class="step-num">2</div><h3>Study the matrix</h3><p>TP, TN, FP, FN counts are displayed. Running totals are shown too.</p></div>
+<div class="step-card"><div class="step-num">3</div><h3>Type your percentages</h3><p>Apply the formulas and enter each metric as a whole number (e.g. 83 for 83%).</p></div>
+<div class="step-card"><div class="step-num">4</div><h3>Level up</h3><p>Level 1 asks 2 metrics. Level 3 asks all 5. Numbers get larger each round.</p></div>
+</div>
+<hr>
+<div class="eq-box">
+<div class="eq-title">Formulas to Know</div>
+<div class="eq-row"><span class="eq-name">Accuracy</span> <code>(TP+TN) / (TP+TN+FP+FN)</code></div>
+<div class="eq-row"><span class="eq-name">Precision</span> <code>TP / (TP+FP)</code></div>
+<div class="eq-row"><span class="eq-name">Recall</span> <code>TP / (TP+FN)</code></div>
+<div class="eq-row"><span class="eq-name">Specificity</span> <code>TN / (TN+FP)</code></div>
+<div class="eq-row"><span class="eq-name">F1 Score</span> <code>2 × Precision × Recall / (Precision + Recall)</code></div>
+</div>
+<p class="tolerance-note" style="margin-bottom:18px; margin-top:8px;">* Answers accepted within ±1.5 percentage points.</p>
+<button class="btn btn-primary btn-full" onclick="p2Start()">Start Phase 2 →</button>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+PHASE 2 — GAME
+════════════════════════════════════════════════════════ -->
+<div class="view" id="view-p2-game">
+<div class="game-header">
+<div class="progress-wrap">
+<span class="q-text" id="p2-q-counter">1 / 8</span>
+<div class="progress-bar"><div class="progress-fill" id="p2-prog" style="width:0%"></div></div>
+</div>
+<div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+<span class="badge badge-purple" id="p2-level-badge">LVL 1</span>
+<span class="badge badge-green" id="p2-correct-badge">0 correct</span>
+<span class="badge badge-blue" id="p2-score-badge">0 pts</span>
+</div>
+</div>
+<div class="scenario-card">
+<div class="s-topic" id="p2-topic">—</div>
+<div style="font-size:14px; color:var(--muted); line-height:1.7; font-weight:400;" id="p2-context">—</div>
+</div>
+<div class="matrix-display">
+<div></div>
+<div class="md-label">Predicted YES</div><div class="md-label">Predicted NO</div>
+<div class="md-label side">Actual YES</div>
+<div class="md-cell md-tp"><div class="md-val" id="d-tp">—</div><div class="md-key">TP</div><div class="md-name">True Positive</div></div>
+<div class="md-cell md-fn"><div class="md-val" id="d-fn">—</div><div class="md-key">FN</div><div class="md-name">False Negative</div></div>
+<div class="md-label side">Actual NO</div>
+<div class="md-cell md-fp"><div class="md-val" id="d-fp">—</div><div class="md-key">FP</div><div class="md-name">False Positive</div></div>
+<div class="md-cell md-tn"><div class="md-val" id="d-tn">—</div><div class="md-key">TN</div><div class="md-name">True Negative</div></div>
+</div>
+<div class="totals-strip" id="totals-strip"></div>
+<div class="challenge-section">
+<div class="challenge-title">Calculate these metrics — enter whole numbers (e.g. 83 for 83%)</div>
+<div class="metric-challenges" id="challenges-wrap"></div>
+</div>
+<div id="p2-feedback-wrap" style="display:none;">
+<div class="feedback-box" id="p2-feedback"></div>
+<button class="btn btn-primary btn-full" id="p2-next-btn" onclick="p2Next()">Next round →</button>
+</div>
+<div class="action-row" id="p2-submit-row">
+<button class="btn btn-primary" onclick="p2Submit()">Check my answers →</button>
+<button class="btn" onclick="p2ShowHints()">Formula hints</button>
+</div>
+<hr>
+<div class="tab-row">
+<button class="tab-btn active" onclick="p2Tab('p2-tab-scores')">Score</button>
+<button class="tab-btn" onclick="p2Tab('p2-tab-eq')">Equations</button>
+</div>
+<div id="p2-tab-scores">
+<div class="scoreboard">
+<div class="sb-card"><div class="sb-label">Score</div><div class="sb-val" id="sb-score">0</div></div>
+<div class="sb-card"><div class="sb-label">Correct</div><div class="sb-val" id="sb-correct">0</div></div>
+<div class="sb-card"><div class="sb-label">Streak</div><div class="sb-val" id="sb-streak">0</div></div>
+</div>
+</div>
+<div id="p2-tab-eq" style="display:none;">
+<div class="eq-box">
+<div class="eq-title">Formulas</div>
+<div class="eq-row"><span class="eq-name">Accuracy</span> <code>(TP+TN)/(TP+TN+FP+FN)</code></div>
+<div class="eq-row"><span class="eq-name">Precision</span> <code>TP/(TP+FP)</code></div>
+<div class="eq-row"><span class="eq-name">Recall</span> <code>TP/(TP+FN)</code></div>
+<div class="eq-row"><span class="eq-name">Specificity</span> <code>TN/(TN+FP)</code></div>
+<div class="eq-row"><span class="eq-name">F1 Score</span> <code>2×(P×R/(P+R))</code></div>
+</div>
+<div class="eq-box">
+<div class="eq-title">Worked Example — GFG Dog Classifier</div>
+<div style="font-size:13px; color:var(--muted); line-height:1.9;">
+TP=5, FP=1, TN=3, FN=1, Total=10<br>
+Accuracy = (5+3)/10 = <strong style="color:var(--text);">80%</strong><br>
+Precision = 5/(5+1) = <strong style="color:var(--text);">83%</strong><br>
+Recall = 5/(5+1) = <strong style="color:var(--text);">83%</strong><br>
+Specificity = 3/(3+1) = <strong style="color:var(--text);">75%</strong><br>
+F1 = 2×(0.833×0.833/(0.833+0.833)) ≈ <strong style="color:var(--text);">83%</strong>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+PHASE 2 — RESULTS
+═══════════════════════════════════════════════════════ -->
+<div class="view" id="view-p2-results">
+<div class="result-hero">
+<p class="badge badge-blue" style="margin-bottom:14px;">Phase 2 Complete</p>
+<div class="score-big" id="p2-r-score">0</div>
+<p class="result-label">points earned</p>
+</div>
+<div class="scoreboard" style="margin-bottom:16px;">
+<div class="sb-card"><div class="sb-label">Metrics Hit</div><div class="sb-val" id="p2-r-correct">0</div></div>
+<div class="sb-card"><div class="sb-label">Total Asked</div><div class="sb-val" id="p2-r-total">0</div></div>
+<div class="sb-card"><div class="sb-label">Hit Rate</div><div class="sb-val" id="p2-r-rate">0%</div></div>
+</div>
+<div class="result-breakdown" id="p2-r-breakdown"></div>
+<div class="insight-box"><div class="i-title">Performance Insight</div><p id="p2-r-insight">—</p></div>
+<div class="result-actions">
+<button class="btn btn-primary" onclick="p2Start()">Replay Phase 2</button>
+<button class="btn btn-pink" onclick="goPhase3(); p3Start()">Continue to Phase 3 →</button>
+<button class="btn btn-success" onclick="goHome()">Back to Home</button>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+PHASE 3 — HOW TO PLAY
+═══════════════════════════════════════════════════════ -->
+<div class="view" id="view-p3-howto">
+<div class="howto-header">
+<p class="p3-chip">Phase 3 — Bayes Theorem</p>
+<h1>Confusion Matrix<br>+ Bayes Theorem</h1>
+<p style="margin-top:12px;">Drag numbers from the matrix into real equations. Discover how confusion matrix values power Bayes Theorem.</p>
+</div>
+
+<div class="bayes-intro">
+<div class="bi-title">What Is Bayes Theorem?</div>
+<p>Bayes Theorem lets us update our belief about something based on new evidence. In machine learning, confusion matrices contain all the numbers we need to compute Bayesian probabilities.</p>
+<p>The classic formula: <strong style="color:var(--text); font-family:var(--font-mono); font-size:12px;">P(Disease | Positive Test) = P(Positive | Disease) × P(Disease) / P(Positive)</strong></p>
+<p>Every one of these probabilities can be read directly from a confusion matrix — and that's exactly what you'll do in Phase 3!</p>
+</div>
+
+<div class="section-label">How to Play</div>
+<div class="steps-grid">
+<div class="step-card"><div class="step-num" style="background: linear-gradient(135deg, #db2777, #8b5cf6);">1</div><h3>Read the scenario</h3><p>A real-world confusion matrix is shown. Study the TP, TN, FP, and FN counts.</p></div>
+<div class="step-card"><div class="step-num" style="background: linear-gradient(135deg, #db2777, #8b5cf6);">2</div><h3>Drag number tokens</h3><p>Numbers from the matrix appear as draggable tokens. Drop them into the blanks in each equation.</p></div>
+<div class="step-card"><div class="step-num" style="background: linear-gradient(135deg, #db2777, #8b5cf6);">3</div><h3>Solve step by step</h3><p>Fill in numerator and denominator for each equation. The game solves it and shows your answer.</p></div>
+<div class="step-card"><div class="step-num" style="background: linear-gradient(135deg, #db2777, #8b5cf6);">4</div><h3>Use hints</h3><p>Stuck? Hit "Show Hint" for a plain-English explanation of what each number means.</p></div>
+</div>
+
+<hr>
+<div class="eq-box">
+<div class="eq-title">Key Connections: Matrix → Bayes</div>
+<div class="eq-row"><span class="eq-name">Sensitivity (Recall)</span> <code>TP / (TP+FN) = P(+ Test | Has Disease)</code></div>
+<div class="eq-row"><span class="eq-name">Specificity</span> <code>TN / (TN+FP) = P(− Test | No Disease)</code></div>
+<div class="eq-row"><span class="eq-name">Prevalence</span> <code>(TP+FN) / Total = P(Disease)</code></div>
+<div class="eq-row"><span class="eq-name">PPV (Precision)</span> <code>TP / (TP+FP) = P(Disease | + Test)</code></div>
+<div class="eq-row"><span class="eq-name">NPV</span> <code>TN / (TN+FN) = P(No Disease | − Test)</code></div>
+</div>
+
+<button class="btn btn-pink btn-full" style="margin-top:8px;" onclick="p3Start()">Start Phase 3 →</button>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+PHASE 3 — GAME
+════════════════════════════════════════════════════════ -->
+<div class="view" id="view-p3-game">
+<div class="p3-header">
+<div class="progress-wrap">
+<span class="q-text" id="p3-q-counter">1 / 5</span>
+<div class="progress-bar" style="flex:1;">
+<div class="progress-fill" id="p3-prog" style="width:0%; background: linear-gradient(90deg, #db2777, #8b5cf6);"></div>
+</div>
+</div>
+<div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+<span class="badge badge-pink" id="p3-level-badge">LVL 1</span>
+<span class="badge badge-green" id="p3-score-badge">0 pts</span>
+</div>
+</div>
+
+<div class="p3-scenario">
+<div class="p3-topic" id="p3-topic">—</div>
+<div style="font-size:14px; color:var(--muted); line-height:1.7;" id="p3-context">—</div>
+</div>
+
+<!-- Mini confusion matrix display -->
+<div class="p3-matrix-display" id="p3-matrix-display">
+<div class="p3md-label"></div><div class="p3md-label">Pred YES</div><div class="p3md-label">Pred NO</div>
+<div class="p3md-label side">Act YES</div>
+<div class="p3md-cell p3md-tp"><div class="p3md-val" id="p3-d-tp">—</div><div class="p3md-key">TP</div></div>
+<div class="p3md-cell p3md-fn"><div class="p3md-val" id="p3-d-fn">—</div><div class="p3md-key">FN</div></div>
+<div class="p3md-label side">Act NO</div>
+<div class="p3md-cell p3md-fp"><div class="p3md-val" id="p3-d-fp">—</div><div class="p3md-key">FP</div></div>
+<div class="p3md-cell p3md-tn"><div class="p3md-val" id="p3-d-tn">—</div><div class="p3md-key">TN</div></div>
+</div>
+
+<!-- Number token bank -->
+<div class="number-bank">
+<div class="number-bank-title">Number Tokens <span>Drag these into the equation blanks below. Click a filled blank to return a token.</span></div>
+<div class="tokens-row" id="p3-tokens-row"></div>
+</div>
+
+<!-- Equation dot tracker -->
+<div class="p3-eq-tracker" id="p3-eq-tracker"></div>
+
+<!-- Equation builder area -->
+<div id="p3-eq-area"></div>
+
+<!-- Hint box -->
+<div class="p3-hint-box" id="p3-hint-box"></div>
+
+<!-- Solve / result panel -->
+<div class="p3-solve-panel" id="p3-solve-panel">
+<div class="p3-solve-title">Step-by-Step Solution</div>
+<div id="p3-steps-wrap"></div>
+</div>
+
+<!-- Action buttons -->
+<div class="action-row" id="p3-action-row" style="margin-top:14px;">
+<button class="btn btn-pink" onclick="p3CheckAnswers()">Check Answers →</button>
+<button class="btn" onclick="p3ShowHint()">Show Hint</button>
+</div>
+
+<div id="p3-next-wrap" style="display:none; margin-top:12px;">
+<button class="btn btn-pink btn-full" id="p3-next-btn" onclick="p3Next()">Next Scenario →</button>
+</div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+PHASE 3 — RESULTS
+═══════════════════════════════════════════════════════ -->
+<div class="view" id="view-p3-results">
+<div class="result-hero">
+<p class="badge badge-pink" style="margin-bottom:14px;">Phase 3 Complete!</p>
+<div class="score-big" id="p3-r-score" style="background: linear-gradient(135deg, #db2777, #8b5cf6); -webkit-background-clip: text; background-clip: text;">0</div>
+<p class="result-label">points earned</p>
+</div>
+<div class="p3-result-grid">
+<div class="sb-card"><div class="sb-label">Equations Hit</div><div class="sb-val" id="p3-r-correct">0</div></div>
+<div class="sb-card"><div class="sb-label">Total Equations</div><div class="sb-val" id="p3-r-total">0</div></div>
+<div class="sb-card"><div class="sb-label">Accuracy</div><div class="sb-val" id="p3-r-rate">0%</div></div>
+</div>
+<div class="insight-box" style="background: linear-gradient(135deg, rgba(219,39,119,0.04), rgba(139,92,246,0.04)); border-color: rgba(219,39,119,0.15);">
+<div class="i-title" style="color:#db2777;">Bayes Insight</div>
+<p id="p3-r-insight">—</p>
+</div>
+<div class="bayes-intro" style="margin-top:14px;">
+<div class="bi-title">What You Mastered</div>
+<p>You now understand that confusion matrix values aren't just numbers — they're probabilities waiting to be unlocked by Bayes Theorem. Every TP, FP, TN, FN maps directly to a conditional probability.</p>
+<p>Sensitivity = Recall = P(+ | Disease). Specificity = P(− | No Disease). PPV = Precision = P(Disease | +). These are the building blocks of real-world diagnostic reasoning.</p>
+</div>
+<div class="result-actions">
+<button class="btn btn-pink" onclick="p3Start()">Replay Phase 3</button>
+<button class="btn btn-primary" onclick="goPhase2(); p2Start()">Back to Phase 2</button>
+<button class="btn btn-success" onclick="goHome()">Home</button>
+</div>
+</div>
+
+</div><!-- /wrapper -->
+
+<script>
+/* ══════════════════ NAV ══════════════════ */
+function setNav(active) {
+['nav-home','nav-p1','nav-p2','nav-p3'].forEach(id => {
+document.getElementById(id).classList.remove('active','done');
+});
+document.getElementById(active).classList.add('active');
+if(active==='nav-p2'&&p1Done) document.getElementById('nav-p1').classList.add('done');
+if(active==='nav-p3') {
+if(p1Done) document.getElementById('nav-p1').classList.add('done');
+if(p2Done) document.getElementById('nav-p2').classList.add('done');
+}
+}
+function showView(id) {
+document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+window.scrollTo(0,0);
+}
+function goHome() { setNav('nav-home'); showView('view-landing'); }
+function goPhase1() { setNav('nav-p1'); showView('view-p1-howto'); }
+function goPhase2() { setNav('nav-p2'); showView('view-p2-howto'); }
+function goPhase3() { setNav('nav-p3'); showView('view-p3-howto'); }
+
+let p1Done=false, p2Done=false;
+
+/* ═══════════════════════════════════════
+PHASE 1 DATA & LOGIC
+══════════════════════════════════════════ */
+const P1_SCENARIOS = [
+{level:1,topic:"Medical Diagnosis",text:"A patient has the flu. A diagnostic AI also predicts the patient has the flu.",question:"The model detected a real condition. Which cell?",answer:"TP",explanation:"Actual = YES (has flu), Predicted = YES. True Positive — a correct detection."},
+{level:1,topic:"Email Spam Filter",text:"An email is ordinary work correspondence. The spam filter lets it through to the inbox.",question:"Nothing was flagged, and nothing needed to be. Which cell?",answer:"TN",explanation:"Actual = NO (not spam), Predicted = NO. True Negative — correctly ignoring a non-event."},
+{level:1,topic:"Pregnancy Test",text:"A person is not pregnant. The home pregnancy test returns a positive result.",question:"The test fired, but it was wrong. Which cell?",answer:"FP",explanation:"Actual = NO (not pregnant), Predicted = YES. False Positive — a false alarm."},
+{level:1,topic:"Smoke Detector",text:"There is a real fire in the kitchen. The smoke detector stays completely silent.",question:"There was real danger, but the system missed it. Which cell?",answer:"FN",explanation:"Actual = YES (fire), Predicted = NO (silent). False Negative — the most dangerous error in safety systems."},
+{level:2,topic:"COVID Rapid Test",text:"A person is infected with COVID-19. The rapid antigen test correctly detects the infection and returns positive.",question:"Infected = Actual YES. What is this outcome?",answer:"TP",explanation:"Actual = YES (COVID), Predicted = YES (positive). True Positive."},
+{level:2,topic:"Fraud Detection",text:"A transaction is completely legitimate. The bank's fraud model flags it as fraudulent and freezes the account.",question:"The model fired incorrectly on a safe transaction. Which cell?",answer:"FP",explanation:"Actual = NO (not fraud), Predicted = YES (flagged). False Positive — a false alarm."},
+{level:2,topic:"Cancer Screening",text:"A patient has early-stage cancer. The AI screening returns a negative result and sends the patient home.",question:"A real illness was present but not detected. Which cell?",answer:"FN",explanation:"Actual = YES (cancer), Predicted = NO (negative). False Negative."},
+{level:2,topic:"Self-Driving Car",text:"The road is clear with no pedestrians. The car's pedestrian detector correctly reports none.",question:"No threat existed, and the model agreed. Which cell?",answer:"TN",explanation:"Actual = NO (no pedestrian), Predicted = NO. True Negative."},
+{level:3,topic:"Airport Security",text:"A traveler is carrying prohibited items. The X-ray scanner flags this person for secondary screening.",question:"Prohibited items = Actual YES. Scanner predicted YES. Which cell?",answer:"TP",explanation:"Actual = YES, Predicted = YES. True Positive."},
+{level:3,topic:"Credit Risk Model",text:"A loan applicant will genuinely default on their loan. The model approves them as low-risk.",question:"Default = Actual YES. Model says low-risk = Predicted NO. Which cell?",answer:"FN",explanation:"Actual = YES (will default), Predicted = NO (approved). False Negative."},
+{level:3,topic:"Wildlife Camera Trap",text:"A camera flags a frame as containing a rare snow leopard. The frame actually shows a domestic cat.",question:"Snow leopard present = YES or NO? Model said yes. Which cell?",answer:"FP",explanation:"Actual = NO (no snow leopard), Predicted = YES. False Positive."},
+{level:3,topic:"Sepsis Alert System",text:"A patient in the ICU is developing sepsis. The hospital's AI does not trigger an alert.",question:"Sepsis present = Actual YES. Alert fired? No = Predicted NO. Which cell?",answer:"FN",explanation:"Actual = YES (sepsis), Predicted = NO (no alert). False Negative."},
+];
+
+let p1Shuffled=[],p1Idx=0,p1Score=0,p1Answered=false;
+let p1M={TP:0,TN:0,FP:0,FN:0};
+const P1_TOTAL=P1_SCENARIOS.length;
+
+function p1Start(){
+p1Idx=0;p1Score=0;p1Answered=false;p1M={TP:0,TN:0,FP:0,FN:0};
+p1Shuffled=[...P1_SCENARIOS].sort(()=>Math.random()-0.5);
+showView('view-p1-game');p1Tab('p1-tab-matrix');p1Load();
+}
+function p1Tab(id){
+['p1-tab-matrix','p1-tab-metrics','p1-tab-eq'].forEach(t=>{document.getElementById(t).style.display=t===id?'':'none';});
+document.querySelectorAll('#view-p1-game .tab-btn').forEach((btn,i)=>{btn.classList.toggle('active',['p1-tab-matrix','p1-tab-metrics','p1-tab-eq'][i]===id);});
+}
+function p1Load(){
+if(p1Idx>=P1_TOTAL){p1Results();return;}
+p1Answered=false;
+const q=p1Shuffled[p1Idx];
+document.getElementById('p1-q-counter').textContent=`${p1Idx+1} / ${P1_TOTAL}`;
+document.getElementById('p1-score-badge').textContent=`${p1Score} pts`;
+document.getElementById('p1-level-badge').textContent=`LVL ${q.level}`;
+document.getElementById('p1-prog').style.width=`${Math.round(p1Idx/P1_TOTAL*100)}%`;
+document.getElementById('p1-topic').textContent=q.topic;
+document.getElementById('p1-text').textContent=q.text;
+document.getElementById('p1-question').textContent=q.question;
+['TP','TN','FP','FN'].forEach(k=>{const el=document.getElementById('cell-'+k);el.className=`cell-btn`;el.disabled=false;});
+document.getElementById('p1-feedback-wrap').style.display='none';
+}
+function p1Select(chosen){
+if(p1Answered)return;p1Answered=true;
+const q=p1Shuffled[p1Idx];const correct=q.answer;const isCorrect=chosen===correct;
+p1M[correct]++;if(isCorrect)p1Score+=q.level*10;
+['TP','TN','FP','FN'].forEach(k=>{const el=document.getElementById('cell-'+k);el.disabled=true;if(k===correct)el.classList.add('state-correct-answer');if(k===chosen&&!isCorrect)el.classList.add('state-wrong-pick');});
+const fb=document.getElementById('p1-feedback');
+fb.className='feedback-box '+(isCorrect?'feedback-correct':'feedback-wrong');
+fb.innerHTML=(isCorrect?'<strong>Correct!</strong> ':`<strong>Not quite — the answer is ${correct}.</strong> `)+q.explanation;
+const isLast=p1Idx===P1_TOTAL-1;
+document.getElementById('p1-next-btn').textContent=isLast?'See results →':'Next question →';
+document.getElementById('p1-feedback-wrap').style.display='';
+p1UpdateLive();
+}
+function p1Next(){p1Idx++;p1Load();}
+function p1UpdateLive(){
+['TP','TN','FP','FN'].forEach(k=>{document.getElementById('lm-'+k).textContent=p1M[k];});
+const {TP,TN,FP,FN}=p1M,total=TP+TN+FP+FN;
+const acc=total>0?Math.round((TP+TN)/total*100):null;
+const prec=(TP+FP)>0?Math.round(TP/(TP+FP)*100):null;
+const rec=(TP+FN)>0?Math.round(TP/(TP+FN)*100):null;
+const f1=(prec!==null&&rec!==null&&(prec+rec)>0)?Math.round(2*prec*rec/(prec+rec)):null;
+const f=v=>v!==null?v+'%':'—';
+document.getElementById('m1-acc').textContent=f(acc);document.getElementById('m1-prec').textContent=f(prec);
+document.getElementById('m1-rec').textContent=f(rec);document.getElementById('m1-f1').textContent=f(f1);
+}
+function p1Results(){
+p1Done=true;document.getElementById('nav-p1').classList.add('done');
+showView('view-p1-results');
+const {TP,TN,FP,FN}=p1M,total=TP+TN+FP+FN;
+const acc=total>0?Math.round((TP+TN)/total*100):null;
+const prec=(TP+FP)>0?Math.round(TP/(TP+FP)*100):null;
+const rec=(TP+FN)>0?Math.round(TP/(TP+FN)*100):null;
+const f1=(prec!==null&&rec!==null&&(prec+rec)>0)?Math.round(2*prec*rec/(prec+rec)):null;
+const f=v=>v!==null?v+'%':'—';
+document.getElementById('p1-r-score').textContent=p1Score;
+document.getElementById('p1-r-acc').textContent=f(acc);document.getElementById('p1-r-prec').textContent=f(prec);
+document.getElementById('p1-r-rec').textContent=f(rec);document.getElementById('p1-r-f1').textContent=f(f1);
+['tp','tn','fp','fn'].forEach(k=>{document.getElementById('p1-r-'+k).textContent=p1M[k.toUpperCase()];});
+let insight='';
+if(FN>FP&&FN>2)insight=`You missed more real positives than you falsely flagged (${FN} FN vs ${FP} FP). Practice asking: "Was the true answer YES, but the model said NO?"`;
+else if(FP>FN&&FP>2)insight=`You triggered more false alarms than you missed (${FP} FP vs ${FN} FN). Practice asking: "Was the true answer NO, but the model fired anyway?"`;
+else if(p1Score>=P1_TOTAL*20)insight=`Outstanding! You correctly classified most scenarios across all three levels. Now test your metric calculation skills in Phase 2.`;
+else insight=`Balanced mix of error types. Keep revisiting the quick-reference and pay close attention to "Actual" vs "Predicted" in each scenario.`;
+document.getElementById('p1-r-insight').textContent=insight;
+}
+
+/* ═══════════════════════════════════════
+PHASE 2 DATA & LOGIC
+═════════════════════════════════════════ */
+const P2_SCENARIOS=[
+{level:1,topic:"Dog Image Classifier",context:"A computer vision model was tested on 10 images. This is the classic GeeksforGeeks foundational example.",tp:5,fp:1,tn:3,fn:1,metrics:['acc','prec'],insight:"Accuracy = (5+3)/10 = 80%. Precision = 5/(5+1) ≈ 83%."},
+{level:1,topic:"Email Spam Filter",context:"An email spam classifier evaluated on 50 emails.",tp:30,fp:5,tn:13,fn:2,metrics:['acc','rec'],insight:"Accuracy = 43/50 = 86%. Recall = 30/32 ≈ 94%."},
+{level:2,topic:"COVID-19 Rapid Test",context:"A rapid antigen test evaluated across 200 patients.",tp:85,fp:10,tn:92,fn:13,metrics:['acc','prec','rec'],insight:"Accuracy ≈ 89%. Precision = 85/95 ≈ 89%. Recall = 85/98 ≈ 87%."},
+{level:2,topic:"Credit Card Fraud Detection",context:"A bank's fraud detection model evaluated over 1,000 recent transactions.",tp:40,fp:20,tn:930,fn:10,metrics:['acc','prec','spec'],insight:"Accuracy = 970/1000 = 97%. Precision = 40/60 ≈ 67%. Specificity = 930/950 ≈ 98%."},
+{level:2,topic:"Airport Security Scanner",context:"An AI-powered X-ray scanner tested on 500 bags.",tp:48,fp:22,tn:418,fn:12,metrics:['acc','rec','spec'],insight:"Accuracy = 466/500 = 93%. Recall = 48/60 = 80%. Specificity = 418/440 ≈ 95%."},
+{level:3,topic:"Breast Cancer Screening AI",context:"A radiology AI model tested on 400 mammogram scans.",tp:72,fp:18,tn:298,fn:12,metrics:['acc','prec','rec','f1'],insight:"Accuracy = 92.5%. Precision = 80%. Recall ≈ 86%. F1 ≈ 83%."},
+{level:3,topic:"Sepsis Alert System (ICU)",context:"A hospital ICU early-warning system for sepsis across 600 patient-days.",tp:55,fp:80,tn:440,fn:25,metrics:['acc','prec','rec','spec'],insight:"Accuracy ≈ 83%. Precision = 55/135 ≈ 41%. Recall = 55/80 ≈ 69%."},
+{level:3,topic:"Self-Driving Pedestrian Detector",context:"An autonomous vehicle's pedestrian detection evaluated across 2,000 video frames.",tp:310,fp:45,tn:1610,fn:35,metrics:['acc','prec','rec','spec','f1'],insight:"Accuracy = 96%. Precision ≈ 87%. Recall ≈ 90%. F1 ≈ 88%."},
+];
+const METRIC_DEF={
+acc:{name:'Accuracy',formula:'(TP+TN) / (TP+TN+FP+FN)',hint:'Add correct predictions (TP+TN) and divide by the total count.'},
+prec:{name:'Precision',formula:'TP / (TP+FP)',hint:'Of all predicted positives, how many are actually positive?'},
+rec:{name:'Recall',formula:'TP / (TP+FN)',hint:'Of all actual positives, how many did the model catch?'},
+spec:{name:'Specificity',formula:'TN / (TN+FP)',hint:'Of all actual negatives, how many did the model correctly reject?'},
+f1:{name:'F1 Score',formula:'2×Precision×Recall / (Precision+Recall)',hint:'First compute Precision and Recall, then apply the F1 formula.'},
+};
+function p2Metric(key,tp,fp,tn,fn){
+const total=tp+fp+tn+fn,p=(tp+fp)>0?tp/(tp+fp):0,r=(tp+fn)>0?tp/(tp+fn):0;
+switch(key){
+case 'acc':return total>0?(tp+tn)/total*100:0;
+case 'prec':return (tp+fp)>0?p*100:0;
+case 'rec':return (tp+fn)>0?r*100:0;
+case 'spec':return (tn+fp)>0?tn/(tn+fp)*100:0;
+case 'f1':return (p+r)>0?2*p*r/(p+r)*100:0;
+}return 0;
+}
+let p2Shuffled=[],p2Idx=0,p2Score=0,p2Correct=0,p2Total=0,p2Streak=0,p2Answered=false,p2RoundResults=[];
+function p2Start(){
+p2Idx=0;p2Score=0;p2Correct=0;p2Total=0;p2Streak=0;p2Answered=false;p2RoundResults=[];
+p2Shuffled=[...P2_SCENARIOS].sort(()=>Math.random()-0.5);
+showView('view-p2-game');p2Tab('p2-tab-scores');p2Load();
+}
+function p2Tab(id){
+['p2-tab-scores','p2-tab-eq'].forEach(t=>{document.getElementById(t).style.display=t===id?'':'none';});
+document.querySelectorAll('#view-p2-game .tab-btn').forEach((btn,i)=>{btn.classList.toggle('active',['p2-tab-scores','p2-tab-eq'][i]===id);});
+}
+function p2Load(){
+if(p2Idx>=p2Shuffled.length){p2Results();return;}
+p2Answered=false;const q=p2Shuffled[p2Idx];const total=q.tp+q.fp+q.tn+q.fn;
+document.getElementById('p2-q-counter').textContent=`${p2Idx+1} / ${p2Shuffled.length}`;
+document.getElementById('p2-score-badge').textContent=`${p2Score} pts`;
+document.getElementById('p2-correct-badge').textContent=`${p2Correct} correct`;
+document.getElementById('p2-level-badge').textContent=`LVL ${q.level}`;
+document.getElementById('p2-prog').style.width=`${Math.round(p2Idx/p2Shuffled.length*100)}%`;
+document.getElementById('p2-topic').textContent=q.topic;
+document.getElementById('p2-context').textContent=q.context;
+document.getElementById('d-tp').textContent=q.tp;document.getElementById('d-fn').textContent=q.fn;
+document.getElementById('d-fp').textContent=q.fp;document.getElementById('d-tn').textContent=q.tn;
+document.getElementById('totals-strip').innerHTML=`
+<div class="total-pill">Total: <span>${total}</span></div>
+<div class="total-pill">Actual YES: <span>${q.tp+q.fn}</span></div>
+<div class="total-pill">Actual NO: <span>${q.fp+q.tn}</span></div>
+<div class="total-pill">Pred YES: <span>${q.tp+q.fp}</span></div>
+<div class="total-pill">Pred NO: <span>${q.fn+q.tn}</span></div>`;
+const wrap=document.getElementById('challenges-wrap');wrap.innerHTML='';
+q.metrics.forEach(key=>{
+const def=METRIC_DEF[key];const card=document.createElement('div');
+card.className='mc-card';card.id=`mc-${key}`;
+card.innerHTML=`<div class="mc-header"><div><div class="mc-name">${def.name}</div><div class="mc-formula">${def.formula}</div></div><span class="mc-result-tag" id="tag-${key}"></span></div><div class="mc-input-row"><input type="number" class="mc-input" id="input-${key}" placeholder="??" min="0" max="100" onkeydown="if(event.key==='Enter')p2Submit()" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,3)"><span class="mc-pct">%</span></div><div class="mc-hint" id="hint-${key}">${def.hint}</div>`;
+wrap.appendChild(card);
+});
+document.getElementById('p2-feedback-wrap').style.display='none';
+document.getElementById('p2-submit-row').style.display='flex';
+setTimeout(()=>{const f=document.querySelector('.mc-input');if(f)f.focus();},100);
+}
+function p2ShowHints(){p2Shuffled[p2Idx].metrics.forEach(key=>{const h=document.getElementById('hint-'+key);if(h)h.classList.add('visible');});}
+function p2Submit(){
+if(p2Answered)return;p2Answered=true;
+const q=p2Shuffled[p2Idx];const TOLERANCE=1.5;
+let roundCorrect=0,roundTotal=q.metrics.length,roundMetrics=[];
+q.metrics.forEach(key=>{
+const input=document.getElementById('input-'+key);const card=document.getElementById('mc-'+key);
+const tag=document.getElementById('tag-'+key);const hint=document.getElementById('hint-'+key);
+const expected=p2Metric(key,q.tp,q.fp,q.tn,q.fn);
+const raw=input?input.value.trim():'';const got=raw===''?null:parseFloat(raw);
+let status=got===null?'skipped':Math.abs(got-expected)<=TOLERANCE?'correct':'wrong';
+if(input){input.disabled=true;if(status==='correct')input.classList.add('correct');else input.classList.add('wrong');}
+if(hint){hint.classList.add('visible');const expStr=Math.round(expected*10)/10;hint.textContent=status==='correct'?`Correct! The answer is ${expStr}%.`:`The correct answer is ${expStr}%. ${METRIC_DEF[key].hint}`;hint.classList.add(status==='correct'?'correct-hint':'wrong-hint');}
+card.classList.add(status==='correct'?'answered-correct':status==='skipped'?'answered-skipped':'answered-wrong');
+tag.textContent=status==='correct'?'CORRECT':status==='skipped'?'SKIPPED':'WRONG';
+tag.className=`mc-result-tag visible ${status}`;
+if(status==='correct'){roundCorrect++;p2Correct++;}
+p2Total++;roundMetrics.push({name:METRIC_DEF[key].name,status,got:got!==null?got:'—',expected:Math.round(expected)});
+});
+const allCorrect=roundCorrect===roundTotal;
+p2Score+=roundCorrect*q.level*15+(allCorrect?q.level*20:0);
+p2Streak=allCorrect?p2Streak+1:0;p2RoundResults.push({topic:q.topic,metrics:roundMetrics});
+document.getElementById('sb-score').textContent=p2Score;document.getElementById('sb-correct').textContent=p2Correct;document.getElementById('sb-streak').textContent=p2Streak;
+document.getElementById('p2-score-badge').textContent=`${p2Score} pts`;document.getElementById('p2-correct-badge').textContent=`${p2Correct} correct`;
+const fb=document.getElementById('p2-feedback');const isLast=p2Idx===p2Shuffled.length-1;
+document.getElementById('p2-next-btn').textContent=isLast?'See final results →':'Next round →';
+fb.className='feedback-box '+(allCorrect?'feedback-correct':roundCorrect>0?'feedback-partial':'feedback-wrong');
+fb.innerHTML=(allCorrect?`<strong>Perfect round!</strong> `:`<strong>${roundCorrect} of ${roundTotal} correct.</strong> `)+q.insight;
+document.getElementById('p2-submit-row').style.display='none';document.getElementById('p2-feedback-wrap').style.display='';
+}
+function p2Next(){p2Idx++;p2Load();}
+function p2Results(){
+p2Done=true;document.getElementById('nav-p2').classList.add('done');showView('view-p2-results');
+const rate=p2Total>0?Math.round(p2Correct/p2Total*100):0;
+document.getElementById('p2-r-score').textContent=p2Score;document.getElementById('p2-r-correct').textContent=p2Correct;
+document.getElementById('p2-r-total').textContent=p2Total;document.getElementById('p2-r-rate').textContent=rate+'%';
+const bd=document.getElementById('p2-r-breakdown');bd.innerHTML='';
+p2RoundResults.forEach(r=>{
+const row=document.createElement('div');row.className='rb-row';
+const vals=r.metrics.map(m=>{const color=m.status==='correct'?'var(--green)':m.status==='skipped'?'var(--amber)':'var(--red)';return `<span style="color:${color}">${m.name}: ${m.got}% <span style="opacity:0.5;">(${m.expected}%)</span></span>`;}).join('');
+row.innerHTML=`<span class="rb-label">${r.topic}</span><div class="rb-vals">${vals}</div>`;bd.appendChild(row);
+});
+let insight='';
+if(rate>=85)insight=`Outstanding! ${rate}% correct. You're ready to interpret real model evaluation reports.`;
+else if(rate>=60)insight=`Good foundation — ${rate}% correct. The most common mistake is confusing Precision (TP÷(TP+FP)) with Recall (TP÷(TP+FN)).`;
+else insight=`Keep practicing! Get Accuracy and Recall solid first, then layer in Precision.`;
+document.getElementById('p2-r-insight').textContent=insight;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+PHASE 3 — CONFUSION MATRIX & BAYES THEOREM (DRAG & DROP)
+═══════════════════════════════════════════════════════════════ */
+
+/*
+Each scenario has:
+- topic, context: what the matrix represents
+- tp, fp, tn, fn: confusion matrix values
+- equations: array of equation objects to solve
+  Each equation:
+    - id: unique string
+    - label: display name (e.g. "Sensitivity (Recall)")
+    - bayesName: Bayes/probability name
+    - numeratorSlots: array of slot IDs (each slot holds one number)
+    - denominatorSlots: array of slot IDs
+    - correctNumeratorFn(q): returns correct numerator value
+    - correctDenominatorFn(q): returns correct denominator value
+    - hint: plain English hint
+    - explanation: full explanation shown after
+- level: 1-3
+*/
+
+const P3_SCENARIOS = [
+  {
+    level: 1,
+    topic: "Medical Screening — GFG Dog Classifier (Adapted)",
+    context: "A medical lab adapted the classic GeeksforGeeks confusion matrix example. 10 patients were tested. The 'positive' outcome means the test flagged a disease. Let's extract Bayesian probabilities from this matrix.",
+    tp: 5, fp: 1, tn: 3, fn: 1,
+    equations: [
+      {
+        id: 'sensitivity',
+        label: 'Sensitivity (Recall)',
+        bayesName: 'P(+ Test | Has Disease)',
+        slots: ['s_tp', 's_tp_fn'],
+        labels: ['TP', 'TP + FN'],
+        correctValues: (q) => [q.tp, q.tp + q.fn],
+        hint: 'Sensitivity asks: of everyone who ACTUALLY has the disease (Actual YES = TP + FN), how many did the test catch (TP)? Drag TP into the top slot, and (TP+FN) into the bottom.',
+        explanation: (q) => `Sensitivity = TP / (TP+FN) = ${q.tp} / ${q.tp+q.fn} = ${(q.tp/(q.tp+q.fn)*100).toFixed(1)}%. This is also called Recall or True Positive Rate. In Bayes terms: P(Positive Test | Has Disease).`
+      },
+      {
+        id: 'ppv',
+        label: 'PPV — Positive Predictive Value',
+        bayesName: 'P(Disease | + Test)',
+        slots: ['p_tp', 'p_tp_fp'],
+        labels: ['TP', 'TP + FP'],
+        correctValues: (q) => [q.tp, q.tp + q.fp],
+        hint: 'PPV (Precision) asks: of all the positive test results (TP + FP = Predicted YES), how many are real? Drag TP to the top, TP+FP to the bottom.',
+        explanation: (q) => `PPV = TP / (TP+FP) = ${q.tp} / ${q.tp+q.fp} = ${(q.tp/(q.tp+q.fp)*100).toFixed(1)}%. This is Precision. In Bayes terms: P(Disease | Positive Test) — how trustworthy is a positive result?`
+      }
+    ]
+  },
+  {
+    level: 1,
+    topic: "COVID-19 Rapid Testing",
+    context: "A health clinic tested 100 patients for COVID-19. Use the confusion matrix below to find key Bayesian probabilities that doctors use to interpret test results.",
+    tp: 40, fp: 10, tn: 45, fn: 5,
+    equations: [
+      {
+        id: 'sensitivity',
+        label: 'Sensitivity (Recall)',
+        bayesName: 'P(+ Test | Has COVID)',
+        slots: ['s_tp', 's_tp_fn'],
+        labels: ['TP', 'TP + FN'],
+        correctValues: (q) => [q.tp, q.tp + q.fn],
+        hint: 'Of all patients who actually have COVID (TP + FN), how many tested positive (TP)? TP goes on top, TP+FN on the bottom.',
+        explanation: (q) => `Sensitivity = ${q.tp} / ${q.tp+q.fn} = ${(q.tp/(q.tp+q.fn)*100).toFixed(1)}%. Doctors call this the True Positive Rate. A high value means the test rarely misses real cases.`
+      },
+      {
+        id: 'specificity',
+        label: 'Specificity',
+        bayesName: 'P(− Test | No COVID)',
+        slots: ['sp_tn', 'sp_tn_fp'],
+        labels: ['TN', 'TN + FP'],
+        correctValues: (q) => [q.tn, q.tn + q.fp],
+        hint: 'Specificity asks: of all people who do NOT have COVID (TN + FP), how many correctly got a negative test (TN)? TN on top, TN+FP on bottom.',
+        explanation: (q) => `Specificity = ${q.tn} / ${q.tn+q.fp} = ${(q.tn/(q.tn+q.fp)*100).toFixed(1)}%. In Bayes terms: P(Negative Test | No COVID). High specificity means few false alarms.`
+      }
+    ]
+  },
+  {
+    level: 2,
+    topic: "Cancer Screening Program",
+    context: "A radiology department screened 200 patients. Radiologists need to understand Sensitivity, Specificity, PPV, and NPV to counsel patients about what a positive or negative result truly means.",
+    tp: 70, fp: 20, tn: 100, fn: 10,
+    equations: [
+      {
+        id: 'sensitivity',
+        label: 'Sensitivity',
+        bayesName: 'P(+ Test | Has Cancer)',
+        slots: ['s_tp', 's_act_pos'],
+        labels: ['TP', 'TP + FN'],
+        correctValues: (q) => [q.tp, q.tp + q.fn],
+        hint: 'How many real cancer cases (TP+FN) did the scan correctly catch (TP)? Sensitivity = TP ÷ (TP+FN).',
+        explanation: (q) => `Sensitivity = ${q.tp}/${q.tp+q.fn} = ${(q.tp/(q.tp+q.fn)*100).toFixed(1)}%. Only ${q.fn} real cancer cases were missed. High sensitivity is critical — we want to catch every cancer.`
+      },
+      {
+        id: 'ppv',
+        label: 'PPV (Precision)',
+        bayesName: 'P(Cancer | + Test)',
+        slots: ['p_tp', 'p_pred_pos'],
+        labels: ['TP', 'TP + FP'],
+        correctValues: (q) => [q.tp, q.tp + q.fp],
+        hint: 'Of all scans that came back positive (TP+FP), how many actually had cancer (TP)? This is the Positive Predictive Value.',
+        explanation: (q) => `PPV = ${q.tp}/${q.tp+q.fp} = ${(q.tp/(q.tp+q.fp)*100).toFixed(1)}%. If a patient gets a positive result, there is a ${(q.tp/(q.tp+q.fp)*100).toFixed(1)}% chance they actually have cancer.`
+      },
+      {
+        id: 'npv',
+        label: 'NPV — Negative Predictive Value',
+        bayesName: 'P(No Cancer | − Test)',
+        slots: ['n_tn', 'n_pred_neg'],
+        labels: ['TN', 'TN + FN'],
+        correctValues: (q) => [q.tn, q.tn + q.fn],
+        hint: 'Of all patients who got a NEGATIVE scan result (TN+FN), how many truly have no cancer (TN)? TN on top, TN+FN on the bottom.',
+        explanation: (q) => `NPV = ${q.tn}/${q.tn+q.fn} = ${(q.tn/(q.tn+q.fn)*100).toFixed(1)}%. If a patient gets a negative result, there is a ${(q.tn/(q.tn+q.fn)*100).toFixed(1)}% chance they are truly cancer-free. This reassures patients.`
+      }
+    ]
+  },
+  {
+    level: 2,
+    topic: "Fraud Detection — Bayesian Risk Analysis",
+    context: "A bank analyzed 1,000 transactions. Fraud is rare (class imbalance). Bayesian analysis helps the bank understand what a fraud flag really means — and how often they're wrong.",
+    tp: 40, fp: 60, tn: 890, fn: 10,
+    equations: [
+      {
+        id: 'prevalence',
+        label: 'Prevalence (Prior Probability)',
+        bayesName: 'P(Fraud) — Base Rate',
+        slots: ['prev_num', 'prev_den'],
+        labels: ['TP + FN', 'Total'],
+        correctValues: (q) => [q.tp + q.fn, q.tp + q.fp + q.tn + q.fn],
+        hint: 'Prevalence = how common is fraud overall? It\'s the fraction of ALL cases that are truly fraudulent. Numerator = actual fraud cases (TP+FN). Denominator = all transactions.',
+        explanation: (q) => `Prevalence = ${q.tp+q.fn}/${q.tp+q.fp+q.tn+q.fn} = ${((q.tp+q.fn)/(q.tp+q.fp+q.tn+q.fn)*100).toFixed(1)}%. This is the prior probability P(Fraud) before seeing any test result. Only ${((q.tp+q.fn)/(q.tp+q.fp+q.tn+q.fn)*100).toFixed(1)}% of transactions are fraudulent.`
+      },
+      {
+        id: 'ppv',
+        label: 'PPV — When the Alert Fires',
+        bayesName: 'P(Fraud | Alert)',
+        slots: ['ppv_num', 'ppv_den'],
+        labels: ['TP', 'TP + FP'],
+        correctValues: (q) => [q.tp, q.tp + q.fp],
+        hint: 'Of all transactions flagged by the model (TP+FP), what fraction are truly fraud (TP)? This is what the bank investigator faces every time an alert fires.',
+        explanation: (q) => `PPV = ${q.tp}/${q.tp+q.fp} = ${(q.tp/(q.tp+q.fp)*100).toFixed(1)}%. Only ${(q.tp/(q.tp+q.fp)*100).toFixed(1)}% of fraud alerts are real! This is because fraud is rare. Low prevalence + moderate precision = many false alarms. This is Bayes in action.`
+      }
+    ]
+  },
+  {
+    level: 3,
+    topic: "Full Bayes Analysis — Disease Screening",
+    context: "A city-wide disease screening program tested 500 people. This final scenario connects everything: compute Sensitivity, Specificity, PPV, NPV, and Prevalence — the five pillars of Bayesian diagnostic reasoning.",
+    tp: 60, fp: 40, tn: 360, fn: 40,
+    equations: [
+      {
+        id: 'prevalence',
+        label: 'Prevalence P(Disease)',
+        bayesName: 'Prior Probability of Disease',
+        slots: ['pv_num', 'pv_den'],
+        labels: ['TP + FN', 'Total'],
+        correctValues: (q) => [q.tp + q.fn, q.tp + q.fp + q.tn + q.fn],
+        hint: 'Prevalence = (TP+FN) / Total. How common is the disease in this population? Drag TP+FN to the numerator and the Total to the denominator.',
+        explanation: (q) => `Prevalence = ${q.tp+q.fn}/${q.tp+q.fp+q.tn+q.fn} = ${((q.tp+q.fn)/(q.tp+q.fp+q.tn+q.fn)*100).toFixed(1)}%. This is the base rate P(Disease) before any test.`
+      },
+      {
+        id: 'sensitivity',
+        label: 'Sensitivity P(+ | Disease)',
+        bayesName: 'True Positive Rate',
+        slots: ['se_num', 'se_den'],
+        labels: ['TP', 'TP + FN'],
+        correctValues: (q) => [q.tp, q.tp + q.fn],
+        hint: 'Sensitivity = TP / (TP+FN). Of all sick people, what fraction tested positive?',
+        explanation: (q) => `Sensitivity = ${q.tp}/${q.tp+q.fn} = ${(q.tp/(q.tp+q.fn)*100).toFixed(1)}%. The test catches ${(q.tp/(q.tp+q.fn)*100).toFixed(1)}% of real cases.`
+      },
+      {
+        id: 'specificity',
+        label: 'Specificity P(− | No Disease)',
+        bayesName: 'True Negative Rate',
+        slots: ['sp_num', 'sp_den'],
+        labels: ['TN', 'TN + FP'],
+        correctValues: (q) => [q.tn, q.tn + q.fp],
+        hint: 'Specificity = TN / (TN+FP). Of all healthy people, what fraction correctly got a negative test?',
+        explanation: (q) => `Specificity = ${q.tn}/${q.tn+q.fp} = ${(q.tn/(q.tn+q.fp)*100).toFixed(1)}%. ${(q.tn/(q.tn+q.fp)*100).toFixed(1)}% of healthy people correctly test negative.`
+      },
+      {
+        id: 'ppv',
+        label: 'PPV P(Disease | +)',
+        bayesName: 'Positive Predictive Value',
+        slots: ['pp_num', 'pp_den'],
+        labels: ['TP', 'TP + FP'],
+        correctValues: (q) => [q.tp, q.tp + q.fp],
+        hint: 'PPV = TP / (TP+FP). If someone tests positive, what is the probability they truly have the disease?',
+        explanation: (q) => `PPV = ${q.tp}/${q.tp+q.fp} = ${(q.tp/(q.tp+q.fp)*100).toFixed(1)}%. A positive test means a ${(q.tp/(q.tp+q.fp)*100).toFixed(1)}% real chance of disease.`
+      },
+      {
+        id: 'npv',
+        label: 'NPV P(No Disease | −)',
+        bayesName: 'Negative Predictive Value',
+        slots: ['np_num', 'np_den'],
+        labels: ['TN', 'TN + FN'],
+        correctValues: (q) => [q.tn, q.tn + q.fn],
+        hint: 'NPV = TN / (TN+FN). If someone tests negative, how likely are they to truly be disease-free?',
+        explanation: (q) => `NPV = ${q.tn}/${q.tn+q.fn} = ${(q.tn/(q.tn+q.fn)*100).toFixed(1)}%. A negative test means a ${(q.tn/(q.tn+q.fn)*100).toFixed(1)}% chance the person is truly healthy.`
+      }
+    ]
+  }
+];
+
+/* ═══ P3 State ═══ */
+let p3Scenarios=[], p3Idx=0, p3Score=0, p3Correct=0, p3Total=0;
+let p3EqIdx=0; // which equation we're currently on
+let p3SlotValues={}; // slotId -> value placed
+let p3Checked=false;
+let p3EqResults=[]; // per-equation results for results page
+
+/* Current drag state */
+let p3DragValue=null, p3DragTokenEl=null;
+
+function p3Start() {
+  p3Idx=0; p3Score=0; p3Correct=0; p3Total=0; p3EqResults=[];
+  p3Scenarios=[...P3_SCENARIOS]; // no shuffle — keep pedagogical order
+  showView('view-p3-game');
+  p3LoadScenario();
+}
+
+function p3LoadScenario() {
+  if(p3Idx >= p3Scenarios.length) { p3Results(); return; }
+  p3EqIdx=0; p3Checked=false;
+  const q=p3Scenarios[p3Idx];
+
+  // Header
+  document.getElementById('p3-q-counter').textContent=`${p3Idx+1} / ${p3Scenarios.length}`;
+  document.getElementById('p3-score-badge').textContent=`${p3Score} pts`;
+  document.getElementById('p3-level-badge').textContent=`LVL ${q.level}`;
+  document.getElementById('p3-prog').style.width=`${Math.round(p3Idx/p3Scenarios.length*100)}%`;
+
+  // Scenario text
+  document.getElementById('p3-topic').textContent=q.topic;
+  document.getElementById('p3-context').textContent=q.context;
+
+  // Matrix display
+  document.getElementById('p3-d-tp').textContent=q.tp;
+  document.getElementById('p3-d-fp').textContent=q.fp;
+  document.getElementById('p3-d-tn').textContent=q.tn;
+  document.getElementById('p3-d-fn').textContent=q.fn;
+
+  // Build token bank — unique values from the matrix plus computed combos
+  const total=q.tp+q.fp+q.tn+q.fn;
+  const tokensNeeded=new Set();
+  q.equations.forEach(eq=>{
+    const vals=eq.correctValues(q);
+    vals.forEach(v=>tokensNeeded.add(v));
+  });
+  // Add some distractors
+  tokensNeeded.add(total);
+  tokensNeeded.add(q.tp); tokensNeeded.add(q.fp); tokensNeeded.add(q.tn); tokensNeeded.add(q.fn);
+  const tokenArr=[...tokensNeeded].sort((a,b)=>a-b);
+
+  const tokensRow=document.getElementById('p3-tokens-row');
+  tokensRow.innerHTML='';
+  tokenArr.forEach(v=>{
+    const tok=document.createElement('div');
+    tok.className='num-token';
+    tok.textContent=v;
+    tok.dataset.value=v;
+    tok.draggable=true;
+    tok.addEventListener('dragstart',p3TokenDragStart);
+    tok.addEventListener('dragend',p3TokenDragEnd);
+    // Touch events
+    tok.addEventListener('touchstart',p3TouchStart,{passive:true});
+    tok.addEventListener('touchmove',p3TouchMove,{passive:false});
+    tok.addEventListener('touchend',p3TouchEnd);
+    tokensRow.appendChild(tok);
+  });
+
+  // Equation dot tracker
+  const tracker=document.getElementById('p3-eq-tracker');
+  tracker.innerHTML='';
+  q.equations.forEach((eq,i)=>{
+    const dot=document.createElement('div');
+    dot.className='p3-eq-dot'+(i===0?' active':'');
+    dot.id=`p3-dot-${i}`;
+    tracker.appendChild(dot);
+  });
+
+  // Hide panels
+  document.getElementById('p3-hint-box').classList.remove('visible');
+  document.getElementById('p3-solve-panel').classList.remove('visible');
+  document.getElementById('p3-next-wrap').style.display='none';
+  document.getElementById('p3-action-row').style.display='flex';
+
+  // Build all equations
+  p3SlotValues={};
+  p3BuildAllEqs();
+}
+
+function p3BuildAllEqs() {
+  const q=p3Scenarios[p3Idx];
+  const area=document.getElementById('p3-eq-area');
+  area.innerHTML='';
+
+  q.equations.forEach((eq,i)=>{
+    const correctVals=eq.correctValues(q);
+    const numVal=correctVals[0];
+    const denVal=correctVals[1];
+    const resultPct=(numVal/denVal*100).toFixed(1);
+
+    const box=document.createElement('div');
+    box.className='eq-builder';
+    box.id=`eqbox-${i}`;
+
+    box.innerHTML=`
+      <div class="eq-builder-title">
+        <span style="font-weight:800; color:var(--text); font-family:var(--font-display); text-transform:none; letter-spacing:0; font-size:13px;">${eq.label}</span>
+        <span style="color:#db2777; font-size:10px; margin-left:8px; font-weight:600;">${eq.bayesName}</span>
+      </div>
+      <div class="eq-problem">
+        <div class="eq-line" id="eqline-${i}">
+          <div class="eq-line-label" style="font-size:11px; color:var(--muted); font-weight:500;">${eq.labels[0]} ÷ ${eq.labels[1]}</div>
+          <div class="drop-zone" id="dz-num-${i}" data-eq="${i}" data-slot="num">
+            <span class="dz-placeholder">numerator</span>
+          </div>
+          <span class="eq-sym op">÷</span>
+          <div class="drop-zone" id="dz-den-${i}" data-eq="${i}" data-slot="den">
+            <span class="dz-placeholder">denominator</span>
+          </div>
+          <span class="eq-sym">=</span>
+          <span class="eq-sym" id="eq-result-${i}" style="font-size:15px; font-weight:700; color:var(--subtle);">?</span>
+        </div>
+      </div>
+    `;
+    area.appendChild(box);
+
+    // Wire drop zones
+    ['num','den'].forEach(slot=>{
+      const dz=document.getElementById(`dz-${slot}-${i}`);
+      dz.addEventListener('dragover',p3DragOver);
+      dz.addEventListener('dragleave',p3DragLeave);
+      dz.addEventListener('drop',p3Drop);
+      dz.addEventListener('click',p3ClearSlot);
+    });
+  });
+}
+
+function p3UpdateResult(eqIdx) {
+  const numKey=`num-${eqIdx}`, denKey=`den-${eqIdx}`;
+  const num=p3SlotValues[numKey], den=p3SlotValues[denKey];
+  const resultEl=document.getElementById(`eq-result-${eqIdx}`);
+  if(num!==undefined && den!==undefined && den>0) {
+    resultEl.textContent=(num/den*100).toFixed(1)+'%';
+    resultEl.style.color='var(--text)';
+  } else {
+    resultEl.textContent='?';
+    resultEl.style.color='var(--subtle)';
+  }
+}
+
+/* ═══ Drag & Drop ═══ */
+function p3TokenDragStart(e) {
+  p3DragValue=parseFloat(this.dataset.value);
+  p3DragTokenEl=this;
+  this.classList.add('dragging');
+  e.dataTransfer.setData('text/plain', this.dataset.value);
+  e.dataTransfer.effectAllowed='copy';
+}
+function p3TokenDragEnd(e) {
+  if(p3DragTokenEl) p3DragTokenEl.classList.remove('dragging');
+  p3DragValue=null; p3DragTokenEl=null;
+}
+function p3DragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect='copy';
+  this.classList.add('drag-over');
+}
+function p3DragLeave(e) {
+  this.classList.remove('drag-over');
+}
+function p3Drop(e) {
+  e.preventDefault();
+  this.classList.remove('drag-over');
+  const val=parseFloat(e.dataTransfer.getData('text/plain'));
+  const eqIdx=parseInt(this.dataset.eq);
+  const slot=this.dataset.slot; // 'num' or 'den'
+  p3PlaceInSlot(this, eqIdx, slot, val);
+}
+function p3ClearSlot(e) {
+  if(!this.classList.contains('filled')) return;
+  const eqIdx=parseInt(this.dataset.eq);
+  const slot=this.dataset.slot;
+  const key=`${slot}-${eqIdx}`;
+  delete p3SlotValues[key];
+  this.classList.remove('filled','correct-zone','wrong-zone');
+  this.innerHTML='<span class="dz-placeholder">'+(slot==='num'?'numerator':'denominator')+'</span>';
+  p3UpdateResult(eqIdx);
+}
+function p3PlaceInSlot(dzEl, eqIdx, slot, val) {
+  const key=`${slot}-${eqIdx}`;
+  p3SlotValues[key]=val;
+  dzEl.classList.add('filled');
+  dzEl.classList.remove('drag-over','correct-zone','wrong-zone');
+  dzEl.innerHTML=`<span style="font-size:14px; font-weight:800;">${val}</span>`;
+  p3UpdateResult(eqIdx);
+}
+
+/* ═══ Touch Drag & Drop ═══ */
+let p3TouchToken=null, p3TouchGhost=null, p3TouchVal=null;
+function p3TouchStart(e) {
+  p3TouchToken=this;
+  p3TouchVal=parseFloat(this.dataset.value);
+  const ghost=document.createElement('div');
+  ghost.className='num-token pink-token';
+  ghost.textContent=this.dataset.value;
+  ghost.style.cssText='position:fixed; pointer-events:none; z-index:9999; opacity:0.85; transform:scale(1.15);';
+  document.body.appendChild(ghost);
+  p3TouchGhost=ghost;
+  const t=e.touches[0];
+  ghost.style.left=(t.clientX-28)+'px';
+  ghost.style.top=(t.clientY-22)+'px';
+}
+function p3TouchMove(e) {
+  e.preventDefault();
+  if(!p3TouchGhost) return;
+  const t=e.touches[0];
+  p3TouchGhost.style.left=(t.clientX-28)+'px';
+  p3TouchGhost.style.top=(t.clientY-22)+'px';
+  // highlight drop zones
+  document.querySelectorAll('.drop-zone').forEach(dz=>{
+    const r=dz.getBoundingClientRect();
+    if(t.clientX>=r.left&&t.clientX<=r.right&&t.clientY>=r.top&&t.clientY<=r.bottom) {
+      dz.classList.add('drag-over');
+    } else {
+      dz.classList.remove('drag-over');
+    }
+  });
+}
+function p3TouchEnd(e) {
+  if(p3TouchGhost) { p3TouchGhost.remove(); p3TouchGhost=null; }
+  if(!p3TouchToken) return;
+  const t=e.changedTouches[0];
+  document.querySelectorAll('.drop-zone').forEach(dz=>{
+    dz.classList.remove('drag-over');
+    const r=dz.getBoundingClientRect();
+    if(t.clientX>=r.left&&t.clientX<=r.right&&t.clientY>=r.top&&t.clientY<=r.bottom) {
+      const eqIdx=parseInt(dz.dataset.eq);
+      const slot=dz.dataset.slot;
+      p3PlaceInSlot(dz, eqIdx, slot, p3TouchVal);
+    }
+  });
+  p3TouchToken=null; p3TouchVal=null;
+}
+
+/* ═══ Check Answers ═══ */
+function p3CheckAnswers() {
+  const q=p3Scenarios[p3Idx];
+  let allFilled=true;
+  q.equations.forEach((eq,i)=>{
+    if(p3SlotValues[`num-${i}`]===undefined||p3SlotValues[`den-${i}`]===undefined) allFilled=false;
+  });
+  if(!allFilled) {
+    const hintBox=document.getElementById('p3-hint-box');
+    hintBox.innerHTML='<strong>Not quite done!</strong> Fill in all the blanks (numerator AND denominator for each equation) before checking.';
+    hintBox.classList.add('visible');
+    return;
+  }
+
+  p3Checked=true;
+  const solvePanel=document.getElementById('p3-solve-panel');
+  const stepsWrap=document.getElementById('p3-steps-wrap');
+  stepsWrap.innerHTML='';
+  let roundCorrect=0;
+
+  q.equations.forEach((eq,i)=>{
+    const correctVals=eq.correctValues(q);
+    const correctNum=correctVals[0], correctDen=correctVals[1];
+    const userNum=p3SlotValues[`num-${i}`], userDen=p3SlotValues[`den-${i}`];
+    const numOk=(userNum===correctNum), denOk=(userDen===correctDen);
+    const isCorrect=numOk&&denOk;
+
+    const numDZ=document.getElementById(`dz-num-${i}`);
+    const denDZ=document.getElementById(`dz-den-${i}`);
+    const line=document.getElementById(`eqline-${i}`);
+
+    if(numOk) numDZ.classList.add('correct-zone'); else numDZ.classList.add('wrong-zone');
+    if(denOk) denDZ.classList.add('correct-zone'); else denDZ.classList.add('wrong-zone');
+    if(isCorrect) { line.classList.add('solved'); roundCorrect++; p3Correct++; }
+
+    // Update dot
+    const dot=document.getElementById(`p3-dot-${i}`);
+    if(dot) dot.classList.add(isCorrect?'done':'active');
+
+    // Show solution result
+    const resultPct=(correctNum/correctDen*100).toFixed(1);
+    const resultEl=document.getElementById(`eq-result-${i}`);
+    if(resultEl) {
+      resultEl.textContent=resultPct+'%';
+      resultEl.style.color=isCorrect?'var(--green)':'var(--red)';
+    }
+
+    // Add solved badge
+    const box=document.getElementById(`eqbox-${i}`);
+    if(box) {
+      const badge=document.createElement('div');
+      badge.style.cssText='margin-top:8px; font-size:12px; font-weight:600;';
+      badge.className=isCorrect?'solved-answer':'solved-answer wrong-answer';
+      badge.textContent=isCorrect?`✓ Correct! ${correctNum} ÷ ${correctDen} = ${resultPct}%`:`✗ Expected ${correctNum} ÷ ${correctDen} = ${resultPct}%`;
+      box.appendChild(badge);
+    }
+
+    // Step explanation
+    const step=document.createElement('div');
+    step.className='p3-step';
+    step.innerHTML=`<strong>${eq.label}:</strong> ${eq.explanation(q)}`;
+    stepsWrap.appendChild(step);
+
+    p3Total++;
+    p3EqResults.push({label:eq.label, correct:isCorrect, resultPct});
+  });
+
+  const allCorrect=roundCorrect===q.equations.length;
+  p3Score+=roundCorrect*q.level*20+(allCorrect?q.level*30:0);
+  document.getElementById('p3-score-badge').textContent=`${p3Score} pts`;
+
+  solvePanel.classList.add('visible');
+  document.getElementById('p3-hint-box').classList.remove('visible');
+  document.getElementById('p3-action-row').style.display='none';
+
+  const nextWrap=document.getElementById('p3-next-wrap');
+  const nextBtn=document.getElementById('p3-next-btn');
+  const isLast=p3Idx===p3Scenarios.length-1;
+  nextBtn.textContent=isLast?'See Final Results →':'Next Scenario →';
+  nextWrap.style.display='';
+}
+
+function p3ShowHint() {
+  const q=p3Scenarios[p3Idx];
+  const hints=q.equations.map(eq=>eq.hint).join('<br><br>');
+  const hintBox=document.getElementById('p3-hint-box');
+  hintBox.innerHTML=hints;
+  hintBox.classList.add('visible');
+}
+
+function p3Next() {
+  p3Idx++;
+  p3LoadScenario();
+}
+
+function p3Results() {
+  showView('view-p3-results');
+  const rate=p3Total>0?Math.round(p3Correct/p3Total*100):0;
+  document.getElementById('p3-r-score').textContent=p3Score;
+  document.getElementById('p3-r-correct').textContent=p3Correct;
+  document.getElementById('p3-r-total').textContent=p3Total;
+  document.getElementById('p3-r-rate').textContent=rate+'%';
+  let insight='';
+  if(rate>=85) insight=`Excellent! You correctly built ${rate}% of all Bayesian equations from confusion matrix values. You now understand that every confusion matrix is a Bayesian probability machine — PPV, NPV, Sensitivity, and Specificity are all hidden inside TP, TN, FP, and FN.`;
+  else if(rate>=60) insight=`Good work — ${rate}% correct. The key insight: the numerator is always the cell you're measuring (TP or TN), and the denominator is the total of the relevant row or column. Review any equations you missed and think about what "given" means in P(A|B).`;
+  else insight=`Keep practicing! Remember: Sensitivity uses TP in the numerator and all ACTUAL positives (TP+FN) in the denominator. Specificity uses TN numerator and all ACTUAL negatives (TN+FP). PPV uses TP numerator and all PREDICTED positives (TP+FP). Write these out before trying again.`;
+  document.getElementById('p3-r-insight').textContent=insight;
+}
+</script>
+
+<footer class="game-credits">
+Created & Developed by: <span>Dori Simpson</span>, <span>Samuel Gonzales</span>, <span>Jessica Rivera</span> & <span>Christina Salas</span>
+</footer>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NVC Wildcats Feedback</title>
+
+  <style>
+    /* RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* BODY - DARK NEON BACKGROUND */
+    body {
+      background: radial-gradient(circle at top, #0a0a0f, #000);
+      color: #eaeaea;
+      line-height: 1.6;
+    }
+
+    /* CONTAINER */
+    .container {
+      width: 90%;
+      max-width: 900px;
+      margin: 40px auto;
+    }
+
+    /* TEXT CENTER */
+    .text-center {
+      text-align: center;
+    }
+
+    /* HEADER */
+    h1 {
+      font-size: 2.7rem;
+      color: #00f0ff;
+      text-shadow: 0 0 10px #b026ff, 0 0 20px #6a00ff;
+    }
+
+    p {
+      color: #00f0ff;
+      margin-top: 10px;
+    }
+
+    /* CARD - GLASS / NEON */
+    .card {
+      background: rgba(20, 20, 30, 0.85);
+      padding: 25px;
+      margin-top: 25px;
+      border-radius: 15px;
+      border: 1px solid rgba(176, 38, 255, 0.3);
+      box-shadow: 0 0 20px rgba(176, 38, 255, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    /* HEADINGS */
+    h2 {
+      margin-top: 20px;
+      color: #00f0ff;
+      text-shadow: 0 0 5px #b026ff;
+    }
+
+    h3 {
+      margin-top: 15px;
+      font-size: 1rem;
+      color: #ddd;
+    }
+
+    /* SPACING */
+    .mt-20 {
+      margin-top: 20px;
+    }
+
+    /* FORM ELEMENTS */
+    form label {
+      display: block;
+      margin-top: 10px;
+      color: #ccc;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #111;
+      color: #fff;
+      font-size: 0.95rem;
+      transition: 0.3s ease;
+    }
+
+    /* INPUT GLOW ON FOCUS */
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #b026ff;
+      box-shadow: 0 0 8px #b026ff;
+    }
+
+    /* RADIO BUTTONS */
+    input[type="radio"] {
+      margin-right: 8px;
+      accent-color: #b026ff;
+    }
+
+    /* TEXTAREA */
+    textarea {
+      resize: vertical;
+    }
+
+    /* BUTTON */
+    input[type="submit"] {
+      background: linear-gradient(45deg, #00ffea, #b026ff);
+      color: #0b0f1a;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: 0.3s ease;
+      box-shadow: 0 0 10px rgba(176, 38, 255, 0.6);
+    }
+
+    input[type="submit"]:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(176, 38, 255, 0.9);
+    }
+
+    /* FOOTER */
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      padding: 20px;
+      background: #000;
+      border-top: 1px solid #222;
+      color: #aaa;
+    }
+
+    footer .page-views {
+      font-weight: bold;
+      color: #00f0ff;
+    }
+
+    footer .copyright {
+      margin-top: 5px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- HERO / HEADER (matches homepage feel) -->
+    <section class="text-center">
+      <h1>NVC Wildcats Feedback</h1>
+      <p>Help us improve our website and club experience 🐾</p>
+    </section>
+
+    <!-- FEEDBACK FORM -->
+    <section class="card">
+      <form action="#" method="post">
+
+        <!-- Website Experience -->
+        <h2>Website Experience</h2>
+
+        <label>How easy is it to navigate the homepage?</label><br>
+        <label><input type="radio" name="navigation" value="very_easy"> Very Easy</label><br>
+        <label><input type="radio" name="navigation" value="easy"> Easy</label><br>
+        <label><input type="radio" name="navigation" value="neutral"> Neutral</label><br>
+        <label><input type="radio" name="navigation" value="hard"> Hard</label>
+
+        <h3 class="mt-20">How visually appealing is the homepage?</h3>
+        <select name="design">
+          <option value="">-- Select Rating --</option>
+          <option value="5">🔥 Excellent</option>
+          <option value="4">👍 Good</option>
+          <option value="3">😐 Average</option>
+          <option value="2">👎 Poor</option>
+          <option value="1">❌ Very Poor</option>
+        </select>
+
+        <h3 class="mt-20">What did you like most about the homepage?</h3>
+        <select name="liked">
+          <option value="">-- Choose one --</option>
+          <option value="design">Design / Theme</option>
+          <option value="content">Content / Information</option>
+          <option value="announcements">Announcements</option>
+          <option value="members">Featured Members</option>
+          <option value="other">Other</option>
+        </select>
+
+        <!-- CLUB EXPERIENCE -->
+        <h2 class="mt-20">Club Experience</h2>
+
+        <label>How satisfied are you with the Wildcats club overall?</label><br>
+        <label><input type="radio" name="satisfaction" value="very_satisfied"> Very Satisfied</label><br>
+        <label><input type="radio" name="satisfaction" value="satisfied"> Satisfied</label><br>
+        <label><input type="radio" name="satisfaction" value="neutral"> Neutral</label><br>
+        <label><input type="radio" name="satisfaction" value="unsatisfied"> Unsatisfied</label>
+
+        <h3 class="mt-20">Would you recommend the Wildcats club to others?</h3>
+        <label><input type="radio" name="recommend" value="yes"> Yes</label><br>
+        <label><input type="radio" name="recommend" value="maybe"> Maybe</label><br>
+        <label><input type="radio" name="recommend" value="no"> No</label>
+
+        <!-- IMPROVEMENTS -->
+        <h2 class="mt-20">Improvements</h2>
+
+        <h3>What would you like to see improved?</h3>
+        <select name="improve">
+          <option value="">-- Select an option --</option>
+          <option value="website">Website Layout</option>
+          <option value="events">Events</option>
+          <option value="communication">Communication</option>
+          <option value="activities">Club Activities</option>
+          <option value="other">Other</option>
+        </select>
+
+        <!-- TEXT BOX -->
+        <h3 class="mt-20">Additional Feedback</h3>
+        <textarea name="comments" rows="6" placeholder="Tell us anything else you'd like us to improve..."></textarea>
+
+        <!-- OPTIONAL INFO -->
+        <h3 class="mt-20">Your Info (Optional)</h3>
+        <input type="text" name="name" placeholder="Your Name">
+        <input type="email" name="email" placeholder="Your Email">
+
+        <!-- SUBMIT -->
+        <div class="text-center mt-20">
+          <input type="submit" value="Submit Feedback">
+        </div>
+
+      </form>
+    </section>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="page-views">
+      Wildcats AI and Cloud Technology Club Feedback
+    </div>
+
+    <div class="copyright">
+      © 2026 NVC Wildcats | Built for the Community 🐾
+    </div>
+  </footer>
+
+</body>
+</html>

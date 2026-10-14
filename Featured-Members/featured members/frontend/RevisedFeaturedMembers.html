@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Featured Members – Wildcats AI & Cloud Technology Club</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- AOS Animation Library -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="updatedfeaturedmemberspage.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div>
+            <div class="logo">Wildcats 'Willy' Club</div>
+            <div class="sub-logo">Built and Maintained by students of Northwest Vista College</div>
+        </div>
+        <ul>
+            <li><a href="https://www.nvcwildcats.com/index.html">Home</a></li>
+            <li><a href="https://www.nvcwildcats.com/index.html#about">About</a></li>
+            <li><a href="https://www.nvcwildcats.com/index.html#projects">Experience Our Club</a></li>
+            <li><a href="https://www.nvcwildcats.com/index.html#involved">Join & Feedback</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>Featured Members</h1>
+        <p class="hero-sub">Showcasing the talent driving our Cloud & AI Club forward.</p>
+    </section>
+
+    <!-- Members — loaded dynamically from DynamoDB via API Gateway -->
+    <section class="section" data-aos="fade-up">
+        <h2>Our Contributors</h2>
+        <div class="cards" id="members-container">
+            <p id="loading-msg" style="color:#94f0ff;">Loading members...</p>
+        </div>
+    </section>
+
+    <!-- Submit Section -->
+    <section class="section submit-section" data-aos="fade-up">
+        <h2>Want to Be Featured?</h2>
+        <p class="submit-description">
+            Club members can submit their info to be featured on this page.
+            All submissions are reviewed by the club president before going live.
+        </p>
+        <a href="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=qDo5EFWkyEubaPV3cSu28LfvayOh3IRChVyEz7UN1EtUNU9MTzRSNjdCNE9HVjNNVTZPWFNIQ0Y4Sy4u"
+           target="_blank" class="submit-btn">
+            <i class="fas fa-paper-plane"></i> Submit Yourself
+        </a>
+        <p class="submit-note">
+            <i class="fas fa-lock"></i> Requires your Alamo Colleges login — not open to the public.
+        </p>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        © 2026 Wildcats AI & Cloud Technology Club – Northwest Vista College
+    </footer>
+
+    <script>
+        AOS.init({ duration: 1000 });
+
+        // =============================================
+        // STEP 1: Replace this with your real API Gateway URL after AWS setup
+        // Example: https://abc123.execute-api.us-east-2.amazonaws.com
+        // =============================================
+        const API_URL = "https://YOUR_API_GATEWAY_URL";
+
+        async function loadMembers() {
+            try {
+                const res = await fetch(`${API_URL}/members`);
+                const members = await res.json();
+                const container = document.getElementById("members-container");
+                document.getElementById("loading-msg")?.remove();
+
+                if (members.length === 0) {
+                    container.innerHTML = `<p style="color:#94f0ff;">No featured members yet — be the first to submit!</p>`;
+                    return;
+                }
+
+                members.forEach((member, index) => {
+                    // Combine all contribution fields into one list
+                    const allContributions = [
+                        member.contributions,
+                        member["contribution 2"],
+                        member["contribution 3"],
+                        member["additional contributions"]
+                    ].filter(c => c && c.trim() !== "");
+
+                    const contributionItems = allContributions
+                        .map(c => `<li>${c.trim()}</li>`)
+                        .join("");
+
+                    const links = `
+                            ${member.linkedin ? `<a href="${member.linkedin}" target="_blank"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>` : ""}
+                            ${member.github ? `<a href="${member.github}"   target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>` : ""}
+                            ${member.website ? `<a href="${member.website}"  target="_blank"><i class="fa-solid fa-globe"></i> Website</a>` : ""}
+                        `.trim();
+
+                    const card = `
+                            <div class="card" data-aos="fade-up" data-aos-delay="${(index + 1) * 100}">
+                                <h3><i class="fas fa-user"></i> ${member.name}</h3>
+                                ${member.role ? `<p class="member-role">${member.role}</p>` : ""}
+                                <ul class="member-contributions">${contributionItems}</ul>
+                                ${member["any additional information"] ? `<p class="member-extra">${member["any additional information"]}</p>` : ""}
+                                ${links ? `<div class="member-links">${links}</div>` : ""}
+                            </div>
+                        `;
+                    container.insertAdjacentHTML("beforeend", card);
+                });
+
+                AOS.refresh();
+            } catch (err) {
+                console.error("Failed to load members:", err);
+                document.getElementById("loading-msg").textContent =
+                    "Failed to load members. Please try again later.";
+            }
+        }
+
+        loadMembers();
+    </script>
+
+</body>
+</html>

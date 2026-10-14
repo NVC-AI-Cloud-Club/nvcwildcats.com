@@ -1,0 +1,293 @@
+/* =============================================
+   NVC Wildcats — Featured Members Page CSS
+   Matches main site style guide
+   ============================================= */
+
+/* Reset & Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: #0b0f1a;
+    color: #f0f9ff;
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: #00f0ff;
+    transition: 0.3s;
+}
+
+    a:hover {
+        color: #7c3aed;
+    }
+
+ul {
+    list-style: none;
+}
+
+/* Nav */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background: #131a2b;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+    nav .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #00f0ff;
+    }
+
+    nav .sub-logo {
+        font-size: 0.8rem;
+        color: #94f0ff;
+        margin-top: 3px;
+    }
+
+    nav ul {
+        display: flex;
+    }
+
+        nav ul li {
+            margin-left: 30px;
+            font-weight: 500;
+        }
+
+            nav ul li a {
+                color: #00f0ff;
+            }
+
+                nav ul li a:hover {
+                    color: #7c3aed;
+                }
+
+/* Hero */
+.hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 120px 20px;
+    background: linear-gradient(-45deg, #131a2b, #0b0f1a, #00f0ff, #7c3aed);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+
+    .hero h1 {
+        color: #00f0ff;
+        font-size: 3.5rem;
+        margin-bottom: 20px;
+    }
+
+.hero-sub {
+    font-size: 1.2rem;
+    color: #f0f9ff;
+    max-width: 600px;
+}
+
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Section */
+.section {
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 20px;
+}
+
+    .section h2 {
+        font-size: 2.5rem;
+        margin-bottom: 40px;
+        color: #00f0ff;
+    }
+
+/* Cards */
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+.card {
+    background: #131a2b;
+    padding: 30px;
+    border-radius: 15px;
+    width: 300px;
+    transition: 0.3s;
+    cursor: pointer;
+    text-align: left;
+}
+
+    .card:hover {
+        transform: translateY(-10px) rotate(-1deg);
+        box-shadow: 0 15px 25px rgba(0, 255, 234, 0.5);
+    }
+
+    .card h3 {
+        font-size: 1.3rem;
+        margin-bottom: 8px;
+        color: #00f0ff;
+    }
+
+/* Member role */
+.member-role {
+    color: #00f0ff;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    font-style: italic;
+    opacity: 0.8;
+}
+
+/* Contribution List */
+.member-contributions {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px;
+    color: #f0f9ff;
+}
+
+    .member-contributions li {
+        margin-bottom: 8px;
+        padding-left: 16px;
+        position: relative;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+        .member-contributions li::before {
+            content: "\276F";
+            color: #00f0ff;
+            position: absolute;
+            left: 0;
+        }
+
+/* Extra info */
+.member-extra {
+    font-size: 0.85rem;
+    color: #94f0ff;
+    margin-bottom: 12px;
+    font-style: italic;
+}
+
+/* Member Links */
+.member-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 15px;
+    padding-top: 12px;
+    border-top: 1px solid #00f0ff33;
+}
+
+    .member-links a {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background-color: #0b0f1a;
+        color: #00f0ff;
+        border: 1px solid #00f0ff;
+        border-radius: 50px;
+        padding: 5px 12px;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+    }
+
+        .member-links a:hover {
+            background-color: #00f0ff;
+            color: #0b0f1a;
+        }
+
+/* Submit Section */
+.submit-section {
+    text-align: center;
+    border-top: 1px solid #00f0ff33;
+    padding-top: 60px;
+}
+
+.submit-description {
+    color: #94f0ff;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto 30px;
+    line-height: 1.8;
+}
+
+.submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #00f0ff;
+    color: #0b0f1a;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 15px 35px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+    .submit-btn:hover {
+        background-color: #7c3aed;
+        color: #f0f9ff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(0, 240, 255, 0.3);
+    }
+
+.submit-note {
+    margin-top: 15px;
+    font-size: 0.85rem;
+    color: #94f0ff;
+    opacity: 0.7;
+}
+
+/* Footer */
+footer {
+    background: #131a2b;
+    padding: 40px 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #94f0ff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cards {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    nav {
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+}

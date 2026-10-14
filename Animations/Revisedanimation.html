@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> <!-- Keep only one -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wildcats AI & Cloud Club - Vault</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- Base Styles --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', sans-serif; background: #0b0f1a; color: #f0f9ff; line-height: 1.6; overflow-x: hidden; }
+        a { text-decoration: none; color: #00f0ff; transition: 0.3s; }
+        ul { list-style: none; }
+
+        /* --- Navigation --- */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; background: rgba(19, 26, 43, 0.9); backdrop-filter: blur(5px); position: sticky; top: 0; z-index: 1000; }
+        nav .logo { font-size: 1.5rem; font-weight: 700; color: #00f0ff; }
+        nav ul { display: flex; }
+        nav ul li { margin-left: 30px; }
+
+        /* --- Hero Back ground image--- */
+	 .hero { 
+ 	 display: flex; 
+  	 flex-direction: column; 
+ 	 justify-content: center; 
+  	 align-items: center; 
+ 	 text-align: center; 
+  	 min-height: 45vh; /* keep as is or adjust if needed */
+  	 padding: 100px 20px; 
+ 	 background: linear-gradient(rgba(11, 15, 26, 0.6), rgba(11, 15, 26, 0.6)), 
+         url('photos/Willy.jpeg') no-repeat center center; 
+ 	 background-size: cover;
+ 	 background-position: top; /* <-- add this line */
+  	 border-bottom: 2px solid #7c3aed; 
+	}
+        .hero h1 { color: #00f0ff; font-size: clamp(2rem, 6vw, 3.5rem); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* --- History Grid --- */
+        .history-section { padding: 60px 20px; background: #131a2b; text-align: center; }
+        .history-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; max-width: 1200px; margin: 40px auto; }
+        .history-card { background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 12px; border-left: 4px solid #00f0ff; cursor: pointer; transition: 0.3s; text-align: left; height: 100%; }
+        .history-card:hover { transform: translateY(-10px); background: rgba(124, 58, 237, 0.1); border-left-color: #7c3aed; }
+        .device-thumb { width: 100%; height: 130px; object-fit: contain; margin-bottom: 15px; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; }
+        .history-card h4 { color: #00f0ff; margin-bottom: 8px; font-size: 1.2rem; }
+        .history-card p { font-size: 0.9rem; color: #cbd5e1; }
+
+        /* --- Video Vault --- */
+        .section { padding: 80px 20px; max-width: 1200px; margin: 0 auto; text-align: center; }
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
+        .card { background: rgba(19, 26, 43, 0.8); border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 15px; padding: 15px; transition: 0.3s; }
+        .card:hover { transform: scale(1.03); box-shadow: 0 10px 30px rgba(0, 240, 255, 0.2); }
+        .card video { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; background: #000; }
+        .card h3 { margin-top: 15px; color: #00f0ff; font-size: 1.1rem; }
+
+        /* --- Modal --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 15, 26, 0.95); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
+        .modal-content { background: #131a2b; border: 2px solid #00f0ff; border-radius: 20px; max-width: 700px; width: 100%; padding: 40px; position: relative; text-align: left; max-height: 90vh; overflow-y: auto; }
+        .modal-img { width: 100%; max-height: 300px; object-fit: contain; margin-bottom: 25px; border-radius: 10px; background: #000; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 2.5rem; color: #7c3aed; cursor: pointer; background: none; border: none; line-height: 1; }
+        .modal-badge { display: inline-block; padding: 6px 16px; background: #00f0ff; color: #0b0f1a; font-weight: bold; border-radius: 4px; margin-top: 20px; font-size: 0.75rem; text-transform: uppercase; }
+        .modal-content p { font-size: 1.05rem; line-height: 1.8; color: #e2e8f0; }
+        .modal-content h3 { margin-bottom: 15px; color: #00f0ff; font-size: 1.8rem; }
+
+        /* --- Willie Widget --- */
+        #willie-launcher { position: fixed; bottom: 30px; right: 30px; width: 70px; cursor: pointer; z-index: 1000; transition: 0.3s; }
+        #willie-launcher:hover { transform: scale(1.1) rotate(5deg); }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">Wildcats 'Willy' Club</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#vault">Vault</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <h1 data-aos="zoom-in">The Evolution of Digital Intelligence</h1>
+        <p>A journey through the history of AI in gaming and media.</p>
+    </header>
+
+<section class="history-section">
+    <h2 data-aos="fade-up">Evolution of AI</h2>
+    <div class="history-grid">
+        <div class="history-card" onclick="openModal('m80')" data-aos="fade-up">
+            <img src="Atari.png" alt="Atari 2600" class="device-thumb">
+            <h4>1980s: The Age of the Script</h4>
+            <p>A world of "If-Then" logic where the computer was a puppet on a string.</p>
+        </div>
+        <div class="history-card" onclick="openModal('m90')" data-aos="fade-up" data-aos-delay="100">
+            <img src="Quake1cover.jpg" alt="Quake" class="device-thumb">
+            <h4>1990s: Getting Clever with 3D</h4>
+            <p>Finite State Machines gave enemies a "state of mind" for the first time.</p>
+        </div>
+        <div class="history-card" onclick="openModal('m00')" data-aos="fade-up" data-aos-delay="200">
+            <img src="Netflix_prize.jpg" alt="Netflix Prize" class="device-thumb">
+            <h4>2000s: The Era of Suggestion</h4>
+            <p>AI became a personal curator, predicting behavior through big data.</p>
+        </div>
+        <div class="history-card" onclick="openModal('mToday')" data-aos="fade-up" data-aos-delay="300">
+            <img src="Dall-e_3_(jan_'24)_artificial_intelligence_icon.png" alt="Dall-e_3" class="device-thumb">
+            <h4>Today: The AI Brain</h4>
+            <p>Generative Intelligence.</p>
+        </div>
+    </div>
+</section>
+
+<main class="section" id="vault">
+    <h2 data-aos="fade-up">Featured AI Animations</h2>
+    
+    <div class="cards">
+        <article class="card" data-aos="fade-up">
+    <video muted loop playsinline class="dynamic-video">
+        <source src="https://s3.us-east-2.amazonaws.com/nvcwildcats.com/Animations/Welcome_to_NVC.mp4" type="video/mp4">
+    </video>
+    <h3>Welcome to NVC</h3>
+</article>
+        <article class="card" data-aos="fade-up" data-aos-delay="100">
+            <video muted loop playsinline class="dynamic-video"><source src="The Cloud Crew.mp4" type="video/mp4"></video>
+            <h3>The Cloud Crew</h3>
+        </article>
+        <article class="card" data-aos="fade-up" data-aos-delay="200">
+            <video muted loop playsinline class="dynamic-video"><source src="Digital Frontier.mp4" type="video/mp4"></video>
+            <h3>Digital Frontier</h3>
+        </article>
+        <article class="card" data-aos="fade-up" data-aos-delay="200">
+            <video muted loop playsinline class="dynamic-video"><source src="Cyber Defense.mp4" type="video/mp4"></video>
+            <h3>Cyber Defense</h3>
+        </article>
+    </div>
+</main>
+
+<div id="m80" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModals()">×</button>
+        <img src="Atari.png" class="modal-img" />
+        <h3>1980s: The Age of the Script</h3>
+        <p>In the 1980s, "Artificial Intelligence" was mostly an illusion created by clever math. Consoles like the <strong>Atari 2600</strong> had so little memory that enemies couldn't "think"—they followed rigid, hard-coded scripts.</p>
+        <a href="https://en.wikipedia.org/wiki/Atari_2600" target="_blank" class="modal-badge">Source: Wikipedia</a>
+    </div>
+</div>
+
+<div id="m90" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModals()">×</button>
+        <img src="Quake1cover.jpg" class="modal-img" />
+        <h3>1990s: Getting Clever with 3D</h3>
+        <p>Titles like <strong>Quake</strong> introduced Finite State Machines (FSM). For the first time, an enemy could have a "state of mind."</p>
+        <a href="https://en.wikipedia.org/wiki/Quake_(video_game)" target="_blank" class="modal-badge">Source: Wikipedia</a>
+    </div>
+</div>
+
+<div id="m00" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModals()">×</button>
+        <img src="Netflix_prize.jpg" class="modal-img" />
+        <h3>2000s: The Era of Suggestion</h3>
+        <p>The <strong>Netflix Prize</strong> proved that AI could understand human behavior better than humans could using Collaborative Filtering.</p>
+        <a href="https://en.wikipedia.org/wiki/Netflix_Prize" target="_blank" class="modal-badge">Source: Wikipedia</a>
+    </div>
+</div>
+
+<div id="mToday" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModals()">×</button>
+        <img src="Dall-e_3_(jan_'24)_artificial_intelligence_icon.png" class="modal-img" />
+        <h3>Today: The AI Brain</h3>
+        <p>Entered the age of <strong>Generative Intelligence</strong>.Deep learning is a type of machine learning that uses neural networks with many layers to recognize patterns, learn from data, and make decisions. In video games, deep learning is used to create more intelligent and realistic behaviors, such as advanced non-player characters (NPCs), adaptive difficulty, and realistic animations. It can also help generate game content, improve graphics (like upscaling or rendering), and personalize player experiences by learning how individuals play..</p>
+        <a href="https://en.wikipedia.org/wiki/Deep_learning" target="_blank" class="modal-badge">Source: Wikipedia</a>
+    </div>
+</div>
+
+<div id="willie-bubble" style="
+       position: fixed;
+       bottom: 30px;
+       right: 30px;
+       width: 80px;
+       height: 80px;
+       background: url('https://nvcwildcats-willie-chat-bubble.s3.us-east-1.amazonaws.com/NVC-Bublble.png') center/cover no-repeat;
+       border-radius: 50%;
+       box-shadow: 0 0 20px #7c3aed;
+       cursor: pointer;
+       z-index: 999999;
+       animation: pulse 2s infinite;
+     ">
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+    // Initialize AOS only after DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof AOS !== 'undefined') {
+            AOS.init({ 
+                duration: 1000,
+                once: true 
+            });
+        }
+    });
+
+    function openModal(id) { 
+        document.getElementById(id).style.display = 'flex'; 
+        document.body.style.overflow = 'hidden'; 
+    }
+
+    function closeModals() { 
+        document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); 
+        document.body.style.overflow = 'auto'; 
+    }
+
+    window.onclick = (e) => { 
+        if (e.target.classList.contains('modal-overlay')) closeModals(); 
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.play();
+            else entry.target.pause();
+        });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.dynamic-video').forEach(v => observer.observe(v));
+</script>
+<!-- Removed duplicate AOS script inclusion -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script> -->
+
+<footer style="text-align: center; padding: 40px 20px; background: #131a2b; border-top: 2px solid #7c3aed; width: 100%; clear: both;">
+    
+    <div style="margin-bottom: 20px;">
+        <div style="margin-bottom: 10px; font-weight: 700; font-size: 1.1rem; color: #00f0ff;">
+            👀 Total Page Views:
+        </div>
+        <a href="https://www.hitwebcounter.com/" target="_blank">
+            <img src="https://hitwebcounter.com/counter/counter.php?page=21479679&style=0010&nbdigits=5&type=page&initCount=0" 
+                 title="Wildcats Visitor Counter" 
+                 alt="Wildcats Visitor Counter" 
+                 style="border:none;" />
+        </a>
+    </div>
+    <p style="font-size: 0.9rem; color: #94f0ff; opacity: 0.8; margin: 0;">
+        © 2026 Wildcats AI & Cloud Technology Club – Northwest Vista College
+    </p>
+</footer>
+
+</body>
+</html>

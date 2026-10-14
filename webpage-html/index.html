@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NVC AI & Cloud Technology Club - NVC</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* --- Reset & Base --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Roboto', sans-serif;
+    background: #0b0f1a;
+    color: #f0f9ff;
+    line-height: 1.6;
+}
+a { text-decoration: none; color: #00f0ff; transition: 0.3s; }
+a:hover { color: #7c3aed; }
+ul { list-style: none; }
+img { max-width: 100%; }
+
+/* --- Navigation --- */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background: #131a2b;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+nav .logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #00f0ff;
+}
+nav .sub-logo {
+    font-size: 0.8rem;
+    color: #94f0ff;
+    margin-top: 3px;
+}
+nav ul { display: flex; }
+nav ul li { margin-left: 30px; font-weight: 500; }
+.menu-toggle {
+    display: none;
+    font-size: 1.8rem;
+    color: #00f0ff;
+    cursor: pointer;
+}
+
+/* --- Hero Section --- */
+.hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 120px 20px;
+    background: linear-gradient(-45deg,#131a2b,#0b0f1a,#00f0ff,#7c3aed);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+.hero h1 {
+    color: #00f0ff;
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* --- Unified Button Style --- */
+button {
+  background-color: #00ffea;
+  color: #0b0f1a;
+  border: none;
+  padding: 15px 35px;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  display: inline-block;
+  margin-top: 15px;
+}
+button:hover {
+  background-color: #3730a3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* --- General Sections --- */
+.section {
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 20px;
+}
+.section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    color: #00f0ff;
+}
+.section p {
+    line-height: 1.8;
+    margin-bottom: 30px;
+    font-size: 18px;
+}
+
+/* --- Cards --- */
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+.card {
+    background: #131a2b;
+    padding: 30px;
+    border-radius: 15px;
+    width: 300px;
+    transition: 0.3s;
+    cursor: pointer;
+}
+.card:hover {
+    transform: translateY(-10px) rotate(-1deg);
+    box-shadow: 0 15px 25px rgba(0,255,234,0.5);
+}
+.card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #00f0ff;
+}
+
+/* --- Bottom CTA --- */
+.cta-section {
+    background: #0b0f1a;
+    padding: 100px 20px;
+}
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.cta-block {
+  background: #131a2b;
+  padding: 25px 40px;
+  border-radius: 15px;
+  text-align: center;
+}
+
+/* --- Footer --- */
+footer {
+    background: #131a2b;
+    padding: 40px 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #94f0ff;
+}
+
+/* Responsive */
+@media(max-width:768px) {
+    .menu-toggle { display: block; }
+    nav ul { display: none; width: 100%; flex-direction: column; background: #131a2b; }
+    nav ul.active { display: flex; }
+    .hero h1 { font-size: 2.2rem; }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div>
+      <div class="logo">NVC Wildcats 'Willy' Club</div>
+      <div class="sub-logo">Built and Maintained by students of Northwest Vista College</div>
+    </div>
+    <div class="menu-toggle" id="mobile-menu"><i class="fas fa-bars"></i></div>
+    <ul id="nav-list">
+        <li><a href="#">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#projects">Experience Our Club</a></li>
+        <li><a href="#involved">Join & Feedback</a></li>
+    </ul>
+</nav>
+
+<section class="hero">
+<h1>NVC AI & Cloud Technology Club</h1>
+</section>
+
+<section class="section" id="about" data-aos="fade-up">
+  <h2>About Us</h2>
+  <p>The NVC AI & Cloud Technology Club empowers students to turn ideas into reality. Dive into cloud technologies, experiment with AI, and collaborate on hands-on projects.</p>
+  <div class="cards">
+    <div class="card"><h3><i class="fas fa-cloud"></i> Cloud Labs</h3><p>Build and deploy projects on AWS.</p></div>
+    <div class="card"><h3><i class="fas fa-robot"></i> AI Projects</h3><p>Create AI experiments to solve real problems.</p></div>
+    <div class="card"><h3><i class="fas fa-basketball-ball"></i> Sports Streaming</h3><p>Live stream Wildcats games.</p></div>
+  </div>
+</section>
+
+<section class="section" id="projects" data-aos="fade-up">
+  <h2>Experience Our Club</h2>
+  <div class="cards">
+    <div class="card">
+      <h3><i class="fas fa-users"></i> Featured Members</h3>
+      <p>Come see what our members have made!</p>
+      <button onclick="window.open('https://s3.us-east-2.amazonaws.com/nvcwildcats.com/Featured+members/RevisedFeaturedMembers.html')">View Members</button>
+    </div>
+
+    <div class="card">
+      <h3><i class="fas fa-gamepad"></i> Game Arcade</h3>
+      <p>Explore student-built games.</p>
+      <select id="gameSelect" style="padding:10px; border-radius:10px; margin-top:10px; width:100%; background:#0b0f1a; color:white; border:1px solid #00f0ff;">
+        <option value="">-- Choose a Game --</option>
+        <option value="https://s3.us-east-2.amazonaws.com/nvcwildcats.com/game-arcade.html/Orlando/blips_arcade_export/v2/tts.html">Blips Playground</option>
+        <option value="https://game.nvcwildcats.com/">Unity Player</option>
+        <option value="https://s3.us-east-2.amazonaws.com/nvcwildcats.com/game-arcade.html/Caroline-game/nvc-race+(2)/nvc-race/index.html">NVC Race</option>
+      </select>
+      <button onclick="launchGame()">Play</button>
+    </div>
+
+    <div class="card">
+      <h3><i class="fas fa-film"></i> Animations</h3>
+      <p>Watch AI-generated storytelling.</p>
+      <button onclick="window.open('https://s3.us-east-2.amazonaws.com/nvcwildcats.com/Animations/Revisedanimation.html')">Watch Now</button>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="involved" data-aos="zoom-in">
+    <div class="cta-block">
+      <h2 style="font-size: 20px; color: #00f0ff; margin-bottom: 10px;">Give Us Your Feedback</h2>
+      <button onclick="window.open('https://s3.us-east-2.amazonaws.com/nvcwildcats.com/feedbackindex.html')">Send Feedback</button>
+    </div>
+</section>
+
+<footer>
+    <div style="margin-bottom:15px; font-weight:700; color:#00f0ff;">👀 Total Page Views:</div>
+    <a href="https://www.hitwebcounter.com/" target="_blank">
+        <img src="https://hitwebcounter.com/counter/counter.php?page=21479679&style=0010&nbdigits=5&type=page&initCount=0" border="0" />
+    </a>
+    <p style="margin-top:20px;">© 2026 NVC AI & Cloud Technology Club</p>
+</footer>
+
+<script>
+    AOS.init({ duration: 1000 });
+
+    const menuToggle = document.getElementById('mobile-menu');
+    const navList = document.getElementById('nav-list');
+    menuToggle.onclick = () => navList.classList.toggle('active');
+
+    function launchGame() {
+        const url = document.getElementById("gameSelect").value;
+        if (!url) return alert("Please select a game!");
+        window.open(url, "_blank");
+    }
+</script>
+

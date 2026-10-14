@@ -1,0 +1,4600 @@
+body, html {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #4B2E83 0%, #C0C0C0 100%);
+    color: white;
+    min-height: 100vh;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+h1 {
+    color: white;
+    font-size: 3rem;
+    text-shadow: 0 0 20px rgba(75, 46, 131, 0.8);
+    margin-bottom: 30px;
+}
+
+/* Robot BLIP Character */
+.robot-container {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+    position: relative;
+    z-index: 130;
+}
+
+.robot-head {
+    position: relative;
+    z-index: 2;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle at 50% 20%, rgba(100, 118, 149, 0.26), rgba(44, 60, 80, 0.95) 48%),
+                linear-gradient(145deg, #2c3e50, #34495e);
+    background-blend-mode: overlay;
+    border-radius: 50%;
+    border: 4px solid #4B2E83;
+    box-shadow: 
+        0 0 30px rgba(75, 46, 131, 0.3),
+        inset 0 0 30px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.robot-head::before,
+.robot-head::after {
+    content: "";
+    position: absolute;
+    top: -15px;
+    width: 38px;
+    height: 42px;
+    background: linear-gradient(160deg, #3f2474, #4B2E83 55%, #5f438f);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    border-radius: 0;
+    filter: drop-shadow(0 0 8px rgba(75, 46, 131, 0.6));
+    background-image:
+        radial-gradient(circle at 45% 18%, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 45%),
+        radial-gradient(circle at 55% 18%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 42%),
+        linear-gradient(160deg, #3f2474, #4B2E83 55%, #5f438f);
+    background-size: 100% 100%, 100% 100%, 100% 100%;
+    background-repeat: no-repeat;
+}
+
+.robot-head::before {
+    left: 20px;
+    transform: rotate(-30deg);
+    box-shadow: inset -4px 4px 4px rgba(0,0,0,0.25), 0 0 10px rgba(75, 46, 131, 0.5);
+}
+
+.robot-head::after {
+    right: 20px;
+    transform: rotate(30deg);
+    box-shadow: inset 4px 4px 4px rgba(0,0,0,0.25), 0 0 10px rgba(75, 46, 131, 0.5);
+}
+
+/* Sleep/Shutdown State */
+.robot-head.sleeping {
+    background: linear-gradient(145deg, #1a252f, #2c3e50);
+    border: 4px solid #4B2E83;
+    box-shadow: 
+        0 0 10px rgba(0, 102, 204, 0.2),
+        inset 0 0 30px rgba(0, 0, 0, 0.5);
+    opacity: 0.7;
+}
+
+/* Wake-up Animation */
+.robot-head.waking {
+    animation: wakeUp 1.5s ease-out;
+}
+
+.robot-head:hover {
+    animation: wakeUp 0.8s ease-out;
+}
+
+.blip-instruction {
+    margin-top: 12px;
+    font-size: 1.1rem;
+    color: #ffff8f;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    letter-spacing: 0.03em;
+    font-weight: bold;
+    animation: blinkHint 2.4s ease-in-out infinite;
+}
+
+body.game-mode .blip-instruction {
+    display: none;
+}
+
+@keyframes blinkHint {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Horn */
+.horn {
+    display: none;
+    position: absolute;
+    top: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 80px;
+    background: linear-gradient(180deg, #E0E0E0, #A6A6A6);
+    border: 2px solid #C0C0C0;
+    border-radius: 6px;
+    box-shadow: 0 0 12px rgba(192, 192, 192, 0.7), inset 0 0 8px rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
+}
+
+.horn::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #FFFFFF, #D1D1D1);
+    border: 1px solid #BBBBBB;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+}
+
+.horn.sleeping {
+    background: linear-gradient(180deg, #B0B0B0, #8B8B8B);
+    box-shadow: 0 0 6px rgba(192, 192, 192, 0.5), inset 0 0 6px rgba(255, 255, 255, 0.4);
+    opacity: 0.8;
+}
+
+/* Eyes */
+.eye {
+    position: absolute;
+    top: 62px;
+    width: 34px;
+    height: 22px;
+    background: linear-gradient(145deg, #5e45ac, #4B2E83);
+    border-radius: 50% 50% 52% 52% / 55% 55% 45% 45%;
+    box-shadow: 0 0 12px rgba(75, 46, 131, 0.8);
+    transition: all 0.3s ease;
+}
+
+.eye::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 3px;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 16px;
+    background: #1a163d;
+    border-radius: 3px;
+    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.eye::after {
+    content: "";
+    position: absolute;
+    left: 54%;
+    top: 4px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+}
+
+.left-eye {
+    left: 40px;
+    transform: rotate(-8deg);
+}
+
+.right-eye {
+    right: 40px;
+    transform: rotate(8deg);
+}
+
+.eye.sleeping {
+    background: #0066cc;
+    box-shadow: 0 0 5px rgba(0, 102, 204, 0.4);
+    opacity: 0.5;
+    transform: scale(0.8);
+}
+
+.face-details {
+    position: absolute;
+    top: 63px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 110px;
+    height: 40px;
+    pointer-events: none;
+}
+
+.face-details .muzzle {
+    display: none;
+}
+
+
+/* Wake-up Animation Keyframes */
+@keyframes wakeUp {
+    0% {
+        background: linear-gradient(145deg, #1a252f, #2c3e50);
+        border: 4px solid #0066cc;
+        box-shadow: 
+            0 0 10px rgba(0, 102, 204, 0.2),
+            inset 0 0 30px rgba(0, 0, 0, 0.5);
+        opacity: 0.7;
+        transform: scale(0.95);
+    }
+    50% {
+        background: linear-gradient(145deg, #2c3e50, #34495e);
+        border: 4px solid #0099ff;
+        box-shadow: 
+            0 0 20px rgba(0, 153, 255, 0.4),
+            inset 0 0 30px rgba(0, 0, 0, 0.4);
+        opacity: 0.9;
+        transform: scale(1.02);
+    }
+    100% {
+        background: linear-gradient(145deg, #2c3e50, #34495e);
+        border: 4px solid #00d4ff;
+        box-shadow: 
+            0 0 30px rgba(0, 212, 255, 0.3),
+            inset 0 0 30px rgba(0, 0, 0, 0.3);
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Robot BLIP Character */
+.robot-head {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(145deg, #2c3e50, #34495e);
+    border-radius: 50%;
+    border: 4px solid #00d4ff;
+    box-shadow: 
+        0 0 30px rgba(0, 212, 255, 0.3),
+        inset 0 0 30px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.robot-head.speaking {
+    border: 4px solid #00d4ff;
+    box-shadow: 
+        0 0 50px rgba(0, 212, 255, 0.6),
+        0 0 100px rgba(0, 212, 255, 0.3),
+        inset 0 0 30px rgba(0, 212, 255, 0.2);
+    animation: headAura 0.8s ease-in-out infinite;
+}
+
+.robot-head.clicked {
+    transform: scale(1.1);
+    box-shadow: 
+        0 0 60px rgba(0, 212, 255, 0.8),
+        0 0 120px rgba(0, 212, 255, 0.4),
+        inset 0 0 40px rgba(0, 212, 255, 0.3);
+    transition: all 0.15s ease;
+}
+
+/* Horn */
+.horn {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 60px;
+    background: #00d4ff;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.horn.speaking {
+    background: linear-gradient(to bottom, #00d4ff, #0099cc);
+    box-shadow: 
+        0 0 25px rgba(0, 212, 255, 0.8),
+        0 0 50px rgba(0, 212, 255, 0.4);
+    animation: hornGlow 0.5s ease-in-out infinite;
+}
+
+/* Eyes */
+.eye {
+    position: absolute;
+    top: 60px;
+    width: 30px;
+    height: 30px;
+    background: #00d4ff;
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
+    transition: all 0.3s ease;
+}
+
+.left-eye {
+    left: 40px;
+}
+
+.right-eye {
+    right: 40px;
+}
+
+.eye.speaking {
+    background: #00d4ff;
+    box-shadow: 
+        0 0 20px rgba(0, 212, 255, 0.8),
+        0 0 40px rgba(0, 212, 255, 0.4);
+    animation: eyeBlink 0.3s ease-in-out infinite;
+}
+
+/* Mouth */
+.mouth {
+    position: absolute;
+    top: 37px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 15px;
+    background: linear-gradient(180deg, #ffb6c1, #d686b8);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    transition: all 0.3s ease;
+    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.35);
+}
+
+.mouth.speaking {
+    background: linear-gradient(180deg, #ffb6c1, #e0d7d7);
+    box-shadow: 0 0 8px rgba(203, 73, 113, 0.7);
+    animation: mouthTalk 0.2s ease-in-out infinite;
+}
+
+.whiskers {
+    position: absolute;
+    top: 42px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 68px;
+    height: 24px;
+    pointer-events: none;
+}
+
+.whiskers::before,
+.whiskers::after {
+    content: "";
+    position: absolute;
+    width: 36px;
+    height: 2px;
+    background: #ffffff;
+    border-radius: 1px;
+}
+
+.whiskers::before {
+    left: -40px;
+    top: 1px;
+    box-shadow: 0 6px #ffffff, 0 12px #ffffff;
+}
+
+.whiskers::after {
+    right: -40px;
+    top: 1px;
+    box-shadow: 0 6px #ffffff, 0 12px #ffffff;
+}
+
+/* Animations */
+@keyframes headAura {
+    0%, 100% { 
+        box-shadow: 
+            0 0 50px rgba(0, 212, 255, 0.6),
+            0 0 100px rgba(0, 212, 255, 0.3),
+            inset 0 0 30px rgba(0, 212, 255, 0.2);
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 
+            0 0 70px rgba(0, 212, 255, 0.8),
+            0 0 140px rgba(0, 212, 255, 0.4),
+            inset 0 0 40px rgba(0, 212, 255, 0.3);
+        transform: scale(1.05);
+    }
+}
+
+@keyframes hornGlow {
+    0%, 100% { 
+        box-shadow: 
+            0 0 25px rgba(0, 212, 255, 0.8),
+            0 0 50px rgba(0, 212, 255, 0.4);
+        transform: translateX(-50%) scale(1);
+    }
+    50% { 
+        box-shadow: 
+            0 0 40px rgba(0, 212, 255, 1),
+            0 0 80px rgba(0, 212, 255, 0.6);
+        transform: translateX(-50%) scale(1.15);
+    }
+}
+
+@keyframes eyeBlink {
+    0%, 90%, 100% { 
+        transform: scaleY(1);
+        background: #00d4ff;
+        box-shadow: 
+            0 0 20px rgba(0, 212, 255, 0.8),
+            0 0 40px rgba(0, 212, 255, 0.4);
+    }
+    95% { 
+        transform: scaleY(0.1);
+        background: #0099cc;
+        box-shadow: 
+            0 0 30px rgba(0, 153, 204, 0.9),
+            0 0 60px rgba(0, 153, 204, 0.5);
+    }
+}
+
+/* Click animation for robot head */
+.robot-head.clicked {
+    transform: scale(1.1);
+    box-shadow: 
+        0 0 60px rgba(0, 212, 255, 0.8),
+        0 0 120px rgba(0, 212, 255, 0.4),
+        inset 0 0 40px rgba(0, 212, 255, 0.3);
+    transition: all 0.15s ease;
+}
+
+body.bad-boy-mode .robot-head.clicked {
+    transform: scale(1.1);
+    box-shadow: 
+        0 0 60px rgba(255, 0, 0, 0.8),
+        0 0 120px rgba(255, 0, 0, 0.4),
+        inset 0 0 40px rgba(255, 0, 0, 0.3);
+    transition: all 0.15s ease;
+}
+
+/* Form Elements */
+textarea {
+    width: 400px;
+    height: 120px;
+    margin: 20px auto;
+    padding: 15px;
+    border: 2px solid #00d4ff;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 16px;
+    resize: vertical;
+    display: block;
+}
+
+textarea::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+button {
+    padding: 15px 30px;
+    background: linear-gradient(145deg, #4B2E83, #7F61A8);
+    color: white;
+    border: 2px solid #4B2E83;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(75, 46, 131, 0.35);
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: linear-gradient(145deg, #573A96, #A486C9);
+    box-shadow: 0 5px 20px rgba(117, 79, 166, 0.45);
+    transform: translateY(-2px);
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+/* Hide textbox/speech UI in normal mode; BLIP click now starts typing game */
+#textInput,
+.controls {
+    display: none;
+}
+
+body.game-mode .typing-wrapper,
+body.game-mode #textInput {
+    display: block !important;
+}
+
+.typing-wrapper {
+    position: absolute;
+    bottom: 110px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+}
+
+.typing-wrapper #textInput {
+    width: 260px;
+    max-width: 80vw;
+    height: 34px;
+    padding: 8px 10px;
+    font-size: 14px;
+    background-color: rgba(255,255,255,0.95);
+    border: 2px solid #4B2E83;
+    border-radius: 10px;
+    color: #222;
+    outline: none;
+}
+
+.typing-wrapper #textInput:focus {
+    border-color: #2E7D32;
+    box-shadow: 0 0 8px rgba(34, 139, 34, 0.35);
+}
+
+.stop-btn {
+    background: linear-gradient(145deg, #4B2E83, #7F61A8) !important;
+    border: 2px solid #4B2E83 !important;
+}
+
+.stop-btn:hover {
+    background: linear-gradient(145deg, #573A96, #A486C9) !important;
+    box-shadow: 0 5px 20px rgba(117, 79, 166, 0.4);
+}
+
+.speed-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.12);
+    padding: 10px 15px;
+    border-radius: 25px;
+    border: 2px solid #4B2E83;
+}
+
+.speed-control label {
+    color: #4B2E83;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.speed-control input[type="range"] {
+    width: 100px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.speed-control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #4B2E83;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(75, 46, 131, 0.6);
+}
+
+.speed-control input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: #4B2E83;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 10px rgba(75, 46, 131, 0.6);
+}
+
+#speedValue {
+    color: #4B2E83;
+    font-weight: bold;
+    font-size: 14px;
+    min-width: 40px;
+}
+
+/* Mode Control */
+.mode-control {
+    position: absolute;
+    bottom: 100px;
+    right: 32px;
+    z-index: 1000;
+}
+
+.arcade-menu {
+    position: relative;
+    width: min(420px, 86vw);
+    margin: 10px auto 0;
+    z-index: 220;
+    display: grid;
+    gap: 10px;
+}
+
+.minigames-scene {
+    position: fixed;
+    inset: 0;
+    z-index: 1500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 20%, rgba(0, 212, 255, 0.12), rgba(7, 12, 22, 0.95));
+}
+
+.minigames-panel {
+    width: min(860px, 92vw);
+    padding: 24px;
+    border: 1px solid rgba(124, 203, 255, 0.4);
+    border-radius: 18px;
+    background: linear-gradient(160deg, rgba(9, 18, 33, 0.96), rgba(4, 11, 22, 0.96));
+    box-shadow: 0 0 26px rgba(0, 212, 255, 0.2);
+}
+
+.minigames-panel h2 {
+    margin: 0 0 6px;
+    color: #dff7ff;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.minigames-subtitle {
+    margin: 0 0 16px;
+    color: #9fc2d8;
+    font-size: 0.95rem;
+}
+
+.minigame-card-list {
+    display: grid;
+    gap: 12px;
+}
+
+.minigame-card {
+    text-align: left;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(124, 203, 255, 0.32);
+    background: linear-gradient(155deg, rgba(14, 30, 49, 0.88), rgba(8, 20, 36, 0.88));
+}
+
+.minigame-card h3 {
+    margin: 0 0 8px;
+    color: #ebfbff;
+}
+
+.minigame-card p {
+    margin: 0 0 10px;
+    color: #b9d6e8;
+    font-size: 0.9rem;
+}
+
+.minigame-card.locked {
+    opacity: 0.58;
+    filter: grayscale(0.35);
+}
+
+.minigames-panel .return-btn {
+    margin-top: 16px;
+}
+
+.menu-btn {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(124, 203, 255, 0.45);
+    color: #e8f7ff;
+    background: linear-gradient(145deg, rgba(13, 29, 46, 0.9), rgba(7, 17, 30, 0.9));
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.82rem;
+    box-shadow: 0 0 14px rgba(0, 212, 255, 0.2);
+}
+
+.menu-btn.primary {
+    border-color: rgba(0, 212, 255, 0.7);
+    box-shadow: 0 0 16px rgba(0, 212, 255, 0.36), 0 0 24px rgba(161, 69, 255, 0.22);
+}
+
+.menu-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 18px rgba(0, 212, 255, 0.45), 0 0 28px rgba(161, 69, 255, 0.28);
+}
+
+
+
+.robot-container.portal-expanding {
+    animation: portalExpand 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes portalExpand {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(150);
+        opacity: 0.3;
+    }
+}
+
+@keyframes goalPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), inset 0 0 10px rgba(255, 255, 200, 0.6);
+    }
+    50% {
+        transform: scale(1.15);
+        box-shadow: 0 0 35px rgba(255, 215, 0, 1), inset 0 0 15px rgba(255, 255, 200, 0.8);
+    }
+}
+
+.platformer-scene {
+    position: fixed;
+    inset: 0;
+    z-index: 2400;
+    overflow: hidden;
+    background: linear-gradient(180deg, #162033 0%, #0f1626 55%, #0a101b 100%);
+}
+
+.platformer-parallax {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.platformer-parallax.back {
+    background:
+        radial-gradient(circle at 20% 30%, rgba(0, 212, 255, 0.16) 0%, transparent 45%),
+        radial-gradient(circle at 80% 20%, rgba(161, 69, 255, 0.16) 0%, transparent 48%);
+}
+
+.platformer-parallax.mid {
+    background:
+        linear-gradient(180deg, transparent 60%, rgba(3, 7, 13, 0.88) 100%),
+        repeating-linear-gradient(90deg, rgba(72, 110, 168, 0.08) 0 2px, transparent 2px 56px);
+}
+
+.platformer-world {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2600px;
+    height: 100%;
+}
+
+.platformer-platform {
+    position: absolute;
+    border-radius: 10px;
+    border: 1px solid rgba(130, 205, 255, 0.4);
+    background: linear-gradient(165deg, rgba(31, 58, 88, 0.95), rgba(13, 27, 43, 0.95));
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(212, 241, 255, 0.15);
+    transform: perspective(420px) rotateX(16deg);
+    transform-origin: center bottom;
+}
+
+.platformer-goal {
+    position: absolute;
+    width: 28px;
+    height: 70px;
+    border-radius: 6px;
+    border: 2px solid rgba(255, 247, 190, 0.95);
+    background: linear-gradient(180deg, rgba(255, 245, 180, 0.95), rgba(255, 193, 88, 0.94));
+    box-shadow: 0 0 16px rgba(255, 223, 140, 0.8);
+}
+
+.platformer-player {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(145deg, #2c3e50, #34495e);
+    border-radius: 50%;
+    border: 3px solid #00d4ff;
+    box-shadow: 
+        0 0 30px rgba(0, 212, 255, 0.3),
+        inset 0 0 30px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+}
+
+/* Left eye */
+.platformer-player .eye-left {
+    position: absolute;
+    top: 18px;
+    left: 10px;
+    width: 16px;
+    height: 12px;
+    background: linear-gradient(145deg, #5e45ac, #4B2E83);
+    border-radius: 50% 50% 52% 52% / 55% 55% 45% 45%;
+    box-shadow: 0 0 8px rgba(75, 46, 131, 0.8);
+}
+
+.platformer-player .eye-left::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 2px;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 7px;
+    background: #1a163d;
+    border-radius: 1.5px;
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.platformer-player .eye-left::after {
+    content: "";
+    position: absolute;
+    left: 55%;
+    top: 3px;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+/* Right eye */
+.platformer-player .eye-right {
+    position: absolute;
+    top: 18px;
+    right: 10px;
+    width: 16px;
+    height: 12px;
+    background: linear-gradient(145deg, #5e45ac, #4B2E83);
+    border-radius: 50% 50% 52% 52% / 55% 55% 45% 45%;
+    box-shadow: 0 0 8px rgba(75, 46, 131, 0.8);
+}
+
+.platformer-player .eye-right::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 2px;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 7px;
+    background: #1a163d;
+    border-radius: 1.5px;
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.platformer-player .eye-right::after {
+    content: "";
+    position: absolute;
+    left: 55%;
+    top: 3px;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 2px rgba(255, 255, 255, 0.8);
+}
+
+.platformer-ui {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 2500;
+    display: grid;
+    gap: 6px;
+    text-align: left;
+}
+
+.platformer-title {
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: #d6f3ff;
+}
+
+.platformer-tip {
+    font-size: 0.76rem;
+    color: #b8ddff;
+}
+
+#exitPlatformerBtn {
+    width: fit-content;
+    padding: 7px 12px;
+    font-size: 12px;
+    border-radius: 12px;
+}
+
+/* Home/Test button */
+.home-btn {
+    padding: 8px 14px;
+    font-size: 13px;
+    background: linear-gradient(145deg, #43a047, #66bb6a) !important;
+    border: 2px solid #2e7d32 !important;
+    color: #ffffff !important;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(67, 160, 71, 0.4);
+    transition: all 0.3s ease;
+}
+
+/* Mode switch button */
+.bad-boy-btn {
+    padding: 8px 14px;
+    font-size: 13px;
+    background: linear-gradient(145deg, #f44336, #d32f2f) !important;
+    border: 2px solid #b71c1c !important;
+    color: #ffffff !important;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(244, 67, 54, 0.4);
+    transition: all 0.3s ease;
+}
+
+.bad-boy-btn:hover {
+    background: linear-gradient(145deg, #e57373, #f44336) !important;
+    box-shadow: 0 5px 20px rgba(244, 67, 54, 0.4);
+}
+.home-btn:hover {
+    background: linear-gradient(145deg, #66bb6a, #43a047) !important;
+    box-shadow: 0 5px 20px rgba(67, 160, 71, 0.5);
+}
+
+.bad-boy-btn.active {
+    background: linear-gradient(145deg, #8e24aa, #7e57c2) !important;
+    border: 2px solid #6a1b9a !important;
+    box-shadow: 0 0 20px rgba(123, 31, 162, 0.6);
+}
+
+.bad-boy-btn.active:hover {
+    background: linear-gradient(145deg, #00d4ff, #0099cc) !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.8);
+    transform: translateY(-2px);
+}
+
+
+/* Bad Boy Mode Transformations */
+body.bad-boy-mode {
+    background: #0a0a0a;
+    color: #ff4444;
+    height: 100vh;
+    overflow: hidden;
+}
+
+body.bad-boy-mode h1 {
+    color: #e74c3c;
+    text-shadow: 0 0 20px rgba(231, 76, 60, 0.8);
+    animation: evilTitle 1s ease-in-out infinite;
+}
+
+body.bad-boy-mode .robot-head {
+    background: linear-gradient(145deg, #1a1a1a, #2c2c2c);
+    border: 4px solid #e74c3c;
+    box-shadow: 
+        0 0 30px rgba(231, 76, 60, 0.5),
+        inset 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+body.bad-boy-mode .horn {
+    background: linear-gradient(to bottom, #e74c3c, #8b0000);
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.8);
+}
+
+body.bad-boy-mode .eye {
+    background: #e74c3c;
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.8);
+}
+
+body.bad-boy-mode .robot-head.speaking {
+    border: 4px solid #ff0000;
+    box-shadow: 
+        0 0 50px rgba(255, 0, 0, 0.8),
+        0 0 100px rgba(255, 0, 0, 0.4),
+        inset 0 0 30px rgba(255, 0, 0, 0.3);
+    animation: evilHeadAura 0.6s ease-in-out infinite;
+}
+
+body.bad-boy-mode .horn.speaking {
+    background: linear-gradient(to bottom, #ff0000, #8b0000);
+    box-shadow: 
+        0 0 25px rgba(255, 0, 0, 1),
+        0 0 50px rgba(255, 0, 0, 0.6);
+    animation: evilHornGlow 0.4s ease-in-out infinite;
+}
+
+body.bad-boy-mode .eye.speaking {
+    background: #ff0000;
+    box-shadow: 
+        0 0 20px rgba(255, 0, 0, 1),
+        0 0 40px rgba(255, 0, 0, 0.6);
+    animation: evilEyeBlink 0.2s ease-in-out infinite;
+}
+
+body.bad-boy-mode textarea {
+    border: 2px solid #e74c3c;
+    background: rgba(0, 0, 0, 0.3);
+    color: #ffffff;
+}
+
+body.bad-boy-mode textarea::placeholder {
+    color: rgba(231, 76, 60, 0.7);
+}
+
+body.bad-boy-mode button:not(.bad-boy-btn) {
+    background: linear-gradient(145deg, #e74c3c, #c0392b);
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+}
+
+body.bad-boy-mode button:not(.bad-boy-btn):hover {
+    background: linear-gradient(145deg, #ff0000, #e74c3c);
+    box-shadow: 0 5px 20px rgba(255, 0, 0, 0.6);
+}
+
+body.bad-boy-mode .speed-control {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #e74c3c;
+}
+
+body.bad-boy-mode .speed-control label {
+    color: #e74c3c;
+}
+
+body.bad-boy-mode #speedValue {
+    color: #e74c3c;
+}
+
+/* Evil Animations */
+@keyframes evilTitle {
+    0%, 100% { 
+        text-shadow: 0 0 20px rgba(231, 76, 60, 0.8);
+        transform: scale(1);
+    }
+    50% { 
+        text-shadow: 0 0 30px rgba(255, 0, 0, 1);
+        transform: scale(1.05);
+    }
+}
+
+@keyframes evilHeadAura {
+    0%, 100% { 
+        box-shadow: 
+            0 0 50px rgba(255, 0, 0, 0.8),
+            0 0 100px rgba(255, 0, 0, 0.4),
+            inset 0 0 30px rgba(255, 0, 0, 0.3);
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 
+            0 0 80px rgba(255, 0, 0, 1),
+            0 0 160px rgba(255, 0, 0, 0.6),
+            inset 0 0 50px rgba(255, 0, 0, 0.5);
+        transform: scale(1.08);
+    }
+}
+
+@keyframes evilHornGlow {
+    0%, 100% { 
+        box-shadow: 
+            0 0 25px rgba(255, 0, 0, 1),
+            0 0 50px rgba(255, 0, 0, 0.6);
+        transform: translateX(-50%) scale(1);
+    }
+    50% { 
+        box-shadow: 
+            0 0 50px rgba(255, 0, 0, 1),
+            0 0 100px rgba(255, 0, 0, 0.8);
+        transform: translateX(-50%) scale(1.2);
+    }
+}
+
+@keyframes evilEyeBlink {
+    0%, 90%, 100% { 
+        transform: scaleY(1);
+        background: #ff0000;
+        box-shadow: 
+            0 0 20px rgba(255, 0, 0, 1),
+            0 0 40px rgba(255, 0, 0, 0.6);
+    }
+    95% { 
+        transform: scaleY(0.1);
+        background: #8b0000;
+        box-shadow: 
+            0 0 40px rgba(139, 0, 0, 1),
+            0 0 80px rgba(139, 0, 0, 0.8);
+    }
+}
+
+/* Good BLIP Background Decorations */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, #00d4ff, transparent),
+        radial-gradient(2px 2px at 40px 70px, #00d4ff, transparent),
+        radial-gradient(1px 1px at 90px 40px, #00d4ff, transparent),
+        radial-gradient(1px 1px at 130px 80px, #00d4ff, transparent),
+        radial-gradient(2px 2px at 160px 30px, #00d4ff, transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: goodStars 20s linear infinite;
+    opacity: 0.6;
+    z-index: -1;
+}
+
+/* Bad BLIP Background Decorations */
+body.bad-boy-mode::before {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 800px;
+    height: 800px;
+    background: 
+        radial-gradient(circle at center, transparent 0%, transparent 30%, rgba(0, 0, 0, 0.9) 70%, rgba(0, 0, 0, 1) 100%),
+        conic-gradient(
+            from 0deg,
+            rgba(0, 0, 0, 0.8),
+            rgba(139, 0, 0, 0.6),
+            rgba(255, 0, 0, 0.4),
+            rgba(231, 76, 60, 0.6),
+            rgba(139, 0, 0, 0.8),
+            rgba(0, 0, 0, 0.8)
+        );
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: evilVortex 6s linear infinite;
+    opacity: 0.95;
+    z-index: -1;
+    box-shadow: 
+        inset 0 0 100px rgba(0, 0, 0, 0.8),
+        0 0 50px rgba(0, 0, 0, 0.6);
+}
+
+body.bad-boy-mode::after {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 600px;
+    height: 600px;
+    background: 
+        radial-gradient(circle at center, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.95) 80%, rgba(0, 0, 0, 1) 100%),
+        conic-gradient(
+            from 180deg,
+            rgba(0, 0, 0, 0.9),
+            rgba(255, 0, 0, 0.5),
+            rgba(231, 76, 60, 0.7),
+            rgba(139, 0, 0, 0.9),
+            rgba(0, 0, 0, 0.9)
+        );
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: evilVortexInner 4s linear infinite reverse;
+    opacity: 0.9;
+    z-index: -1;
+    box-shadow: 
+        inset 0 0 80px rgba(0, 0, 0, 0.9),
+        0 0 40px rgba(0, 0, 0, 0.7);
+}
+
+/* Good BLIP Floating Shapes */
+body::after {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(45deg, transparent 30%, rgba(0, 212, 255, 0.3) 50%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: goodOrb 8s ease-in-out infinite;
+    opacity: 0.3;
+    z-index: -1;
+}
+
+body.bad-boy-mode::after {
+    background: linear-gradient(45deg, transparent 30%, rgba(231, 76, 60, 0.4) 50%, transparent 70%);
+    animation: evilOrb 6s ease-in-out infinite;
+}
+
+/* Good BLIP Animations */
+@keyframes goodStars {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-100px); }
+}
+
+@keyframes goodOrb {
+    0%, 100% { 
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        opacity: 0.3;
+    }
+    50% { 
+        transform: translate(-50%, -50%) scale(1.2) rotate(180deg);
+        opacity: 0.6;
+    }
+}
+
+/* Bad BLIP Vortex Animations */
+@keyframes evilVortex {
+    0% { 
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    }
+    50% { 
+        transform: translate(-50%, -50%) rotate(180deg) scale(1.1);
+    }
+    100% { 
+        transform: translate(-50%, -50%) rotate(360deg) scale(1);
+    }
+}
+
+@keyframes evilVortexInner {
+    0% { 
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    }
+    50% { 
+        transform: translate(-50%, -50%) rotate(-180deg) scale(0.9);
+    }
+    100% { 
+        transform: translate(-50%, -50%) rotate(-360deg) scale(1);
+    }
+}
+
+@keyframes evilOrb {
+    0%, 100% { 
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        opacity: 0.4;
+    }
+    50% { 
+        transform: translate(-50%, -50%) scale(1.3) rotate(-180deg);
+        opacity: 0.7;
+    }
+}
+
+/* Add a third vortex layer */
+body.bad-boy-mode .vortex-extra {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 1000px;
+    height: 1000px;
+    background: 
+        radial-gradient(circle at center, transparent 0%, transparent 20%, rgba(0, 0, 0, 0.8) 60%, rgba(0, 0, 0, 0.95) 100%),
+        conic-gradient(
+            from 90deg,
+            rgba(0, 0, 0, 0.7),
+            rgba(139, 0, 0, 0.3),
+            rgba(255, 0, 0, 0.4),
+            rgba(231, 76, 60, 0.5),
+            rgba(139, 0, 0, 0.3),
+            rgba(0, 0, 0, 0.7)
+        );
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: evilVortexOuter 8s linear infinite;
+    opacity: 0.85;
+    z-index: -2;
+    box-shadow: 
+        inset 0 0 120px rgba(0, 0, 0, 0.7),
+        0 0 60px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes evilVortexOuter {
+    0% { 
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    }
+    50% { 
+        transform: translate(-50%, -50%) rotate(90deg) scale(1.05);
+    }
+    100% { 
+        transform: translate(-50%, -50%) rotate(180deg) scale(1);
+    }
+}
+
+/* Remove Matrix styles */
+#matrix-container,
+.matrix-column,
+.matrix-column span {
+    display: none;
+}
+
+/* Particle Effects */
+.particles-container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    height: 250px;
+    pointer-events: none;
+    z-index: 6;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.particles-container.active {
+    opacity: 1;
+}
+
+/* Good BLIP Particles */
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #00d4ff;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(0, 212, 255, 0.8);
+    animation: particleFloat 3s ease-in-out infinite;
+}
+
+/* Position particles around BLIP's head (centered in the 300x300 container) */
+.particle:nth-child(1) { left: 50%; top: 15%; animation-delay: 0s; }
+.particle:nth-child(2) { left: 75%; top: 25%; animation-delay: 0.2s; }
+.particle:nth-child(3) { left: 85%; top: 50%; animation-delay: 0.4s; }
+.particle:nth-child(4) { left: 75%; top: 75%; animation-delay: 0.6s; }
+.particle:nth-child(5) { left: 50%; top: 85%; animation-delay: 0.8s; }
+.particle:nth-child(6) { left: 25%; top: 75%; animation-delay: 1s; }
+.particle:nth-child(7) { left: 15%; top: 50%; animation-delay: 1.2s; }
+.particle:nth-child(8) { left: 25%; top: 25%; animation-delay: 1.4s; }
+.particle:nth-child(9) { left: 35%; top: 20%; animation-delay: 1.6s; }
+.particle:nth-child(10) { left: 65%; top: 20%; animation-delay: 1.8s; }
+.particle:nth-child(11) { left: 80%; top: 35%; animation-delay: 2s; }
+.particle:nth-child(12) { left: 20%; top: 35%; animation-delay: 2.2s; }
+.particle:nth-child(13) { left: 45%; top: 35%; animation-delay: 0.1s; }
+.particle:nth-child(14) { left: 55%; top: 35%; animation-delay: 0.3s; }
+.particle:nth-child(15) { left: 40%; top: 45%; animation-delay: 0.5s; }
+.particle:nth-child(16) { left: 60%; top: 45%; animation-delay: 0.7s; }
+.particle:nth-child(17) { left: 50%; top: 55%; animation-delay: 0.9s; }
+.particle:nth-child(18) { left: 35%; top: 55%; animation-delay: 1.1s; }
+.particle:nth-child(19) { left: 65%; top: 55%; animation-delay: 1.3s; }
+.particle:nth-child(20) { left: 45%; top: 65%; animation-delay: 1.5s; }
+.particle:nth-child(21) { left: 55%; top: 65%; animation-delay: 1.7s; }
+.particle:nth-child(22) { left: 30%; top: 45%; animation-delay: 1.9s; }
+.particle:nth-child(23) { left: 70%; top: 45%; animation-delay: 2.1s; }
+.particle:nth-child(24) { left: 50%; top: 25%; animation-delay: 2.3s; }
+
+/* Bad Boy Mode Particles */
+body.bad-boy-mode .particle {
+    background: #e74c3c;
+    box-shadow: 0 0 12px rgba(231, 76, 60, 1);
+    animation: particleFloatEvil 3.5s ease-in-out infinite;
+}
+
+body.bad-boy-mode .particle:nth-child(1) { left: 50%; top: 15%; animation-delay: 0s; }
+body.bad-boy-mode .particle:nth-child(2) { left: 75%; top: 25%; animation-delay: 0.1s; }
+body.bad-boy-mode .particle:nth-child(3) { left: 85%; top: 50%; animation-delay: 0.2s; }
+body.bad-boy-mode .particle:nth-child(4) { left: 75%; top: 75%; animation-delay: 0.3s; }
+body.bad-boy-mode .particle:nth-child(5) { left: 50%; top: 85%; animation-delay: 0.4s; }
+body.bad-boy-mode .particle:nth-child(6) { left: 25%; top: 75%; animation-delay: 0.5s; }
+body.bad-boy-mode .particle:nth-child(7) { left: 15%; top: 50%; animation-delay: 0.6s; }
+body.bad-boy-mode .particle:nth-child(8) { left: 25%; top: 25%; animation-delay: 0.7s; }
+body.bad-boy-mode .particle:nth-child(9) { left: 35%; top: 20%; animation-delay: 0.8s; }
+body.bad-boy-mode .particle:nth-child(10) { left: 65%; top: 20%; animation-delay: 0.9s; }
+body.bad-boy-mode .particle:nth-child(11) { left: 80%; top: 35%; animation-delay: 1s; }
+body.bad-boy-mode .particle:nth-child(12) { left: 20%; top: 35%; animation-delay: 1.1s; }
+body.bad-boy-mode .particle:nth-child(13) { left: 45%; top: 35%; animation-delay: 0.05s; }
+body.bad-boy-mode .particle:nth-child(14) { left: 55%; top: 35%; animation-delay: 0.15s; }
+body.bad-boy-mode .particle:nth-child(15) { left: 40%; top: 45%; animation-delay: 0.25s; }
+body.bad-boy-mode .particle:nth-child(16) { left: 60%; top: 45%; animation-delay: 0.35s; }
+body.bad-boy-mode .particle:nth-child(17) { left: 50%; top: 55%; animation-delay: 0.45s; }
+body.bad-boy-mode .particle:nth-child(18) { left: 35%; top: 55%; animation-delay: 0.55s; }
+body.bad-boy-mode .particle:nth-child(19) { left: 65%; top: 55%; animation-delay: 0.65s; }
+body.bad-boy-mode .particle:nth-child(20) { left: 45%; top: 65%; animation-delay: 0.75s; }
+body.bad-boy-mode .particle:nth-child(21) { left: 55%; top: 65%; animation-delay: 0.85s; }
+body.bad-boy-mode .particle:nth-child(22) { left: 30%; top: 45%; animation-delay: 0.95s; }
+body.bad-boy-mode .particle:nth-child(23) { left: 70%; top: 45%; animation-delay: 1.05s; }
+body.bad-boy-mode .particle:nth-child(24) { left: 50%; top: 25%; animation-delay: 1.15s; }
+
+/* Particle Animations */
+@keyframes particleFloat {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.8;
+    }
+    25% {
+        transform: translate(10px, -15px) scale(1.2);
+        opacity: 1;
+    }
+    50% {
+        transform: translate(-5px, -25px) scale(0.8);
+        opacity: 0.6;
+    }
+    75% {
+        transform: translate(15px, -10px) scale(1.1);
+        opacity: 0.9;
+    }
+}
+
+@keyframes particleFloatEvil {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.8;
+    }
+    15% {
+        transform: translate(8px, -12px) scale(1.2);
+        opacity: 1;
+    }
+    30% {
+        transform: translate(-6px, -18px) scale(0.8);
+        opacity: 0.6;
+    }
+    45% {
+        transform: translate(12px, -8px) scale(1.3);
+        opacity: 0.9;
+    }
+    60% {
+        transform: translate(-4px, -22px) scale(0.7);
+        opacity: 0.5;
+    }
+    75% {
+        transform: translate(6px, -15px) scale(1.1);
+        opacity: 1;
+    }
+    90% {
+        transform: translate(-8px, -10px) scale(0.9);
+        opacity: 0.7;
+    }
+}
+
+@keyframes scanLines {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(4px); }
+}
+
+/* Glitch Effects for Bad BLIP */
+.glitch-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.1s ease;
+}
+
+.glitch-overlay.active {
+    opacity: 1;
+}
+
+/* Screen Flicker Effect */
+body.bad-boy-mode.speaking .glitch-overlay {
+    animation: screenFlicker 0.2s ease-in-out infinite;
+}
+
+/* Color Channel Split */
+body.bad-boy-mode.speaking .glitch-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        rgba(255, 0, 0, 0.1) 0%, 
+        transparent 50%, 
+        rgba(0, 0, 255, 0.1) 100%);
+    animation: colorSplit 0.3s ease-in-out infinite;
+}
+
+/* Screen Shake */
+body.bad-boy-mode.speaking {
+    animation: screenShake 0.1s ease-in-out infinite;
+}
+
+/* Digital Distortion */
+body.bad-boy-mode.speaking .glitch-overlay::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 0, 0, 0.1) 2px,
+        rgba(255, 0, 0, 0.1) 4px
+    );
+    animation: scanLines 0.15s linear infinite;
+}
+
+/* Glitch Animations */
+@keyframes screenFlicker {
+    0%, 100% { opacity: 0; }
+    10% { opacity: 0.3; }
+    20% { opacity: 0; }
+    30% { opacity: 0.5; }
+    40% { opacity: 0; }
+    50% { opacity: 0.2; }
+    60% { opacity: 0; }
+    70% { opacity: 0.4; }
+    80% { opacity: 0; }
+    90% { opacity: 0.1; }
+}
+
+@keyframes colorSplit {
+    0%, 100% { 
+        transform: translateX(0);
+        filter: hue-rotate(0deg);
+    }
+    25% { 
+        transform: translateX(-2px);
+        filter: hue-rotate(90deg);
+    }
+    50% { 
+        transform: translateX(2px);
+        filter: hue-rotate(180deg);
+    }
+    75% { 
+        transform: translateX(-1px);
+        filter: hue-rotate(270deg);
+    }
+}
+
+@keyframes screenShake {
+    0%, 100% { transform: translate(0, 0); }
+    10% { transform: translate(-1px, -1px); }
+    20% { transform: translate(1px, 1px); }
+    30% { transform: translate(-2px, 0); }
+    40% { transform: translate(2px, 0); }
+    50% { transform: translate(-1px, 1px); }
+    60% { transform: translate(1px, -1px); }
+    70% { transform: translate(-1px, 0); }
+    80% { transform: translate(1px, 0); }
+    90% { transform: translate(0, -1px); }
+}
+
+/* BLIP Character Glitch Effects */
+body.bad-boy-mode.speaking .robot-head {
+    animation: headFragmentation 0.3s ease-in-out infinite, positionJump 0.2s ease-in-out infinite;
+}
+
+body.bad-boy-mode.speaking .eye {
+    animation: eyeCorruption 0.15s ease-in-out infinite;
+}
+
+body.bad-boy-mode.speaking .horn {
+    animation: hornFragmentation 0.25s ease-in-out infinite;
+}
+
+/* Corruption Overlay on BLIP */
+body.bad-boy-mode.speaking .robot-head::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 0, 0, 0.3) 2px,
+            rgba(255, 0, 0, 0.3) 4px
+        ),
+        repeating-linear-gradient(
+            -45deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 255, 0.2) 2px,
+            rgba(0, 0, 255, 0.2) 4px
+        );
+    border-radius: 50%;
+    animation: corruptionOverlay 0.4s linear infinite;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Eye Corruption Animation */
+@keyframes eyeCorruption {
+    0%, 100% { 
+        background: #e74c3c;
+        box-shadow: 0 0 15px rgba(231, 76, 60, 0.8);
+        transform: scale(1);
+    }
+    10% { 
+        background: #00ff00;
+        box-shadow: 0 0 20px rgba(0, 255, 0, 1);
+        transform: scale(1.2);
+    }
+    20% { 
+        background: #ff00ff;
+        box-shadow: 0 0 25px rgba(255, 0, 255, 1);
+        transform: scale(0.8);
+    }
+    30% { 
+        background: #ffff00;
+        box-shadow: 0 0 30px rgba(255, 255, 0, 1);
+        transform: scale(1.5);
+    }
+    40% { 
+        background: #00ffff;
+        box-shadow: 0 0 15px rgba(0, 255, 255, 1);
+        transform: scale(0.5);
+    }
+    50% { 
+        background: #ff0000;
+        box-shadow: 0 0 35px rgba(255, 0, 0, 1);
+        transform: scale(1.3);
+    }
+    60% { 
+        background: #0000ff;
+        box-shadow: 0 0 10px rgba(0, 0, 255, 1);
+        transform: scale(0.7);
+    }
+    70% { 
+        background: #ffffff;
+        box-shadow: 0 0 40px rgba(255, 255, 255, 1);
+        transform: scale(1.1);
+    }
+    80% { 
+        background: #000000;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 1);
+        transform: scale(0.9);
+    }
+    90% { 
+        background: #e74c3c;
+        box-shadow: 0 0 15px rgba(231, 76, 60, 0.8);
+        transform: scale(1);
+    }
+}
+
+/* Body Fragmentation Animation */
+@keyframes headFragmentation {
+    0%, 100% { 
+        clip-path: circle(50% at 50% 50%);
+        transform: scale(1);
+    }
+    10% { 
+        clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);
+        transform: scale(1.1);
+    }
+    20% { 
+        clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+        transform: scale(0.9);
+    }
+    30% { 
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        transform: scale(1.2);
+    }
+    40% { 
+        clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+        transform: scale(0.8);
+    }
+    50% { 
+        clip-path: circle(30% at 70% 30%);
+        transform: scale(1.3);
+    }
+    60% { 
+        clip-path: polygon(0% 0%, 50% 0%, 100% 50%, 50% 100%, 0% 100%);
+        transform: scale(0.7);
+    }
+    70% { 
+        clip-path: polygon(20% 20%, 80% 20%, 80% 80%, 20% 80%);
+        transform: scale(1.1);
+    }
+    80% { 
+        clip-path: circle(60% at 30% 70%);
+        transform: scale(0.9);
+    }
+    90% { 
+        clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+        transform: scale(1);
+    }
+}
+
+/* Horn Fragmentation */
+@keyframes hornFragmentation {
+    0%, 100% { 
+        clip-path: polygon(50% 0%, 60% 100%, 40% 100%);
+        transform: translateX(-50%) scale(1);
+    }
+    15% { 
+        clip-path: polygon(30% 0%, 70% 0%, 80% 100%, 20% 100%);
+        transform: translateX(-50%) scale(1.2);
+    }
+    30% { 
+        clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+        transform: translateX(-50%) scale(0.8);
+    }
+    45% { 
+        clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+        transform: translateX(-50%) scale(1.3);
+    }
+    60% { 
+        clip-path: polygon(50% 0%, 60% 100%, 40% 100%);
+        transform: translateX(-50%) scale(0.7);
+    }
+    75% { 
+        clip-path: polygon(0% 0%, 50% 0%, 100% 50%, 50% 100%, 0% 100%);
+        transform: translateX(-50%) scale(1.1);
+    }
+    90% { 
+        clip-path: polygon(50% 0%, 60% 100%, 40% 100%);
+        transform: translateX(-50%) scale(0.9);
+    }
+}
+
+/* Position Jump Animation */
+@keyframes positionJump {
+    0%, 100% { 
+        transform: translate(0, 0);
+    }
+    10% { 
+        transform: translate(-3px, -2px);
+    }
+    20% { 
+        transform: translate(4px, 1px);
+    }
+    30% { 
+        transform: translate(-2px, 3px);
+    }
+    40% { 
+        transform: translate(5px, -1px);
+    }
+    50% { 
+        transform: translate(-1px, -3px);
+    }
+    60% { 
+        transform: translate(3px, 2px);
+    }
+    70% { 
+        transform: translate(-4px, -1px);
+    }
+    80% { 
+        transform: translate(2px, 4px);
+    }
+    90% { 
+        transform: translate(-3px, 1px);
+    }
+}
+
+/* Corruption Overlay Animation */
+@keyframes corruptionOverlay {
+    0% { 
+        transform: translateX(0) rotate(0deg);
+        opacity: 0.3;
+    }
+    25% { 
+        transform: translateX(-2px) rotate(90deg);
+        opacity: 0.7;
+    }
+    50% { 
+        transform: translateX(2px) rotate(180deg);
+        opacity: 0.5;
+    }
+    75% { 
+        transform: translateX(-1px) rotate(270deg);
+        opacity: 0.8;
+    }
+    100% { 
+        transform: translateX(0) rotate(360deg);
+        opacity: 0.3;
+    }
+}
+
+/* Game Mode Transformations */
+body.game-mode {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    position: relative;
+}
+
+body.game-mode::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(231, 76, 60, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(231, 76, 60, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(231, 76, 60, 0.05) 0%, transparent 50%);
+    z-index: -1;
+    animation: invasionGlow 4s ease-in-out infinite;
+}
+
+@keyframes invasionGlow {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+}
+
+body.game-mode h1 {
+    color: #e74c3c;
+    text-shadow: 0 0 20px rgba(231, 76, 60, 0.8);
+    animation: invasionTitle 2s ease-in-out infinite;
+}
+
+body.game-mode .arcade-menu,
+body.game-mode .minigames-scene,
+body.game-mode .packet-runner-scene,
+body.game-mode .cipher-match-scene {
+    display: none !important;
+}
+
+@keyframes invasionTitle {
+    0%, 100% { 
+        text-shadow: 0 0 20px rgba(231, 76, 60, 0.8);
+        transform: scale(1);
+    }
+    50% { 
+        text-shadow: 0 0 30px rgba(255, 0, 0, 1);
+        transform: scale(1.05);
+    }
+}
+
+/* Bad Boy Mode Sleep States */
+body.bad-boy-mode .robot-head.sleeping {
+    background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
+    border: 4px solid #660000;
+    box-shadow: 
+        0 0 10px rgba(102, 0, 0, 0.3),
+        inset 0 0 30px rgba(0, 0, 0, 0.7);
+    opacity: 0.6;
+}
+
+body.bad-boy-mode .horn.sleeping {
+    background: #660000;
+    box-shadow: 0 0 5px rgba(102, 0, 0, 0.4);
+    opacity: 0.5;
+}
+
+body.bad-boy-mode .eye.sleeping {
+    background: #660000;
+    box-shadow: 0 0 5px rgba(102, 0, 0, 0.5);
+    opacity: 0.4;
+    transform: scale(0.7);
+}
+
+/* Evil Wake-up Animation */
+body.bad-boy-mode .robot-head.waking {
+    animation: evilWakeUp 1.5s ease-out;
+}
+
+body.bad-boy-mode .robot-head:hover {
+    animation: evilWakeUp 0.8s ease-out;
+}
+
+@keyframes evilWakeUp {
+    0% {
+        background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
+        border: 4px solid #660000;
+        box-shadow: 
+            0 0 10px rgba(102, 0, 0, 0.3),
+            inset 0 0 30px rgba(0, 0, 0, 0.7);
+        opacity: 0.6;
+        transform: scale(0.95);
+    }
+    50% {
+        background: linear-gradient(145deg, #1a1a1a, #2c2c2c);
+        border: 4px solid #cc0000;
+        box-shadow: 
+            0 0 20px rgba(204, 0, 0, 0.5),
+            inset 0 0 30px rgba(0, 0, 0, 0.6);
+        opacity: 0.8;
+        transform: scale(1.02);
+    }
+    100% {
+        background: linear-gradient(145deg, #1a1a1a, #2c2c2c);
+        border: 4px solid #e74c3c;
+        box-shadow: 
+            0 0 30px rgba(231, 76, 60, 0.5),
+            inset 0 0 30px rgba(0, 0, 0, 0.5);
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Game Mode Score Display */
+.game-score {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #e74c3c;
+    border-radius: 8px;
+    padding: 6px 10px;
+    color: #ffffff;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 12px rgba(231, 76, 60, 0.45);
+    z-index: 1000;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.game-score.visible {
+    display: block;
+    opacity: 1;
+}
+
+.score-label {
+    color: #e74c3c;
+    margin-right: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.score-value {
+    color: #ffffff;
+    font-size: 16px;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.65);
+}
+
+/* Game Mode Clock Display */
+.game-clock {
+    position: fixed;
+    top: 12px;
+    left: 215px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #e74c3c;
+    border-radius: 8px;
+    padding: 6px 10px;
+    color: #ffffff;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 12px rgba(231, 76, 60, 0.45);
+    z-index: 1000;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.game-clock.visible {
+    display: block;
+    opacity: 1;
+}
+
+.clock-label {
+    color: #e74c3c;
+    margin-right: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.clock-value {
+    color: #ffffff;
+    font-size: 16px;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.65);
+}
+
+/* Show score and clock only in game mode */
+body.game-mode .game-score,
+body.game-mode .game-clock {
+    display: block;
+    opacity: 1;
+}
+
+/* ============================================================================ */
+/* DEFENSIVE WORDS SYSTEM - Pop-up words to type for positional barricades */
+/* ============================================================================ */
+
+/* Container for floating defensive words */
+.defensive-words-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 300;
+    pointer-events: none;
+}
+
+/* Individual defensive word on screen */
+.defensive-word {
+    position: fixed;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffe58f;
+    text-shadow: 
+        0 0 10px rgba(255, 229, 143, 0.9),
+        0 0 20px rgba(255, 169, 77, 0.65),
+        2px 2px 0 rgba(0, 0, 0, 0.9);
+    border: 3px solid #ffb347;
+    border-radius: 6px;
+    padding: 8px 14px;
+    background: rgba(52, 28, 0, 0.92);
+    box-shadow: 
+        0 0 20px rgba(255, 179, 71, 0.85),
+        inset 0 0 15px rgba(255, 209, 128, 0.35),
+        0 0 34px rgba(255, 138, 61, 0.55);
+    pointer-events: none;
+    z-index: 305;
+    letter-spacing: 1px;
+    font-family: 'Courier New', monospace;
+    animation: defensiveWordPulse 2s ease-in-out infinite;
+    white-space: nowrap;
+    transform: translate(-50%, -50%);
+}
+@keyframes defensiveWordPulse {
+    0% {
+        box-shadow: 
+            0 0 25px rgba(255, 179, 71, 0.88),
+            inset 0 0 15px rgba(255, 209, 128, 0.28),
+            0 0 40px rgba(255, 138, 61, 0.58);
+    }
+    50% {
+        box-shadow: 
+            0 0 15px rgba(255, 179, 71, 0.6),
+            inset 0 0 10px rgba(255, 209, 128, 0.16),
+            0 0 28px rgba(255, 138, 61, 0.35);
+    }
+    100% {
+        box-shadow: 
+            0 0 25px rgba(255, 179, 71, 0.88),
+            inset 0 0 15px rgba(255, 209, 128, 0.28),
+            0 0 40px rgba(255, 138, 61, 0.58);
+    }
+}
+
+.packet-runner-scene {
+    position: fixed;
+    inset: 0;
+    z-index: 1600;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 16%, rgba(81, 172, 255, 0.2), rgba(8, 12, 18, 0.96));
+}
+
+.packet-runner-panel {
+    width: min(760px, 92vw);
+    border-radius: 18px;
+    border: 1px solid rgba(133, 214, 255, 0.35);
+    background: linear-gradient(160deg, rgba(9, 18, 33, 0.96), rgba(4, 11, 22, 0.96));
+    box-shadow: 0 0 26px rgba(0, 212, 255, 0.2);
+    padding: 18px;
+}
+
+.packet-runner-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.packet-runner-title {
+    color: #dff7ff;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+}
+
+.packet-runner-hud {
+    display: flex;
+    gap: 16px;
+    color: #cbe8f7;
+    font-size: 0.92rem;
+}
+
+.packet-runner-tip {
+    margin: 0 0 10px;
+    color: #97bad1;
+    font-size: 0.88rem;
+}
+
+.packet-runner-track {
+    position: relative;
+    height: 440px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(120, 204, 255, 0.36);
+    background:
+        linear-gradient(180deg, rgba(14, 29, 46, 0.95), rgba(8, 17, 31, 0.96)),
+        repeating-linear-gradient(90deg, rgba(72, 110, 168, 0.08) 0 2px, transparent 2px 42px);
+}
+
+.packet-runner-track.hit {
+    animation: packetTrackHitShake 0.18s ease;
+}
+
+.packet-lane {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, rgba(171, 223, 255, 0.42), rgba(171, 223, 255, 0.08));
+}
+
+.packet-lane.lane-1 {
+    left: 33.333%;
+}
+
+.packet-lane.lane-2 {
+    left: 66.666%;
+}
+
+.packet-lane.lane-3 {
+    display: none;
+}
+
+.packet-runner-player,
+.packet-runner-entity {
+    position: absolute;
+    width: 54px;
+    height: 54px;
+    margin-left: -27px;
+    border-radius: 12px;
+    transition: left 0.12s ease;
+}
+
+.packet-runner-player {
+    bottom: 24px;
+    left: 50%;
+    border: 2px solid #7ef1ff;
+    background: linear-gradient(160deg, rgba(38, 110, 152, 0.95), rgba(12, 58, 93, 0.95));
+    box-shadow: 0 0 18px rgba(0, 212, 255, 0.42), inset 0 0 12px rgba(143, 237, 255, 0.22);
+}
+
+.packet-runner-player.hit {
+    animation: packetPlayerHitFlash 0.24s ease;
+}
+
+.packet-runner-player.collect {
+    animation: packetPlayerCollectPulse 0.22s ease;
+}
+
+.packet-runner-entity.bad {
+    border: 2px solid #ff6a6a;
+    background: linear-gradient(160deg, rgba(142, 36, 36, 0.95), rgba(82, 22, 22, 0.95));
+    box-shadow: 0 0 14px rgba(255, 106, 106, 0.45);
+}
+
+.packet-runner-entity.good {
+    border: 2px solid #7fff9f;
+    background: linear-gradient(160deg, rgba(38, 142, 72, 0.95), rgba(20, 89, 44, 0.95));
+    box-shadow: 0 0 14px rgba(120, 255, 159, 0.45);
+}
+
+.packet-runner-entity {
+    animation: packetEntitySpawnDrop 0.22s ease-out;
+}
+
+@keyframes packetTrackHitShake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    50% { transform: translateX(4px); }
+    75% { transform: translateX(-2px); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes packetPlayerHitFlash {
+    0% { filter: saturate(1); }
+    40% { filter: saturate(1.8) hue-rotate(-20deg); }
+    100% { filter: saturate(1); }
+}
+
+@keyframes packetPlayerCollectPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+
+@keyframes packetEntitySpawnDrop {
+    0% { opacity: 0.25; transform: scale(0.92); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.packet-runner-banner {
+    margin: 10px 0 0;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(139, 219, 255, 0.35);
+    color: #def4ff;
+    background: rgba(9, 27, 43, 0.86);
+    text-align: center;
+    font-size: 0.92rem;
+}
+
+.packet-runner-footer {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(139, 219, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.packet-runner-footer .return-btn {
+    margin-top: 2px;
+}
+
+.cipher-match-scene {
+    position: fixed;
+    inset: 0;
+    z-index: 1600;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 16%, rgba(140, 186, 255, 0.2), rgba(8, 12, 18, 0.96));
+}
+
+.cipher-match-panel {
+    width: min(720px, 92vw);
+    border-radius: 18px;
+    border: 1px solid rgba(170, 201, 255, 0.35);
+    background: linear-gradient(160deg, rgba(15, 18, 38, 0.96), rgba(8, 11, 26, 0.96));
+    box-shadow: 0 0 28px rgba(140, 186, 255, 0.2);
+    padding: 18px;
+}
+
+.cipher-match-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.cipher-match-title {
+    color: #e8edff;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+}
+
+.cipher-match-hud {
+    display: flex;
+    gap: 14px;
+    color: #cad8ff;
+    font-size: 0.92rem;
+}
+
+.cipher-match-tip {
+    margin: 0 0 10px;
+    color: #a4b4e2;
+    font-size: 0.88rem;
+}
+
+.cipher-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(70px, 1fr));
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.cipher-card {
+    height: 72px;
+    border-radius: 12px;
+    border: 1px solid rgba(177, 199, 255, 0.42);
+    background: linear-gradient(165deg, rgba(29, 35, 76, 0.95), rgba(16, 19, 46, 0.95));
+    color: #f1f4ff;
+    font-size: 1.42rem;
+    font-weight: 700;
+    box-shadow: 0 0 10px rgba(132, 171, 255, 0.16);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cipher-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 15px rgba(132, 171, 255, 0.25);
+}
+
+.cipher-card.revealed {
+    background: linear-gradient(165deg, rgba(56, 76, 143, 0.98), rgba(32, 45, 98, 0.98));
+}
+
+.cipher-card.matched {
+    border-color: rgba(132, 255, 169, 0.8);
+    background: linear-gradient(165deg, rgba(30, 111, 78, 0.95), rgba(18, 78, 54, 0.95));
+    box-shadow: 0 0 15px rgba(132, 255, 169, 0.35);
+}
+
+.cipher-banner {
+    margin: 10px 0 0;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(177, 199, 255, 0.4);
+    color: #edf2ff;
+    background: rgba(20, 26, 58, 0.88);
+    text-align: center;
+    font-size: 0.92rem;
+}
+
+.cipher-match-footer {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(177, 199, 255, 0.24);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.cipher-match-footer .return-btn {
+    margin-top: 2px;
+}
+
+/* Solid positional barricade */
+.positional-barricade {
+    position: fixed;
+    width: 88px;
+    height: 88px;
+    border-radius: 12px;
+    z-index: 420;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    border: 3px solid rgba(0, 255, 180, 0.95);
+    background:
+        linear-gradient(135deg, rgba(0, 110, 70, 0.9), rgba(0, 170, 120, 0.78)),
+        repeating-linear-gradient(45deg, rgba(0, 255, 180, 0.16) 0 6px, rgba(0, 255, 180, 0.04) 6px 12px);
+    box-shadow:
+        0 0 20px rgba(0, 255, 180, 0.65),
+        inset 0 0 18px rgba(0, 255, 180, 0.28);
+    animation: barricadeIdleFade 2.8s ease-in-out infinite;
+}
+
+@keyframes barricadeIdleFade {
+    0% {
+        opacity: 0.95;
+        box-shadow: 
+            0 0 22px rgba(0, 255, 180, 0.68),
+            inset 0 0 18px rgba(0, 255, 180, 0.32);
+    }
+    50% {
+        opacity: 0.55;
+        box-shadow: 
+            0 0 12px rgba(0, 255, 180, 0.45),
+            inset 0 0 10px rgba(0, 255, 180, 0.2);
+    }
+    100% {
+        opacity: 0.95;
+        box-shadow: 
+            0 0 22px rgba(0, 255, 180, 0.68),
+            inset 0 0 18px rgba(0, 255, 180, 0.32);
+    }
+}
+
+.positional-barricade.hit {
+    animation: barricadeBreakFade 0.5s ease-out forwards;
+}
+
+@keyframes barricadeBreakFade {
+    0% {
+        opacity: 0.95;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.25);
+    }
+}
+
+/* BRET Minions Container */
+.minions-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100;
+    overflow: hidden;
+}
+
+/* BRET Minion */
+.bret-minion {
+    position: absolute;
+    bottom: -100px;
+    width: 60px;
+    height: 80px;
+    background: linear-gradient(145deg, #1a1a1a, #2c2c2c);
+    border: 3px solid #e74c3c;
+    border-radius: 10px;
+    box-shadow: 
+        0 0 20px rgba(231, 76, 60, 0.6),
+        inset 0 0 20px rgba(0, 0, 0, 0.5);
+    pointer-events: auto;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: minionRise 15s linear forwards;
+}
+
+/* Fast Minion Variant */
+.bret-minion.fast {
+    background: linear-gradient(145deg, #2c1a1a, #3c2c2c);
+    border: 3px solid #ff6b35;
+    box-shadow: 
+        0 0 25px rgba(255, 107, 53, 0.7),
+        inset 0 0 20px rgba(0, 0, 0, 0.5);
+    animation: minionRise 10s linear forwards;
+}
+
+/* Ultra-Fast Minion Variant */
+.bret-minion.ultra-fast {
+    background: linear-gradient(145deg, #3c1a1a, #4c2c2c);
+    border: 3px solid #ff4757;
+    box-shadow: 
+        0 0 30px rgba(255, 71, 87, 0.8),
+        inset 0 0 20px rgba(0, 0, 0, 0.5);
+    animation: minionRise 6s linear forwards;
+}
+
+.bret-minion:hover {
+    transform: scale(1.1);
+    box-shadow: 
+        0 0 30px rgba(231, 76, 60, 0.8),
+        0 0 30px rgba(255, 107, 53, 0.8),
+        0 0 30px rgba(255, 71, 87, 0.8),
+        inset 0 0 30px rgba(0, 0, 0, 0.7);
+}
+
+/* Fast Minion Eyes */
+.bret-minion.fast .minion-eye {
+    background: #ff6b35;
+    box-shadow: 0 0 10px rgba(255, 107, 53, 0.9);
+    animation: minionBlink 1.5s ease-in-out infinite;
+}
+
+/* Fast Minion Word Tag */
+.bret-minion.fast .minion-word {
+    border: 2px solid #ff6b35;
+    box-shadow: 0 0 12px rgba(255, 107, 53, 0.6);
+    color: #ff6b35;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Ultra-Fast Minion Eyes */
+.bret-minion.ultra-fast .minion-eye {
+    background: #ff4757;
+    box-shadow: 0 0 12px rgba(255, 71, 87, 1);
+    animation: minionBlink 1s ease-in-out infinite;
+}
+
+/* Ultra-Fast Minion Word Tag */
+.bret-minion.ultra-fast .minion-word {
+    border: 2px solid #ff4757;
+    box-shadow: 0 0 15px rgba(255, 71, 87, 0.7);
+    color: #ff4757;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Minion Eyes */
+.minion-eye {
+    position: absolute;
+    top: 15px;
+    width: 12px;
+    height: 12px;
+    background: #e74c3c;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(231, 76, 60, 0.8);
+    animation: minionBlink 2s ease-in-out infinite;
+}
+
+.minion-eye.left {
+    left: 12px;
+}
+
+.minion-eye.right {
+    right: 12px;
+}
+
+/* Minion Word Tag */
+.minion-word {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #e74c3c;
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: #ffffff;
+    font-family: 'Arial', 'Helvetica', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+    z-index: 10;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
+}
+
+/* Minion Animations */
+@keyframes minionRise {
+    0% {
+        bottom: -100px;
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    85% {
+        opacity: 1;
+    }
+    90% {
+        bottom: calc(100vh - 120px);
+        opacity: 1;
+    }
+    95% {
+        bottom: calc(100vh - 120px);
+        opacity: 0.8;
+    }
+    100% {
+        bottom: calc(100vh - 120px);
+        opacity: 0;
+    }
+}
+
+@keyframes minionBlink {
+    0%, 90%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    95% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+}
+
+/* Minion Destruction Animation */
+.bret-minion.destroyed {
+    animation: minionDestroy 0.3s ease-out forwards !important;
+    pointer-events: none;
+    animation-play-state: running !important;
+}
+
+@keyframes minionDestroy {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+/* Minion Spawn Effect */
+.bret-minion.spawning {
+    animation: minionSpawn 0.3s ease-out;
+}
+
+@keyframes minionSpawn {
+    0% {
+        transform: scale(0) rotate(180deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2) rotate(90deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.wave-warning {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    font-size: 4rem;
+    font-weight: bold;
+    color: #fff;
+    background: rgba(231, 76, 60, 0.95);
+    border: 4px solid #fff;
+    border-radius: 20px;
+    padding: 40px 80px;
+    box-shadow: 0 0 60px #e74c3c, 0 0 120px #e74c3c;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s;
+    text-shadow: 2px 2px 8px #000, 0 0 30px #e74c3c;
+}
+.wave-warning.show {
+    opacity: 1;
+    pointer-events: auto;
+    animation: wavePop 0.5s cubic-bezier(.68,-0.55,.27,1.55);
+}
+@keyframes wavePop {
+    0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0; }
+    60% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+/* Game Mode Firewall - bigger, no health or title bar */
+.game-firewall {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 120px;
+    background: linear-gradient(180deg, 
+        rgba(0, 212, 255, 0.9) 0%, 
+        rgba(0, 212, 255, 0.7) 30%, 
+        rgba(0, 212, 255, 0.5) 60%, 
+        rgba(0, 212, 255, 0.3) 100%);
+    border-bottom: 3px solid #00d4ff;
+    box-shadow: 
+        0 0 20px rgba(0, 212, 255, 0.8),
+        inset 0 0 20px rgba(0, 212, 255, 0.3);
+    z-index: 1000;
+    display: none;
+    animation: firewallPulse 2s ease-in-out infinite;
+    overflow: hidden;
+}
+
+/* Firewall Eyes */
+.firewall-eye {
+    position: absolute;
+    top: 44px;
+    width: 38px;
+    height: 18px;
+    background: linear-gradient(180deg, #87ceeb, #ffffff);
+    border-radius: 4px;
+    z-index: 2002;
+    border: none;
+    box-shadow: 
+        0 0 8px rgba(135, 206, 235, 0.8),
+        0 0 16px rgba(135, 206, 235, 0.6),
+        0 0 24px rgba(135, 206, 235, 0.4);
+}
+.firewall-eye.left {
+    left: calc(50% - 48px);
+}
+.firewall-eye.right {
+    left: calc(50% + 10px);
+}
+
+@keyframes eyeRadiant {
+    0%, 100% {
+        background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00, #00ff00);
+        box-shadow: 
+            0 0 8px rgba(0, 255, 255, 0.8),
+            0 0 16px rgba(255, 0, 255, 0.6),
+            0 0 24px rgba(255, 255, 0, 0.4),
+            0 0 32px rgba(0, 255, 0, 0.3);
+    }
+    25% {
+        background: linear-gradient(45deg, #ff00ff, #ffff00, #00ff00, #00ffff);
+        box-shadow: 
+            0 0 12px rgba(255, 0, 255, 0.9),
+            0 0 24px rgba(255, 255, 0, 0.7),
+            0 0 36px rgba(0, 255, 0, 0.5),
+            0 0 48px rgba(0, 255, 255, 0.4);
+    }
+    50% {
+        background: linear-gradient(45deg, #ffff00, #00ff00, #00ffff, #ff00ff);
+        box-shadow: 
+            0 0 16px rgba(255, 255, 0, 1),
+            0 0 32px rgba(0, 255, 0, 0.8),
+            0 0 48px rgba(0, 255, 255, 0.6),
+            0 0 64px rgba(255, 0, 255, 0.5);
+    }
+    75% {
+        background: linear-gradient(45deg, #00ff00, #00ffff, #ff00ff, #ffff00);
+        box-shadow: 
+            0 0 12px rgba(0, 255, 0, 0.9),
+            0 0 24px rgba(0, 255, 255, 0.7),
+            0 0 36px rgba(255, 0, 255, 0.5),
+            0 0 48px rgba(255, 255, 0, 0.4);
+    }
+}
+
+/* Firewall Mouth */
+.firewall-mouth {
+    position: absolute;
+    top: 84px;
+    left: 50%;
+    width: 70px;
+    height: 4px;
+    background: linear-gradient(180deg, #87ceeb, #ffffff);
+    border-radius: 2px;
+    transform: translateX(-50%);
+    z-index: 2002;
+    border: none;
+    box-shadow: 
+        0 0 6px rgba(135, 206, 235, 0.8),
+        0 0 12px rgba(135, 206, 235, 0.6),
+        0 0 18px rgba(135, 206, 235, 0.4);
+}
+
+/* Keep title hidden, show compact health UI */
+.firewall-title { display: none !important; }
+
+/* Firewall honeycomb pattern */
+.firewall-bars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(0, 212, 255, 0.3) 2px, transparent 2px),
+        radial-gradient(circle at 75% 75%, rgba(0, 212, 255, 0.3) 2px, transparent 2px),
+        radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.2) 1px, transparent 1px);
+    background-size: 40px 40px, 40px 40px, 20px 20px;
+    background-position: 0 0, 20px 20px, 0 0;
+    animation: firewallGlow 4s ease-in-out infinite;
+}
+
+/* Digital particles floating in firewall */
+.firewall-bars::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
+        radial-gradient(circle at 90% 30%, rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+        radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.7) 1px, transparent 1px),
+        radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.5) 1px, transparent 1px);
+    background-size: 60px 60px, 80px 80px, 50px 50px, 70px 70px;
+    animation: particleFloat 6s ease-in-out infinite;
+}
+
+/* Firewall title */
+.firewall-title {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 1);
+    z-index: 1001;
+    letter-spacing: 2px;
+}
+
+/* Health bar container */
+.firewall-health-container {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+    height: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid #00d4ff;
+    border-radius: 8px;
+    z-index: 2010;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Health bar */
+.firewall-health-bar {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        #00ff00 0%, 
+        #00d4ff 50%, 
+        #ff6b6b 100%);
+    border-radius: 7px;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
+    position: relative;
+}
+
+/* Health bar inner glow */
+.firewall-health-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        rgba(0, 255, 0, 0.3) 0%, 
+        rgba(0, 212, 255, 0.3) 50%, 
+        rgba(255, 107, 107, 0.3) 100%);
+    border-radius: 8px;
+    animation: healthGlow 2s ease-in-out infinite;
+}
+
+/* Health percentage text */
+.firewall-health-text {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
+    z-index: 2011;
+    font-family: 'Courier New', monospace;
+}
+
+/* Firewall animations */
+@keyframes firewallPulse {
+    0%, 100% { 
+        box-shadow: 
+            0 0 20px rgba(0, 212, 255, 0.8),
+            inset 0 0 20px rgba(0, 212, 255, 0.3);
+    }
+    50% { 
+        box-shadow: 
+            0 0 30px rgba(0, 212, 255, 1),
+            inset 0 0 30px rgba(0, 212, 255, 0.5);
+    }
+}
+
+@keyframes firewallGlow {
+    0%, 100% { 
+        opacity: 0.7;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 1;
+        transform: scale(1.02);
+    }
+}
+
+@keyframes particleFloat {
+    0%, 100% { 
+        transform: translateY(0px);
+        opacity: 0.6;
+    }
+    25% { 
+        transform: translateY(-5px);
+        opacity: 0.8;
+    }
+    50% { 
+        transform: translateY(-10px);
+        opacity: 0.4;
+    }
+    75% { 
+        transform: translateY(-5px);
+        opacity: 0.9;
+    }
+}
+
+@keyframes healthGlow {
+    0%, 100% { 
+        opacity: 0.3;
+    }
+    50% { 
+        opacity: 0.6;
+    }
+}
+
+/* Show firewall only in game mode */
+body.game-mode .game-firewall {
+    display: block;
+    overflow: visible;
+}
+
+/* Digital Flames */
+.game-firewall::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 40px;
+    pointer-events: none;
+    z-index: 1000;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            transparent 0 10px,
+            #00d4ff 10px 16px,
+            transparent 16px 32px
+        ),
+        linear-gradient(180deg, rgba(0,212,255,0.7) 0%, rgba(0,212,255,0.1) 100%);
+    opacity: 0.7;
+    filter: blur(1px);
+    animation: firewallFlames 2.5s linear infinite;
+}
+@keyframes firewallFlames {
+    0% { background-position: 0 40px, 0 0; opacity: 0.7; }
+    50% { background-position: 32px 20px, 0 0; opacity: 1; }
+    100% { background-position: 64px 0px, 0 0; opacity: 0.7; }
+}
+
+/* Center BLIP in game mode */
+.robot-container.centered {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2001;
+    transition: top 0.8s cubic-bezier(.68,-0.55,.27,1.55), left 0.8s cubic-bezier(.68,-0.55,.27,1.55), transform 0.8s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+/* Animate BLIP disappearing into the firewall */
+.robot-container.disappear {
+    animation: blipDisappear 1.2s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+}
+
+@keyframes blipDisappear {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+        top: 50%;
+    }
+    60% {
+        opacity: 0.7;
+        transform: translate(-50%, -60%) scale(0.9);
+        top: 30%;
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -120%) scale(0.7);
+        top: 0%;
+    }
+}
+
+body.game-mode .robot-container {
+    pointer-events: none;
+}
+
+/* BLIP slides in from the top when game mode starts */
+.robot-container.centered.slide-in {
+    animation: blipSlideIn 1.1s cubic-bezier(.68,-0.55,.27,1.55) forwards;
+}
+
+@keyframes blipSlideIn {
+    0% {
+        top: -200px;
+        opacity: 0;
+        transform: translate(-50%, 0%) scale(0.8);
+    }
+    60% {
+        top: 45%;
+        opacity: 1;
+        transform: translate(-50%, -45%) scale(1.05);
+    }
+    100% {
+        top: 50%;
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Game mode: text box at bottom center */
+body.game-mode textarea {
+    position: fixed;
+    left: 50%;
+    bottom: 40px;
+    transform: translateX(-50%);
+    width: 480px;
+    max-width: 90vw;
+    min-width: 240px;
+    height: 60px;
+    z-index: 2002;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 24px rgba(0,212,255,0.3);
+    border: 3px solid #00d4ff;
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 18px 20px;
+    border-radius: 16px;
+    resize: none;
+    outline: none;
+    transition: box-shadow 0.3s;
+}
+
+body.game-mode textarea:focus {
+    box-shadow: 0 0 32px #00d4ff, 0 4px 24px rgba(0,212,255,0.3);
+    border-color: #fff;
+}
+
+body.game-mode .particles-container {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 2003 !important;
+}
+
+/* Keep evil mode background darker while preserving red vortex overlays */
+body.cyber-dark.bad-boy-mode {
+    background: radial-gradient(circle at 10% 12%, rgba(30, 35, 48, 0.32), transparent 42%),
+                radial-gradient(circle at 88% 82%, rgba(18, 22, 34, 0.38), transparent 46%),
+                linear-gradient(135deg, #050608 0%, #090b10 55%, #0d1016 100%);
+}
+
+.game-firewall::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1001;
+    pointer-events: none;
+    opacity: 0.22;
+    background:
+        conic-gradient(from 0deg at 60% 40%, #00d4ff 0deg, transparent 90deg, #00d4ff 180deg, transparent 270deg, #00d4ff 360deg),
+        radial-gradient(circle at 30% 70%, rgba(0,212,255,0.3) 0%, transparent 60%),
+        radial-gradient(circle at 70% 30%, rgba(0,212,255,0.2) 0%, transparent 70%);
+    mix-blend-mode: lighten;
+    /* animation: swirlRotate 8s linear infinite; */
+}
+@keyframes swirlRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Remove old digital flames */
+.game-firewall::after { display: none !important; }
+
+/* Digital scanline/energy bands effect */
+.game-firewall .scan-row {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0.5;
+}
+
+/* Row 1: top, largest lines, left-to-right */
+.game-firewall .scan-row.row1 {
+    top: 0;
+    height: 28px;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0 8px,
+        #00d4ff 8px 14px,
+        transparent 14px 28px
+    );
+    animation: scanRow1 3.5s linear infinite;
+}
+@keyframes scanRow1 {
+    0% { background-position-x: 0; }
+    100% { background-position-x: 56px; }
+}
+
+/* Row 2: below row 1, smaller lines, right-to-left */
+.game-firewall .scan-row.row2 {
+    top: 28px;
+    height: 20px;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0 5px,
+        #00d4ff 5px 9px,
+        transparent 9px 18px
+    );
+    animation: scanRow2 2.8s linear infinite reverse;
+}
+@keyframes scanRow2 {
+    0% { background-position-x: 0; }
+    100% { background-position-x: 36px; }
+}
+
+/* Row 3: below row 2, even smaller lines, left-to-right */
+.game-firewall .scan-row.row3 {
+    top: 48px;
+    height: 14px;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0 3px,
+        #00d4ff 3px 6px,
+        transparent 6px 12px
+    );
+    animation: scanRow3 2.2s linear infinite;
+}
+@keyframes scanRow3 {
+    0% { background-position-x: 0; }
+    100% { background-position-x: 24px; }
+}
+
+/* Row 4: bottom, smallest lines, right-to-left */
+.game-firewall .scan-row.row4 {
+    top: 62px;
+    height: 8px;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0 2px,
+        #00d4ff 2px 4px,
+        transparent 4px 8px
+    );
+    animation: scanRow4 1.7s linear infinite reverse;
+}
+@keyframes scanRow4 {
+    0% { background-position-x: 0; }
+    100% { background-position-x: 16px; }
+}
+
+/* Remove old scan-row rules */
+.game-firewall .scan-row { position: absolute; left: 0; width: 100%; pointer-events: none; z-index: 2; opacity: 0.5; }
+.game-firewall .scan-row.row1 { top: 0; height: 28px; background: repeating-linear-gradient(90deg, transparent 0 8px, #00d4ff 8px 14px, transparent 14px 28px); animation: scanRow1 3.5s linear infinite; }
+@keyframes scanRow1 { 0% { background-position-x: 0; } 100% { background-position-x: 56px; } }
+.game-firewall .scan-row.row2 { top: 28px; height: 24px; background: repeating-linear-gradient(90deg, transparent 0 8px, #00d4ff 8px 14px, transparent 14px 28px); animation: scanRow2 2.8s linear infinite reverse; }
+@keyframes scanRow2 { 0% { background-position-x: 0; } 100% { background-position-x: 56px; } }
+.game-firewall .scan-row.row3 { top: 52px; height: 20px; background: repeating-linear-gradient(90deg, transparent 0 8px, #00d4ff 8px 14px, transparent 14px 28px); animation: scanRow3 2.2s linear infinite; }
+@keyframes scanRow3 { 0% { background-position-x: 0; } 100% { background-position-x: 56px; } }
+.game-firewall .scan-row.row4 { top: 72px; height: 16px; background: repeating-linear-gradient(90deg, transparent 0 8px, #00d4ff 8px 14px, transparent 14px 28px); animation: scanRow4 1.7s linear infinite reverse; }
+@keyframes scanRow4 { 0% { background-position-x: 0; } 100% { background-position-x: 56px; } }
+.game-firewall .scan-row.row5 { top: 88px; height: 12px; background: repeating-linear-gradient(90deg, transparent 0 8px, #00d4ff 8px 14px, transparent 14px 28px); animation: scanRow5 1.3s linear infinite; }
+@keyframes scanRow5 { 0% { background-position-x: 0; } 100% { background-position-x: 56px; } }
+.game-firewall .scan-row.row6 { top: 100px; height: 8px; background: repeating-linear-gradient(90deg, transparent 0 8px, #00d4ff 8px 14px, transparent 14px 28px); animation: scanRow6 1.1s linear infinite reverse; }
+@keyframes scanRow6 { 0% { background-position-x: 0; } 100% { background-position-x: 56px; } }
+
+body.game-mode .game-score,
+body.game-mode .game-clock {
+    z-index: 2002 !important;
+}
+
+/* Minion Explosion Effect */
+.minion-explosion {
+    position: fixed;
+    width: 100px;
+    height: 100px;
+    pointer-events: none;
+    z-index: 1500;
+    transform: translate(-50%, -50%);
+    animation: explosionEffect 1s ease-out forwards;
+}
+
+@keyframes explosionEffect {
+    0% {
+        background: radial-gradient(circle, #00d4ff 0%, #00bfff 30%, #ffffff 60%, transparent 100%);
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+    50% {
+        background: radial-gradient(circle, #00d4ff 0%, #00bfff 40%, #ffffff 70%, transparent 100%);
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0.8;
+    }
+    100% {
+        background: radial-gradient(circle, #00d4ff 0%, #00bfff 50%, #ffffff 80%, transparent 100%);
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+    }
+}
+
+/* Firewall Band Damage Effects */
+.game-firewall .scan-row.damaged {
+    animation: bandDamage 0.2s ease-in-out;
+}
+
+@keyframes bandDamage {
+    0%, 100% {
+        opacity: 0.5;
+        filter: brightness(1);
+    }
+    50% {
+        opacity: 0.2;
+        filter: brightness(1.5);
+    }
+}
+
+/* Firewall Band Destruction */
+.game-firewall .scan-row.destroyed {
+    animation: bandDestruction 0.5s ease-out forwards;
+}
+
+@keyframes bandDestruction {
+    0% {
+        opacity: 0.5;
+        transform: scaleY(1);
+        filter: brightness(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scaleY(1.2);
+        filter: brightness(2);
+    }
+    100% {
+        opacity: 0;
+        transform: scaleY(0);
+        filter: brightness(0);
+    }
+}
+
+/* Firewall Damage Animation */
+.game-firewall.damaged {
+    animation: firewallDamage 0.3s ease-in-out;
+}
+
+@keyframes firewallDamage {
+    0%, 100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+    25% {
+        transform: scale(1.02);
+        filter: brightness(1.3);
+    }
+    50% {
+        transform: scale(0.98);
+        filter: brightness(0.8);
+    }
+    75% {
+        transform: scale(1.01);
+        filter: brightness(1.2);
+    }
+}
+
+/* Firewall Glitch Effect (after 3rd band destroyed) */
+.game-firewall.glitching {
+    animation: firewallGlitch 0.4s ease-in-out;
+}
+
+@keyframes firewallGlitch {
+    0%, 100% {
+        transform: translateX(0) scale(1);
+        filter: brightness(1) hue-rotate(0deg);
+    }
+    10% {
+        transform: translateX(-3px) scale(1.02);
+        filter: brightness(1.3) hue-rotate(15deg);
+    }
+    20% {
+        transform: translateX(3px) scale(0.98);
+        filter: brightness(0.7) hue-rotate(-15deg);
+    }
+    30% {
+        transform: translateX(-2px) scale(1.03);
+        filter: brightness(1.2) hue-rotate(10deg);
+    }
+    40% {
+        transform: translateX(2px) scale(0.97);
+        filter: brightness(0.8) hue-rotate(-10deg);
+    }
+    50% {
+        transform: translateX(-4px) scale(1.04);
+        filter: brightness(1.4) hue-rotate(20deg);
+    }
+    60% {
+        transform: translateX(4px) scale(0.96);
+        filter: brightness(0.6) hue-rotate(-20deg);
+    }
+    70% {
+        transform: translateX(-1px) scale(1.01);
+        filter: brightness(1.1) hue-rotate(5deg);
+    }
+    80% {
+        transform: translateX(1px) scale(0.99);
+        filter: brightness(0.9) hue-rotate(-5deg);
+    }
+    90% {
+        transform: translateX(-3px) scale(1.02);
+        filter: brightness(1.3) hue-rotate(12deg);
+    }
+}
+
+/* Firewall Eyes Damage Reaction */
+.firewall-eye.damaged {
+    animation: eyeDamage 0.3s ease-in-out;
+}
+
+@keyframes eyeDamage {
+    0%, 100% {
+        background: linear-gradient(180deg, #87ceeb, #ffffff);
+        box-shadow: 
+            0 0 8px rgba(135, 206, 235, 0.8),
+            0 0 16px rgba(135, 206, 235, 0.6),
+            0 0 24px rgba(135, 206, 235, 0.4);
+    }
+    50% {
+        background: linear-gradient(180deg, #ff6b6b, #ff4757);
+        box-shadow: 
+            0 0 12px rgba(255, 107, 107, 0.9),
+            0 0 24px rgba(255, 71, 87, 0.7),
+            0 0 36px rgba(255, 107, 107, 0.5);
+    }
+}
+
+/* Firewall Mouth Damage Reaction */
+.firewall-mouth.damaged {
+    animation: mouthDamage 0.3s ease-in-out;
+}
+
+@keyframes mouthDamage {
+    0%, 100% {
+        background: linear-gradient(180deg, #87ceeb, #ffffff);
+        box-shadow: 
+            0 0 6px rgba(135, 206, 235, 0.8),
+            0 0 12px rgba(135, 206, 235, 0.6),
+            0 0 18px rgba(135, 206, 235, 0.4);
+    }
+    50% {
+        background: linear-gradient(180deg, #ff6b6b, #ff4757);
+        box-shadow: 
+            0 0 10px rgba(255, 107, 107, 0.9),
+            0 0 20px rgba(255, 71, 87, 0.7),
+            0 0 30px rgba(255, 107, 107, 0.5);
+    }
+}
+
+/* Minion passing through destroyed firewall */
+.bret-minion.passing-through {
+    opacity: 1.0 !important;
+    filter: none;
+    background: linear-gradient(145deg, #1a1a1a, #2c2c2c) !important;
+    border: 3px solid #e74c3c !important;
+    box-shadow: 
+        0 0 20px rgba(231, 76, 60, 0.6),
+        inset 0 0 20px rgba(0, 0, 0, 0.5) !important;
+    animation: minionPassThrough 8s linear forwards !important; /* Override original animation */
+}
+
+/* Completely override original minionRise animation for passing-through minions */
+.bret-minion.passing-through,
+.bret-minion.normal.passing-through,
+.bret-minion.fast.passing-through,
+.bret-minion.ultra-fast.passing-through {
+    animation: minionPassThrough 8s linear forwards !important;
+    opacity: 1.0 !important;
+    /* Disable the original minionRise animation completely */
+    animation-name: minionPassThrough !important;
+    animation-duration: 8s !important;
+    animation-timing-function: linear !important;
+    animation-fill-mode: forwards !important;
+}
+
+/* Additional override to ensure no fading */
+.bret-minion.passing-through * {
+    opacity: 1.0 !important;
+}
+
+@keyframes minionPassThrough {
+    0% {
+        bottom: -100px;
+        opacity: 1.0 !important;
+        transform: scale(1);
+    }
+    10% {
+        opacity: 1.0 !important;
+    }
+    85% {
+        opacity: 1.0 !important;
+    }
+    90% {
+        bottom: calc(100vh - 120px);
+        opacity: 1.0 !important;
+    }
+    100% {
+        bottom: calc(100vh + 100px); /* Move off-screen instead of fading */
+        opacity: 1.0 !important;
+        transform: scale(1);
+    }
+}
+
+/* Fast minion passing through - use original fast minion appearance */
+.bret-minion.fast.passing-through {
+    background: linear-gradient(145deg, #2c1a1a, #3c2c2c) !important;
+    border: 3px solid #ff6b35 !important;
+    box-shadow: 
+        0 0 25px rgba(255, 107, 53, 0.7),
+        inset 0 0 20px rgba(0, 0, 0, 0.5) !important;
+    animation: minionPassThrough 6s linear forwards !important; /* Override original animation */
+    opacity: 1.0 !important;
+}
+
+/* Ultra-fast minion passing through - use original ultra-fast minion appearance */
+.bret-minion.ultra-fast.passing-through {
+    background: linear-gradient(145deg, #3c1a1a, #4c2c2c) !important;
+    border: 3px solid #ff4757 !important;
+    box-shadow: 
+        0 0 30px rgba(255, 71, 87, 0.8),
+        inset 0 0 20px rgba(0, 0, 0, 0.5) !important;
+    animation: minionPassThrough 4s linear forwards !important; /* Override original animation */
+    opacity: 1.0 !important;
+}
+
+/* Ultra-fast minion passing through - use original ultra-fast minion appearance */
+.bret-minion.ultra-fast.passing-through {
+    background: linear-gradient(145deg, #3c1a1a, #4c2c2c) !important;
+    border: 3px solid #ff4757 !important;
+    box-shadow: 
+        0 0 30px rgba(255, 71, 87, 0.8),
+        inset 0 0 20px rgba(0, 0, 0, 0.5) !important;
+    animation: minionPassThrough 4s linear forwards !important; /* Override original animation */
+    opacity: 1.0 !important;
+}
+
+/* Firewall severely damaged/dead state */
+.game-firewall.destroyed {
+    background: linear-gradient(180deg, 
+        rgba(139, 0, 0, 0.3) 0%, 
+        rgba(139, 0, 0, 0.2) 30%, 
+        rgba(139, 0, 0, 0.1) 60%, 
+        rgba(139, 0, 0, 0.05) 100%);
+    border-bottom: 3px solid #8b0000;
+    box-shadow: 
+        0 0 10px rgba(139, 0, 0, 0.4),
+        inset 0 0 20px rgba(0, 0, 0, 0.8);
+    animation: firewallDead 3s ease-in-out infinite;
+    opacity: 0.6;
+}
+
+/* Dead firewall animation */
+@keyframes firewallDead {
+    0%, 100% { 
+        opacity: 0.6;
+        filter: brightness(0.7) saturate(0.5);
+    }
+    50% { 
+        opacity: 0.4;
+        filter: brightness(0.5) saturate(0.3);
+    }
+}
+
+/* Dead firewall scan lines - broken and flickering */
+.game-firewall.destroyed .scan-row {
+    opacity: 0.3 !important;
+    animation-duration: 0.5s !important;
+    animation-timing-function: steps(2) !important;
+}
+
+.game-firewall.destroyed .scan-row.row1 {
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0 8px,
+        rgba(139, 0, 0, 0.8) 8px 12px,
+        transparent 12px 20px
+    );
+    animation: scanRowDead 0.8s steps(3) infinite;
+}
+
+.game-firewall.destroyed .scan-row.row2 {
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0 5px,
+        rgba(139, 0, 0, 0.6) 5px 8px,
+        transparent 8px 15px
+    );
+    animation: scanRowDead 1.2s steps(2) infinite reverse;
+}
+
+.game-firewall.destroyed .scan-row.row3 {
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0 3px,
+        rgba(139, 0, 0, 0.7) 3px 5px,
+        transparent 5px 10px
+    );
+    animation: scanRowDead 0.6s steps(4) infinite;
+}
+
+.game-firewall.destroyed .scan-row.row4 {
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0 2px,
+        rgba(139, 0, 0, 0.5) 2px 4px,
+        transparent 4px 8px
+    );
+    animation: scanRowDead 1.0s steps(2) infinite reverse;
+}
+
+.game-firewall.destroyed .scan-row.row5 {
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0 2px,
+        rgba(139, 0, 0, 0.6) 2px 3px,
+        transparent 3px 6px
+    );
+    animation: scanRowDead 0.7s steps(3) infinite;
+}
+
+.game-firewall.destroyed .scan-row.row6 {
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0 1px,
+        rgba(139, 0, 0, 0.4) 1px 2px,
+        transparent 2px 4px
+    );
+    animation: scanRowDead 0.9s steps(2) infinite reverse;
+}
+
+@keyframes scanRowDead {
+    0% { background-position-x: 0; opacity: 0.3; }
+    25% { background-position-x: 4px; opacity: 0.1; }
+    50% { background-position-x: 8px; opacity: 0.4; }
+    75% { background-position-x: 12px; opacity: 0.2; }
+    100% { background-position-x: 16px; opacity: 0.3; }
+}
+
+/* Dead firewall eyes - dimmed and flickering */
+.game-firewall.destroyed .firewall-eye {
+    background: linear-gradient(180deg, #660000, #330000) !important;
+    box-shadow: 
+        0 0 5px rgba(102, 0, 0, 0.4),
+        0 0 10px rgba(102, 0, 0, 0.2) !important;
+    animation: eyeDead 2s ease-in-out infinite;
+}
+
+@keyframes eyeDead {
+    0%, 100% { 
+        opacity: 0.4;
+        background: linear-gradient(180deg, #660000, #330000);
+    }
+    50% { 
+        opacity: 0.2;
+        background: linear-gradient(180deg, #330000, #1a0000);
+    }
+}
+
+/* Dead firewall mouth - barely visible */
+.game-firewall.destroyed .firewall-mouth {
+    background: linear-gradient(180deg, #660000, #330000) !important;
+    box-shadow: 
+        0 0 3px rgba(102, 0, 0, 0.3),
+        0 0 6px rgba(102, 0, 0, 0.1) !important;
+    opacity: 0.3;
+}
+
+/* Dead firewall bars - broken pattern */
+.game-firewall.destroyed .firewall-bars {
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(139, 0, 0, 0.2) 1px, transparent 1px),
+        radial-gradient(circle at 75% 75%, rgba(139, 0, 0, 0.15) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(139, 0, 0, 0.1) 0.5px, transparent 0.5px);
+    animation: barsDead 4s ease-in-out infinite;
+}
+
+@keyframes barsDead {
+    0%, 100% { 
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.1;
+        transform: scale(0.98);
+    }
+}
+
+/* Dead firewall particles - sparse and dim */
+.game-firewall.destroyed .firewall-bars::before {
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(139, 0, 0, 0.4) 0.5px, transparent 0.5px),
+        radial-gradient(circle at 90% 30%, rgba(139, 0, 0, 0.3) 0.5px, transparent 0.5px),
+        radial-gradient(circle at 30% 70%, rgba(139, 0, 0, 0.35) 0.5px, transparent 0.5px),
+        radial-gradient(circle at 70% 80%, rgba(139, 0, 0, 0.25) 0.5px, transparent 0.5px);
+    animation: particleDead 8s ease-in-out infinite;
+}
+
+@keyframes particleDead {
+    0%, 100% { 
+        transform: translateY(0px);
+        opacity: 0.2;
+    }
+    50% { 
+        transform: translateY(-3px);
+        opacity: 0.1;
+    }
+}
+
+/* Dead firewall swirl - barely visible */
+.game-firewall.destroyed::before {
+    opacity: 0.1 !important;
+    background:
+        conic-gradient(from 0deg at 60% 40%, rgba(139, 0, 0, 0.3) 0deg, transparent 90deg, rgba(139, 0, 0, 0.3) 180deg, transparent 270deg, rgba(139, 0, 0, 0.3) 360deg),
+        radial-gradient(circle at 30% 70%, rgba(139, 0, 0, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at 70% 30%, rgba(139, 0, 0, 0.1) 0%, transparent 70%);
+    animation: swirlDead 12s linear infinite;
+}
+
+@keyframes swirlDead {
+    0% { transform: rotate(0deg); opacity: 0.1; }
+    50% { transform: rotate(180deg); opacity: 0.05; }
+    100% { transform: rotate(360deg); opacity: 0.1; }
+}
+
+/* Override minionRise animation when firewall is destroyed */
+.game-firewall.destroyed ~ .minions-container .bret-minion,
+.game-firewall.destroyed ~ .minions-container .bret-minion.normal,
+.game-firewall.destroyed ~ .minions-container .bret-minion.fast,
+.game-firewall.destroyed ~ .minions-container .bret-minion.ultra-fast {
+    animation: minionRisePastWall 15s linear forwards !important;
+}
+
+/* Fast minions continue past wall when firewall is destroyed */
+.game-firewall.destroyed ~ .minions-container .bret-minion.fast {
+    animation: minionRisePastWall 10s linear forwards !important;
+}
+
+/* Ultra-fast minions continue past wall when firewall is destroyed */
+.game-firewall.destroyed ~ .minions-container .bret-minion.ultra-fast {
+    animation: minionRisePastWall 6s linear forwards !important;
+}
+
+/* Animation that continues past the wall */
+@keyframes minionRisePastWall {
+    0% {
+        bottom: -100px;
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    85% {
+        opacity: 1;
+    }
+    90% {
+        bottom: calc(100vh - 120px);
+        opacity: 1;
+    }
+    95% {
+        bottom: calc(100vh - 120px);
+        opacity: 1;
+    }
+    100% {
+        bottom: calc(100vh + 100px); /* Continue past the wall */
+        opacity: 1;
+    }
+}
+
+/* Evil BLIP invasion - appears from bottom and moves up with glitch effect */
+.evil-blip {
+    position: fixed;
+    left: calc(50% - 155px);
+    bottom: -300px;
+    width: 300px;
+    height: 300px;
+    transform: translateX(-50%);
+    z-index: 3000;
+    background: linear-gradient(145deg, #1a1a1a, #2c2c2c);
+    border: 4px solid #e74c3c;
+    border-radius: 50%;
+    box-shadow: 
+        0 0 30px rgba(231, 76, 60, 0.5),
+        inset 0 0 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.98;
+    animation: evilBlipRise 30s linear forwards; /* Much slower - half speed of slow minion (15s * 2) */
+    pointer-events: none;
+    overflow: visible;
+}
+
+.evil-blip.glitching {
+    animation: evilBlipRise 30s linear forwards;
+}
+
+/* Evil BLIP glitch effects - same as bad boy mode BLIP */
+.evil-blip.glitching {
+    animation: evilBlipRise 30s linear forwards, headFragmentation 0.3s ease-in-out infinite, positionJump 0.2s ease-in-out infinite;
+}
+
+.evil-blip.glitching .evil-eye {
+    animation: eyeCorruption 0.15s ease-in-out infinite;
+}
+
+.evil-blip.glitching .evil-horn {
+    animation: hornFragmentation 0.25s ease-in-out infinite;
+}
+
+/* Corruption overlay on Evil BLIP */
+.evil-blip.glitching::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 0, 0, 0.3) 2px,
+            rgba(255, 0, 0, 0.3) 4px
+        ),
+        repeating-linear-gradient(
+            -45deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 255, 0.2) 2px,
+            rgba(0, 0, 255, 0.2) 4px
+        );
+    border-radius: 50%;
+    animation: corruptionOverlay 0.4s linear infinite;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Evil BLIP horn */
+.evil-blip .evil-horn {
+    position: absolute;
+    top: -45px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 90px;
+    background: linear-gradient(to bottom, #e74c3c, #8b0000);
+    border-radius: 15px 15px 0 0;
+    box-shadow: 0 0 20px rgba(231, 76, 60, 0.8);
+    z-index: 1;
+}
+
+/* Evil BLIP eyes */
+.evil-blip .evil-eye {
+    position: absolute;
+    top: 90px;
+    width: 45px;
+    height: 45px;
+    background: #e74c3c;
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(231, 76, 60, 0.8);
+    z-index: 1;
+}
+
+.evil-blip .evil-eye.left {
+    left: 60px;
+}
+
+.evil-blip .evil-eye.right {
+    right: 60px;
+}
+
+@keyframes evilBlipRise {
+    0% {
+        bottom: -300px;
+        opacity: 0.7;
+        filter: blur(2px);
+    }
+    10% {
+        opacity: 1;
+        filter: blur(0.5px);
+    }
+    80% {
+        opacity: 1;
+        filter: blur(0.5px);
+    }
+    100% {
+        bottom: calc(100vh + 300px);
+        opacity: 0.7;
+        filter: blur(2px);
+    }
+}
+
+@keyframes evilBlipGlitch {
+    0%, 100% { filter: none; }
+    10% { filter: hue-rotate(10deg) brightness(1.2); }
+    20% { filter: blur(1px) contrast(1.5); }
+    30% { filter: hue-rotate(-10deg) brightness(0.8); }
+    40% { filter: blur(2px) contrast(0.8); }
+    50% { filter: none; }
+    60% { filter: hue-rotate(5deg) brightness(1.1); }
+    70% { filter: blur(1.5px) contrast(1.2); }
+    80% { filter: hue-rotate(-5deg) brightness(0.9); }
+    90% { filter: blur(0.5px) contrast(1.3); }
+}
+
+/* Firewall Explosion Effect */
+.firewall-explosion {
+    position: fixed;
+    width: 120px;
+    height: 120px;
+    pointer-events: none;
+    z-index: 1500;
+    transform: translate(-50%, -50%);
+    animation: firewallExplosionEffect 1s ease-out forwards;
+}
+
+@keyframes firewallExplosionEffect {
+    0% {
+        background: radial-gradient(circle, #e74c3c 0%, #ff6b35 30%, #ffffff 60%, transparent 100%);
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+    50% {
+        background: radial-gradient(circle, #e74c3c 0%, #ff6b35 40%, #ffffff 70%, transparent 100%);
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0.8;
+    }
+    100% {
+        background: radial-gradient(circle, #e74c3c 0%, #ff6b35 50%, #ffffff 80%, transparent 100%);
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+    }
+}
+
+/* Power Surge Effects */
+.power-surge-wave {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1400;
+    background: radial-gradient(circle at center, rgba(0, 212, 255, 0.8) 0%, rgba(0, 212, 255, 0.4) 30%, transparent 70%);
+    animation: powerSurgeWave 2s ease-out forwards;
+}
+
+@keyframes powerSurgeWave {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(3);
+        opacity: 0;
+    }
+}
+
+.energy-pulse {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    pointer-events: none;
+    border: 4px solid #00d4ff;
+    border-radius: 50%;
+    animation: energyPulse 1.5s ease-out forwards;
+}
+
+@keyframes energyPulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+        border-color: #00d4ff;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0.8;
+        border-color: #ff6b35;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(4);
+        opacity: 0;
+        border-color: #e74c3c;
+    }
+}
+
+.minion-energy-burst {
+    position: fixed;
+    width: 100px;
+    height: 100px;
+    pointer-events: none;
+    z-index: 1500;
+    transform: translate(-50%, -50%);
+    animation: minionEnergyBurst 0.8s ease-out forwards;
+}
+
+@keyframes minionEnergyBurst {
+    0% {
+        background: radial-gradient(circle, #00d4ff 0%, #ff6b35 50%, transparent 100%);
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+    50% {
+        background: radial-gradient(circle, #00d4ff 0%, #ff6b35 60%, transparent 100%);
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0.8;
+    }
+    100% {
+        background: radial-gradient(circle, #00d4ff 0%, #ff6b35 70%, transparent 100%);
+        transform: translate(-50%, -50%) scale(2.5);
+        opacity: 0;
+    }
+}
+
+/* Minion power surge destruction animation */
+.bret-minion.power-surge-destroyed {
+    animation: powerSurgeDestroy 0.5s ease-out forwards !important;
+    pointer-events: none;
+}
+
+@keyframes powerSurgeDestroy {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+        filter: brightness(1);
+    }
+    25% {
+        transform: scale(1.3);
+        opacity: 0.8;
+        filter: brightness(2) hue-rotate(180deg);
+    }
+    50% {
+        transform: scale(0.8);
+        opacity: 0.6;
+        filter: brightness(1.5) hue-rotate(90deg);
+    }
+    75% {
+        transform: scale(1.1);
+        opacity: 0.4;
+        filter: brightness(2.5) hue-rotate(270deg);
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+        filter: brightness(0);
+    }
+}
+
+/* Word Kill Death Effects */
+.word-kill-explosion {
+    position: fixed;
+    width: 80px;
+    height: 80px;
+    pointer-events: none;
+    z-index: 1500;
+    transform: translate(-50%, -50%);
+    animation: wordKillExplosion 0.8s ease-out forwards;
+}
+
+@keyframes wordKillExplosion {
+    0% {
+        background: radial-gradient(circle, #ff0000 0%, #ff6b35 30%, #ffff00 60%, #ffffff 80%, transparent 100%);
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+        filter: brightness(1.5) contrast(1.5);
+    }
+    25% {
+        background: radial-gradient(circle, #ff0000 0%, #ff6b35 40%, #ffff00 70%, #ffffff 85%, transparent 100%);
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.9;
+        filter: brightness(2) contrast(2);
+    }
+    50% {
+        background: radial-gradient(circle, #ff0000 0%, #ff6b35 50%, #ffff00 75%, #ffffff 90%, transparent 100%);
+        transform: translate(-50%, -50%) scale(1.8);
+        opacity: 0.7;
+        filter: brightness(1.8) contrast(1.8);
+    }
+    75% {
+        background: radial-gradient(circle, #ff0000 0%, #ff6b35 60%, #ffff00 80%, #ffffff 95%, transparent 100%);
+        transform: translate(-50%, -50%) scale(2.2);
+        opacity: 0.4;
+        filter: brightness(1.3) contrast(1.3);
+    }
+    100% {
+        background: radial-gradient(circle, #ff0000 0%, #ff6b35 70%, #ffff00 85%, #ffffff 98%, transparent 100%);
+        transform: translate(-50%, -50%) scale(2.5);
+        opacity: 0;
+        filter: brightness(1) contrast(1);
+    }
+}
+
+.word-kill-energy-burst {
+    position: fixed;
+    width: 120px;
+    height: 120px;
+    pointer-events: none;
+    z-index: 1400;
+    transform: translate(-50%, -50%);
+    animation: wordKillEnergyBurst 1.2s ease-out forwards;
+}
+
+@keyframes wordKillEnergyBurst {
+    0% {
+        background: 
+            radial-gradient(circle, rgba(255, 0, 0, 0.8) 0%, rgba(255, 107, 53, 0.6) 30%, transparent 60%),
+            radial-gradient(circle, rgba(255, 255, 0, 0.6) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 70%);
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+        filter: brightness(1.5) contrast(1.5);
+    }
+    20% {
+        background: 
+            radial-gradient(circle, rgba(255, 0, 0, 0.9) 0%, rgba(255, 107, 53, 0.7) 35%, transparent 65%),
+            radial-gradient(circle, rgba(255, 255, 0, 0.7) 0%, rgba(255, 255, 255, 0.5) 45%, transparent 75%);
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0.9;
+        filter: brightness(2) contrast(2);
+    }
+    40% {
+        background: 
+            radial-gradient(circle, rgba(255, 0, 0, 0.7) 0%, rgba(255, 107, 53, 0.5) 40%, transparent 70%),
+            radial-gradient(circle, rgba(255, 255, 0, 0.5) 0%, rgba(255, 255, 255, 0.3) 50%, transparent 80%);
+        transform: translate(-50%, -50%) scale(2.5);
+        opacity: 0.7;
+        filter: brightness(1.8) contrast(1.8);
+    }
+    60% {
+        background: 
+            radial-gradient(circle, rgba(255, 0, 0, 0.5) 0%, rgba(255, 107, 53, 0.3) 45%, transparent 75%),
+            radial-gradient(circle, rgba(255, 255, 0, 0.3) 0%, rgba(255, 255, 255, 0.2) 55%, transparent 85%);
+        transform: translate(-50%, -50%) scale(3.5);
+        opacity: 0.5;
+        filter: brightness(1.5) contrast(1.5);
+    }
+    80% {
+        background: 
+            radial-gradient(circle, rgba(255, 0, 0, 0.3) 0%, rgba(255, 107, 53, 0.2) 50%, transparent 80%),
+            radial-gradient(circle, rgba(255, 255, 0, 0.2) 0%, rgba(255, 255, 255, 0.1) 60%, transparent 90%);
+        transform: translate(-50%, -50%) scale(4.5);
+        opacity: 0.3;
+        filter: brightness(1.2) contrast(1.2);
+    }
+    100% {
+        background: 
+            radial-gradient(circle, rgba(255, 0, 0, 0.1) 0%, rgba(255, 107, 53, 0.05) 55%, transparent 85%),
+            radial-gradient(circle, rgba(255, 255, 0, 0.1) 0%, rgba(255, 255, 255, 0.05) 65%, transparent 95%);
+        transform: translate(-50%, -50%) scale(5.5);
+        opacity: 0;
+        filter: brightness(1) contrast(1);
+    }
+}
+
+/* Enhanced minion destruction animation for word kills */
+.bret-minion.destroyed.word-killed {
+    animation: wordKillDestroy 0.6s ease-out forwards !important;
+    pointer-events: none;
+}
+
+@keyframes wordKillDestroy {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+        filter: brightness(1) hue-rotate(0deg);
+    }
+    15% {
+        transform: scale(1.4);
+        opacity: 0.9;
+        filter: brightness(2) hue-rotate(90deg) saturate(2);
+    }
+    30% {
+        transform: scale(0.7);
+        opacity: 0.8;
+        filter: brightness(1.5) hue-rotate(180deg) saturate(1.5);
+    }
+    45% {
+        transform: scale(1.2);
+        opacity: 0.6;
+        filter: brightness(2.5) hue-rotate(270deg) saturate(3);
+    }
+    60% {
+        transform: scale(0.5);
+        opacity: 0.4;
+        filter: brightness(1.8) hue-rotate(360deg) saturate(2);
+    }
+    75% {
+        transform: scale(0.9);
+        opacity: 0.2;
+        filter: brightness(3) hue-rotate(450deg) saturate(4);
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+        filter: brightness(0) hue-rotate(0deg) saturate(0);
+    }
+}
+
+/* Game Over Screen */
+.game-over-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 5000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.game-over-overlay.show {
+    opacity: 1;
+}
+
+.game-over-content {
+    background: linear-gradient(145deg, #1a1a2e, #16213e);
+    border: 4px solid #e74c3c;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 
+        0 0 50px rgba(231, 76, 60, 0.8),
+        0 0 100px rgba(231, 76, 60, 0.4);
+    transform: scale(0.8);
+    transition: transform 0.5s ease;
+}
+
+.game-over-overlay.show .game-over-content {
+    transform: scale(1);
+}
+
+.game-over-title {
+    color: #e74c3c;
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(231, 76, 60, 0.8);
+    animation: gameOverTitle 2s ease-in-out infinite;
+}
+
+@keyframes gameOverTitle {
+    0%, 100% { 
+        text-shadow: 0 0 20px rgba(231, 76, 60, 0.8);
+        transform: scale(1);
+    }
+    50% { 
+        text-shadow: 0 0 30px rgba(255, 0, 0, 1);
+        transform: scale(1.05);
+    }
+}
+
+.game-over-message {
+    color: #ffffff;
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    line-height: 1.5;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.game-over-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    border: 2px solid rgba(231, 76, 60, 0.5);
+}
+
+.stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.stat-label {
+    color: #e74c3c;
+    font-weight: bold;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stat-value {
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.game-over-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.retry-btn, .return-btn {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.retry-btn {
+    background: linear-gradient(145deg, #e74c3c, #c0392b);
+    color: white;
+    border: 3px solid #ff6b35;
+    box-shadow: 0 0 20px rgba(231, 76, 60, 0.6);
+}
+
+.retry-btn:hover {
+    background: linear-gradient(145deg, #ff6b35, #e74c3c);
+    box-shadow: 0 0 30px rgba(255, 107, 53, 0.8);
+    transform: translateY(-2px);
+}
+
+.return-btn {
+    background: linear-gradient(145deg, #2c3e50, #34495e);
+    color: white;
+    border: 3px solid #3498db;
+    box-shadow: 0 0 20px rgba(52, 152, 219, 0.6);
+}
+
+.return-btn:hover {
+    background: linear-gradient(145deg, #3498db, #2980b9);
+    box-shadow: 0 0 30px rgba(52, 152, 219, 0.8);
+    transform: translateY(-2px);
+}
+
+#returnBtn {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 2005;
+    padding: 8px 14px;
+    font-size: 13px;
+    border-radius: 14px;
+    border-width: 2px;
+    letter-spacing: 0.5px;
+    display: none;
+}
+
+body.game-mode #returnBtn {
+    display: block !important;
+}
+
+.overworld-map {
+    position: fixed;
+    inset: 0;
+    z-index: 120;
+    pointer-events: none;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(15, 26, 40, 0.12) 0%, rgba(9, 12, 20, 0.2) 100%);
+}
+
+.overworld-map::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(100, 170, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(100, 170, 255, 0.07) 1px, transparent 1px);
+    background-size: 42px 42px;
+    opacity: 0.45;
+}
+
+.map-label {
+    position: absolute;
+    top: 108px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #9fd8ff;
+    border: 1px solid rgba(110, 195, 255, 0.45);
+    border-radius: 12px;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    background: rgba(6, 14, 24, 0.6);
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.5);
+}
+
+.map-firewall-preview {
+    position: absolute;
+    left: 50%;
+    bottom: 70px;
+    width: 300px;
+    height: 140px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: end;
+    justify-content: center;
+}
+
+.mini-firewall-glow {
+    position: absolute;
+    inset: 14px 24px;
+    border-radius: 16px;
+    background: radial-gradient(circle at 50% 100%, rgba(0, 212, 255, 0.35), transparent 70%);
+    filter: blur(4px);
+}
+
+.mini-firewall-core {
+    position: relative;
+    width: 240px;
+    height: 62px;
+    border-radius: 12px;
+    border: 2px solid rgba(0, 212, 255, 0.75);
+    background: linear-gradient(180deg, rgba(8, 18, 30, 0.9), rgba(6, 12, 21, 0.95));
+    color: #d9f3ff;
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.5);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.24);
+}
+
+.map-activate-console {
+    position: absolute;
+    left: 50%;
+    bottom: 230px;
+    transform: translateX(-50%);
+    border: 2px solid rgba(0, 212, 255, 0.7);
+    border-radius: 12px;
+    color: #ddf6ff;
+    background: linear-gradient(145deg, rgba(7, 21, 34, 0.9), rgba(10, 30, 46, 0.88));
+    padding: 8px 14px;
+    font-size: 0.76rem;
+    letter-spacing: 0.08em;
+    box-shadow: 0 0 16px rgba(0, 212, 255, 0.3);
+}
+
+.mini-map {
+    position: absolute;
+    top: 86px;
+    right: 16px;
+    width: 160px;
+    border-radius: 12px;
+    border: 1px solid rgba(137, 213, 255, 0.5);
+    background: rgba(7, 16, 28, 0.84);
+    box-shadow: 0 0 16px rgba(0, 212, 255, 0.22);
+    padding: 8px;
+}
+
+.mini-map-title {
+    color: #cfeeff;
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    margin-bottom: 6px;
+    text-align: left;
+}
+
+.mini-map-grid {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1.5 / 1;
+    border-radius: 8px;
+    border: 1px solid rgba(125, 196, 255, 0.4);
+    background:
+        linear-gradient(rgba(110, 194, 255, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(110, 194, 255, 0.12) 1px, transparent 1px),
+        rgba(8, 18, 32, 0.92);
+    background-size: 14px 14px;
+}
+
+.mini-map-dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.mini-map-dot.player-dot {
+    background: #9df1ff;
+    box-shadow: 0 0 8px rgba(157, 241, 255, 0.9);
+}
+
+.mini-map-dot.blip-dot {
+    background: #00d4ff;
+    box-shadow: 0 0 8px rgba(0, 212, 255, 0.95);
+}
+
+.player-sprite {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: 2px solid #e6f8ff;
+    background: linear-gradient(160deg, #46bfff, #0f79c9 65%, #0d4a7c);
+    box-shadow: 0 0 16px rgba(0, 212, 255, 0.5);
+    z-index: 4;
+}
+
+.player-sprite::before,
+.player-sprite::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #e9fbff;
+}
+
+.player-sprite::before {
+    left: 6px;
+}
+
+.player-sprite::after {
+    right: 6px;
+}
+
+.map-prompt {
+    position: absolute;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    width: min(86vw, 740px);
+    border: 1px solid rgba(143, 209, 255, 0.42);
+    border-radius: 12px;
+    background: rgba(8, 18, 30, 0.74);
+    color: #e9f7ff;
+    font-size: 0.86rem;
+    letter-spacing: 0.01em;
+    padding: 9px 12px;
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.3);
+}
+
+
+body.game-mode .overworld-map,
+body.bad-boy-mode .overworld-map {
+    display: none !important;
+}
+
+/* Cyber-Dark Theme */
+:root {
+    --cyber-bg: #0B0E14;
+    --cyber-text: #f5f8ff;
+    --cyber-cyan: #16f2ff;
+    --cyber-sky: #82c6ff;
+    --cyber-card: rgba(18, 28, 46, 0.82);
+    --cyber-card-border: rgba(120, 190, 255, 0.32);
+    --cyber-purple: #a145ff;
+    --cyber-blue: #3b82f6;
+}
+
+body.cyber-dark {
+    font-family: "Segoe UI", "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+    background: radial-gradient(circle at 12% 16%, rgba(59, 130, 246, 0.15), transparent 44%),
+                radial-gradient(circle at 86% 80%, rgba(161, 69, 255, 0.14), transparent 45%),
+                var(--cyber-bg);
+    color: var(--cyber-text);
+}
+
+body.cyber-dark h1 {
+    color: var(--cyber-text);
+    font-size: clamp(2.1rem, 4.2vw, 3rem);
+    letter-spacing: 0.04em;
+    text-shadow: 0 0 18px rgba(22, 242, 255, 0.35);
+    margin-bottom: 14px;
+}
+
+.cyber-hero {
+    width: min(980px, 92vw);
+    margin: 0 auto 18px;
+    border-radius: 20px;
+    border: 1px solid rgba(168, 220, 255, 0.35);
+    background: linear-gradient(90deg, var(--cyber-cyan) 0%, var(--cyber-sky) 52%, #9ad4ff 100%);
+    box-shadow: 0 16px 44px rgba(5, 22, 45, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.cyber-hero-content {
+    text-align: left;
+    color: #041220;
+    padding: clamp(18px, 2.6vw, 28px);
+}
+
+.hero-kicker {
+    margin: 0 0 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.78rem;
+    opacity: 0.78;
+}
+
+.cyber-hero h2 {
+    margin: 0;
+    font-size: clamp(1.35rem, 2.5vw, 2rem);
+}
+
+.cyber-hero p {
+    margin: 10px 0 0;
+    font-size: clamp(0.94rem, 1.85vw, 1.08rem);
+    line-height: 1.45;
+}
+
+.cyber-feature-grid {
+    width: min(1020px, 92vw);
+    margin: 0 auto 14px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.cyber-card {
+    background: linear-gradient(160deg, rgba(14, 24, 42, 0.88), var(--cyber-card));
+    border: 1px solid var(--cyber-card-border);
+    border-radius: 16px;
+    padding: 16px 14px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.cyber-icon {
+    width: 54px;
+    height: 54px;
+    margin: 0 auto 10px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    color: var(--cyber-cyan);
+    font-weight: 700;
+    border: 1px solid rgba(22, 242, 255, 0.5);
+    background: rgba(7, 17, 30, 0.78);
+    box-shadow: 0 0 20px rgba(22, 242, 255, 0.38);
+}
+
+.cyber-card h3 {
+    margin: 0 0 6px;
+    color: var(--cyber-text);
+    font-size: 1rem;
+}
+
+.cyber-card p {
+    margin: 0;
+    color: rgba(228, 238, 255, 0.88);
+    font-size: 0.9rem;
+    line-height: 1.42;
+}
+
+.cyber-chat-widget {
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 1002;
+    padding: 10px 14px;
+    border-radius: 13px;
+    border: 1px solid rgba(161, 69, 255, 0.7);
+    color: #f9fcff;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    background: linear-gradient(145deg, rgba(39, 25, 70, 0.88), rgba(25, 46, 92, 0.84));
+    box-shadow: 0 0 18px rgba(161, 69, 255, 0.58), 0 0 30px rgba(59, 130, 246, 0.48);
+}
+
+button,
+.bad-boy-btn,
+.home-btn,
+.return-btn,
+.cyber-chat-widget {
+    box-shadow: 0 0 16px rgba(161, 69, 255, 0.35), 0 0 26px rgba(59, 130, 246, 0.3);
+}
+
+button:hover,
+.bad-boy-btn:hover,
+.home-btn:hover,
+.return-btn:hover,
+.cyber-chat-widget:hover {
+    box-shadow: 0 0 22px rgba(161, 69, 255, 0.62), 0 0 34px rgba(59, 130, 246, 0.55);
+}
+
+body.game-mode .cyber-hero,
+body.game-mode .cyber-feature-grid,
+body.game-mode .cyber-chat-widget {
+    display: none;
+}
+
+@media (max-width: 920px) {
+    .cyber-feature-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .cyber-card {
+        text-align: left;
+    }
+
+    .cyber-icon {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+
