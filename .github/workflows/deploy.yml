@@ -18,7 +18,7 @@ jobs:
       - name: Log in to AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: PASTE-ROLE-ARN-HERE
+          role-to-assume: arn:aws:iam::129482870088
           aws-region: us-east-2
 
       - name: Upload site to S3
