@@ -4,116 +4,363 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NVC Wildcats | GameDay</title>
+
+<!-- STYLES -->
+<link rel="stylesheet" href="/navbar.css">
+
 <style>
 :root{--ink:#f7f8ff;--muted:#aeb6d4;--bg:#090d1d;--panel:#121a32;--purple:#8a4dff;--blue:#39a5ff;--line:rgba(255,255,255,.12)}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
-a{color:inherit;text-decoration:none}button,input{font:inherit}.shell{max-width:1440px;margin:auto;overflow:hidden;background:radial-gradient(ellipse at 85% 0%,rgba(90,45,200,.24),transparent 36%),var(--bg)}
-header{display:flex;align-items:center;justify-content:space-between;padding:22px clamp(18px,4vw,58px);border-bottom:1px solid var(--line);gap:24px}
-.brand{display:flex;align-items:center;gap:14px;font-weight:950;letter-spacing:-.05em;font-style:italic;font-size:clamp(20px,2.2vw,30px);line-height:.9}.crest{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(140deg,var(--purple),#172f75);font-size:26px;box-shadow:0 0 30px #6e3ce955}.brand small{display:block;font-style:normal;letter-spacing:.25em;font-size:9px;color:var(--muted);margin-top:7px}
-nav{display:flex;gap:clamp(12px,2.6vw,38px);align-items:center;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#c6cce2}nav a:first-child{color:#fff}nav a:hover{color:var(--blue)}
-.live-pill{border:1px solid #ff537a;color:#ff8ca5;padding:9px 12px;border-radius:99px;font-size:10px;font-weight:900;letter-spacing:.12em;white-space:nowrap}.live-pill:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#ff537a;margin-right:7px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+.shell{max-width:1440px;margin:auto;overflow:hidden;background:radial-gradient(ellipse at 85% 0%,rgba(90,45,200,.24),transparent 36%),var(--bg)}
+
+.brand{display:flex;align-items:center;gap:14px;font-weight:950;letter-spacing:-.05em;font-style:italic;font-size:clamp(20px,2.2vw,30px);line-height:.9}
+.crest{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(140deg,var(--purple),#172f75);font-size:26px;box-shadow:0 0 30px #6e3ce955}
+.brand small{display:block;font-style:normal;letter-spacing:.25em;font-size:9px;color:var(--muted);margin-top:7px}
+
+.live-pill{border:1px solid #ff537a;color:#ff8ca5;padding:9px 12px;border-radius:99px;font-size:10px;font-weight:900;letter-spacing:.12em;white-space:nowrap}
+.live-pill:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#ff537a;margin-right:7px}
+
+/* HERO SECTION */
 .hero{padding:clamp(44px,7vw,96px) clamp(18px,4vw,58px) 56px;position:relative;min-height:470px;display:flex;align-items:center;background:radial-gradient(ellipse at 78% 36%,rgba(77,87,255,.24),transparent 35%),radial-gradient(ellipse at 18% 80%,rgba(138,77,255,.22),transparent 38%),linear-gradient(115deg,#070b19 0%,#0c1330 55%,#10102b 100%);isolation:isolate;overflow:hidden}
 .hero:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;background:linear-gradient(90deg,rgba(7,10,27,.92) 0%,rgba(7,10,27,.78) 42%,rgba(7,10,27,.16) 100%),linear-gradient(0deg,#090d1d 0%,transparent 24%)}
-.hero-copy{position:relative;z-index:2;max-width:760px;padding:clamp(0px,2vw,18px) 0}.hero-copy h1{max-width:760px;text-wrap:balance}.hero-copy p{font-size:clamp(14px,1.3vw,17px)}.eyebrow{font-size:11px;letter-spacing:.28em;font-weight:900;color:#75baff;text-transform:uppercase;display:flex;align-items:center;gap:10px}.eyebrow:before{content:"";height:2px;width:30px;background:var(--blue)}
-h1{margin:20px 0 12px;font-size:clamp(52px,8.5vw,112px);line-height:.82;letter-spacing:-.07em;font-weight:1000;text-transform:uppercase}h1 span{display:block;color:transparent;-webkit-text-stroke:1px #a98aff;text-shadow:0 0 38px #773eff30}.hero p{max-width:490px;color:#c3cbe2;line-height:1.65;margin:20px 0 26px}.hero-actions{display:flex;gap:12px;flex-wrap:wrap}.btn{border:1px solid var(--line);border-radius:10px;padding:13px 18px;color:#fff;background:#ffffff08;font-weight:800;font-size:12px;cursor:pointer}.btn.primary{background:linear-gradient(100deg,var(--purple),#4c69ff);border:0;box-shadow:0 10px 30px #663bff45}.btn:hover{transform:translateY(-1px)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-block:1px solid var(--line)}.stat{padding:19px clamp(16px,4vw,58px);background:#0c1124}.stat strong{font-size:22px;display:block;letter-spacing:-.04em}.stat span{font-size:10px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
-main{padding:38px clamp(18px,4vw,58px) 70px}.section-top{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:22px}.section-top h2{font-size:clamp(26px,4vw,38px);letter-spacing:-.05em;margin:0}.section-top p{color:var(--muted);margin:8px 0 0;font-size:13px}.filters{display:flex;gap:8px;flex-wrap:wrap}.filter{cursor:pointer;border:1px solid var(--line);background:#111831;color:#bdc6e1;border-radius:10px;padding:14px 21px;min-width:112px;font-weight:850;font-size:14px}.filter.active{background:#f4f3ff;color:#17102b;border-color:#f4f3ff}
-.sport-tabs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:30px}.sport{display:flex;align-items:center;gap:16px;padding:17px 20px;border-radius:14px;border:1px solid var(--line);background:linear-gradient(110deg,#211442,#11172e);cursor:pointer;text-align:left;color:#fff}.sport.volleyball{background:linear-gradient(110deg,#0b2b51,#10182d)}.sport.active{outline:2px solid var(--purple);outline-offset:-2px}.sport .symbol{font-size:30px}.sport strong{font-size:17px;text-transform:uppercase;letter-spacing:.04em}.sport small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
-.content-grid{display:grid;grid-template-columns:minmax(260px,.82fr) minmax(0,1.55fr);gap:22px;align-items:start}.library-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.library-head h3{margin:0;font-size:17px}.count{font-size:10px;letter-spacing:.12em;color:#bca6ff;text-transform:uppercase}.search{width:100%;background:#0d142a;border:1px solid var(--line);border-radius:10px;padding:13px 14px;color:white;outline:none;margin-bottom:13px}.search:focus{border-color:var(--blue)}
-.video-card{width:100%;padding:0;text-align:left;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#111831;color:#fff;cursor:pointer;margin-bottom:12px;transition:.2s}.video-card:hover,.video-card.selected{border-color:#9365ff;transform:translateY(-2px);box-shadow:0 12px 28px #0005}.thumb{position:relative;aspect-ratio:16/9;background:linear-gradient(130deg,#1c1740,#0c2447);overflow:hidden}.thumb img{width:100%;height:100%;object-fit:cover;display:block}.thumb:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#080c1bd9,transparent 65%)}.play{position:absolute;z-index:1;left:50%;top:50%;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;background:#ffffffed;color:#111;display:grid;place-items:center;font-size:20px;box-shadow:0 4px 25px #0008}.video-info{padding:14px}.video-info strong{display:block;font-size:14px}.video-info small{display:block;color:var(--muted);font-size:11px;margin-top:7px}
-.player-panel{border:1px solid var(--line);border-radius:16px;background:#10172d;overflow:hidden}.player-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;gap:12px}.player-head h3{margin:0;font-size:16px}.player-head p{margin:5px 0 0;font-size:11px;color:var(--muted)}.player-badge{font-size:10px;font-weight:900;color:#91d1ff;letter-spacing:.12em}.player-frame{aspect-ratio:16/9;background:#050813;position:relative}.player-frame iframe{width:100%;height:100%;border:0;display:block}.player-placeholder{height:100%;min-height:240px;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:25px;background:linear-gradient(135deg,#19113a,#08172c)}.player-placeholder .big-play{font-size:34px;color:#fff;background:#ff1744;border-radius:15px;padding:12px 22px;margin-bottom:15px}.player-placeholder p{color:var(--muted);font-size:12px}.player-foot{display:flex;justify-content:space-between;gap:14px;padding:14px 18px;color:var(--muted);font-size:11px}.empty{border:1px dashed var(--line);padding:24px;border-radius:12px;color:var(--muted);font-size:13px;line-height:1.5}
+.hero-copy{position:relative;z-index:2;max-width:760px;padding:clamp(0px,2vw,18px) 0}
+.hero-copy h1{max-width:760px;text-wrap:balance}
+.hero-copy p{font-size:clamp(14px,1.3vw,17px)}
+.eyebrow{font-size:11px;letter-spacing:.28em;font-weight:900;color:#75baff;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.eyebrow:before{content:"";height:2px;width:30px;background:var(--blue)}
+h1{margin:20px 0 12px;font-size:clamp(52px,8.5vw,112px);line-height:.82;letter-spacing:-.07em;font-weight:1000;text-transform:uppercase}
+h1 span{display:block;color:transparent;-webkit-text-stroke:1px #a98aff;text-shadow:0 0 38px #773eff30}
+.hero p{max-width:490px;color:#c3cbe2;line-height:1.65;margin:20px 0 26px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);border-radius:10px;padding:13px 18px;color:#fff;background:#ffffff08;font-weight:800;font-size:12px;cursor:pointer}
+.btn.primary{background:linear-gradient(100deg,var(--purple),#4c69ff);border:0;box-shadow:0 10px 30px #663bff45}
+.btn:hover{transform:translateY(-1px)}
+
+/* GAME STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-block:1px solid var(--line)}
+.stat{padding:19px clamp(16px,4vw,58px);background:#0c1124}
+.stat strong{font-size:22px;display:block;letter-spacing:-.04em}
+.stat span{font-size:10px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+
+/* VIDEO LIBRARY */
+main{padding:38px clamp(18px,4vw,58px) 70px}
+.section-top{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:22px}
+.section-top h2{font-size:clamp(26px,4vw,38px);letter-spacing:-.05em;margin:0}
+.section-top p{color:var(--muted);margin:8px 0 0;font-size:13px}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filter{cursor:pointer;border:1px solid var(--line);background:#111831;color:#bdc6e1;border-radius:10px;padding:14px 21px;min-width:112px;font-weight:850;font-size:14px}
+.filter.active{background:#f4f3ff;color:#17102b;border-color:#f4f3ff}
+.sport-tabs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:30px}
+.sport{display:flex;align-items:center;gap:16px;padding:17px 20px;border-radius:14px;border:1px solid var(--line);background:linear-gradient(110deg,#211442,#11172e);cursor:pointer;text-align:left;color:#fff}
+.sport.volleyball{background:linear-gradient(110deg,#0b2b51,#10182d)}
+.sport.active{outline:2px solid var(--purple);outline-offset:-2px}
+.sport .symbol{font-size:30px}
+.sport strong{font-size:17px;text-transform:uppercase;letter-spacing:.04em}
+.sport small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.content-grid{display:grid;grid-template-columns:minmax(260px,.82fr) minmax(0,1.55fr);gap:22px;align-items:start}
+.library-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.library-head h3{margin:0;font-size:17px}
+.count{font-size:10px;letter-spacing:.12em;color:#bca6ff;text-transform:uppercase}
+.search{width:100%;background:#0d142a;border:1px solid var(--line);border-radius:10px;padding:13px 14px;color:white;outline:none;margin-bottom:13px}
+.search:focus{border-color:var(--blue)}
+
+/* VIDEO CARDS */
+.video-card{width:100%;padding:0;text-align:left;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#111831;color:#fff;cursor:pointer;margin-bottom:12px;transition:.2s}
+.video-card:hover,.video-card.selected{border-color:#9365ff;transform:translateY(-2px);box-shadow:0 12px 28px #0005}
+.thumb{position:relative;aspect-ratio:16/9;background:linear-gradient(130deg,#1c1740,#0c2447);overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#080c1bd9,transparent 65%)}
+.play{position:absolute;z-index:1;left:50%;top:50%;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;background:#ffffffed;color:#111;display:grid;place-items:center;font-size:20px;box-shadow:0 4px 25px #0008}
+.video-info{padding:14px}
+.video-info strong{display:block;font-size:14px}
+.video-info small{display:block;color:var(--muted);font-size:11px;margin-top:7px}
+
+/* VIDEO PLAYER */
+.player-panel{border:1px solid var(--line);border-radius:16px;background:#10172d;overflow:hidden}
+.player-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;gap:12px}
+.player-head h3{margin:0;font-size:16px}
+.player-head p{margin:5px 0 0;font-size:11px;color:var(--muted)}
+.player-badge{font-size:10px;font-weight:900;color:#91d1ff;letter-spacing:.12em}
+.player-frame{aspect-ratio:16/9;background:#050813;position:relative}
+.player-frame iframe{width:100%;height:100%;border:0;display:block}
+.player-placeholder{height:100%;min-height:240px;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:25px;background:linear-gradient(135deg,#19113a,#08172c)}
+.player-placeholder .big-play{font-size:34px;color:#fff;background:#ff1744;border-radius:15px;padding:12px 22px;margin-bottom:15px}
+.player-placeholder p{color:var(--muted);font-size:12px}
+.player-foot{display:flex;justify-content:space-between;gap:14px;padding:14px 18px;color:var(--muted);font-size:11px}
+.empty{border:1px dashed var(--line);padding:24px;border-radius:12px;color:var(--muted);font-size:13px;line-height:1.5}
+
+/* FOOTER */
 footer{border-top:1px solid var(--line);padding:24px clamp(18px,4vw,58px);display:flex;justify-content:space-between;gap:16px;color:#7f89ac;font-size:11px;flex-wrap:wrap}
-@media(max-width:850px){header{flex-wrap:wrap}nav{order:3;width:100%;justify-content:space-between;gap:10px;font-size:10px}.hero{min-height:350px}.content-grid{grid-template-columns:1fr}.sport-tabs{grid-template-columns:1fr}.section-top{align-items:start;flex-direction:column}}
+
+/* RESPONSIVE STYLES */
+@media(max-width:850px){.hero{min-height:350px}.content-grid{grid-template-columns:1fr}.sport-tabs{grid-template-columns:1fr}.section-top{align-items:start;flex-direction:column}}
 @media(max-width:480px){.filter{padding:15px 18px;min-width:0;flex:1;font-size:14px}.brand{font-size:22px}.live-pill{font-size:9px}.stats{grid-template-columns:1fr 1fr}.stat:last-child{display:none}.hero{padding-top:45px}h1{font-size:55px}.player-foot{flex-direction:column}.sport{padding:14px}.filter{flex:1}}
 
-    .hero-athlete-montage{position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:1}
+/* ATHLETE BACKGROUNDS */
+.hero-athlete-montage{position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:1}
 .hero-athlete-montage img{position:absolute;height:112%;width:47%;top:-4%;object-fit:cover;filter:grayscale(1) contrast(1.1);mix-blend-mode:screen;opacity:.28;mask-image:linear-gradient(to bottom,black 42%,transparent 100%);-webkit-mask-image:linear-gradient(to bottom,black 42%,transparent 100%)}
 .hero-athlete-montage .volleyball-athlete{left:35%;object-position:center;mask-image:linear-gradient(to right,transparent 0%,black 38%,black 64%,transparent 100%);-webkit-mask-image:linear-gradient(to right,transparent 0%,black 38%,black 64%,transparent 100%)}
 .hero-athlete-montage .basketball-athlete{right:-3%;object-position:center;opacity:.38;mask-image:linear-gradient(to left,transparent 0%,black 28%,black 66%,transparent 100%);-webkit-mask-image:linear-gradient(to left,transparent 0%,black 28%,black 66%,transparent 100%)}
 .hero-copy{z-index:2}
 @media(max-width:700px){.hero{min-height:410px}.hero-athlete-montage{opacity:.75}.hero-athlete-montage img{width:60%;height:100%;top:0;opacity:.19}.hero-athlete-montage .volleyball-athlete{left:24%}.hero-athlete-montage .basketball-athlete{right:-16%;opacity:.25}}
-.hero-athlete-montage img{width:65%}.hero-athlete-montage .volleyball-athlete{left:-12%}.hero-athlete-montage .basketball-athlete{right:-12%}}
-    
+.hero-athlete-montage img{width:65%}
+.hero-athlete-montage .volleyball-athlete{left:-12%}
+.hero-athlete-montage .basketball-athlete{right:-12%}
 </style>
 </head>
+
 <body>
+
+<!-- NAVBAR -->
+<div id="site-navbar"></div>
+
+<!-- SPORTS PAGE -->
 <div class="shell">
-<header>
-  <a class="brand" href="#"><span class="crest">🐾</span><span>NVC WILDCATS<small>ATHLETICS • GAME DAY</small></span></a>
-  <nav><a href="#home">Home</a><a href="#library">Watch</a><a href="#schedule">Schedule</a><a href="#about">About</a></nav>
-  <span class="live-pill">WILDCAT PRIDE</span>
-</header>
+
+<!-- HERO SECTION -->
 <section class="hero" id="home">
-      <div class="hero-athlete-montage" aria-hidden="true">
+    <div class="hero-athlete-montage" aria-hidden="true">
         <img class="volleyball-athlete" src="https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?auto=format&fit=crop&w=1200&q=85" alt="">
         <img class="basketball-athlete" src="https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=1200&q=85" alt="">
-      </div>
-    
-  <div class="hero-copy">
-    <div class="eyebrow">The home of Wildcats athletics</div>
-    <h1>Every game.<span>Every moment.</span></h1>
-    <p>Feel the energy, relive the big plays, and back your team. Welcome to the new home for NVC Wildcats game videos and highlights.</p>
-    <div class="hero-actions"><a class="btn primary" href="#library">▶ &nbsp; Watch games</a></div>
-  </div>
+    </div>
+
+    <div class="hero-copy">
+        <div class="eyebrow">The home of Wildcats athletics</div>
+        <h1>Every game.<span>Every moment.</span></h1>
+        <p>Feel the energy, relive the big plays, and back your team. Welcome to the new home for NVC Wildcats game videos and highlights.</p>
+        <div class="hero-actions">
+            <a class="btn primary" href="#library">▶ &nbsp; Watch games</a>
+        </div>
+    </div>
 </section>
-<div class="stats"><div class="stat"><strong>ONE TEAM</strong><span>One school. One family.</span></div><div class="stat"><strong>ALL IN</strong><span>Every play matters</span></div><div class="stat"><strong>WILDCAT PRIDE</strong><span>Show up. Stand proud.</span></div></div>
-<main id="library">
-  <div class="section-top"><div><div class="eyebrow">On demand</div><h2>Find your game.</h2><p>Choose a sport and team to browse the Wildcats video library.</p></div><div class="filters"><button class="filter active" data-team="Men">Men's</button><button class="filter" data-team="Women">Women's</button></div></div>
-  <div class="sport-tabs" id="teams">
-    <button class="sport active" data-sport="Basketball"><span class="symbol">🏀</span><span><strong>Basketball</strong><small>Fast breaks. Big moments.</small></span></button>
-    <button class="sport volleyball" data-sport="Volleyball"><span class="symbol">🏐</span><span><strong>Volleyball</strong><small>Power. Precision. Pride.</small></span></button>
-  </div>
-  <div class="content-grid">
-    <section>
-      <div class="library-head"><h3 id="libraryTitle">Men's Basketball</h3><span class="count" id="videoCount">1 VIDEO</span></div>
-      <input class="search" id="search" type="search" placeholder="Search games and highlights…" aria-label="Search videos">
-      <div id="videoList"></div>
-    </section>
-    <section class="player-panel">
-      <div class="player-head"><div><h3 id="playerTitle">NVC Men's Basketball Game</h3><p id="playerSub">Selected game • Wildcats video library</p></div><span class="player-badge">NOW PLAYING</span></div>
-      <div class="player-frame" id="playerFrame"><div class="player-placeholder"><div class="big-play">▶</div><strong>Select a game to watch</strong><p>Choose a video card on the left to load the game here.</p></div></div>
-      <div style="padding:0 18px 14px;text-align:right"><a id="youtubeFallback" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" style="color:#91d1ff;font-size:12px;font-weight:800">Open video on YouTube ↗</a></div>
-      <div class="player-foot"><span>🔊 Sound on for the full game-day experience</span><span>GO WILDCATS</span></div>
-    </section>
-  </div>
-</main>
-<footer id="about"><span>© NVC Wildcats Athletics • Game Day, Every Day</span><span>Built for Wildcats fans.</span></footer>
+
+<!-- GAME STATS -->
+<div class="stats">
+    <div class="stat"><strong>ONE TEAM</strong><span>One school. One family.</span></div>
+    <div class="stat"><strong>ALL IN</strong><span>Every play matters</span></div>
+    <div class="stat"><strong>WILDCAT PRIDE</strong><span>Show up. Stand proud.</span></div>
 </div>
+
+<!-- VIDEO LIBRARY -->
+<main id="library">
+    <div class="section-top">
+        <div>
+            <div class="eyebrow">On demand</div>
+            <h2>Find your game.</h2>
+            <p>Choose a sport and team to browse the Wildcats video library.</p>
+        </div>
+        <div class="filters">
+            <button class="filter active" data-team="Men">Men's</button>
+            <button class="filter" data-team="Women">Women's</button>
+        </div>
+    </div>
+
+    <div class="sport-tabs" id="teams">
+        <button class="sport active" data-sport="Basketball">
+            <span class="symbol">🏀</span>
+            <span><strong>Basketball</strong><small>Fast breaks. Big moments.</small></span>
+        </button>
+        <button class="sport volleyball" data-sport="Volleyball">
+            <span class="symbol">🏐</span>
+            <span><strong>Volleyball</strong><small>Power. Precision. Pride.</small></span>
+        </button>
+    </div>
+
+    <div class="content-grid">
+        <section>
+            <div class="library-head">
+                <h3 id="libraryTitle">Men's Basketball</h3>
+                <span class="count" id="videoCount">1 VIDEO</span>
+            </div>
+            <input class="search" id="search" type="search" placeholder="Search games and highlights…" aria-label="Search videos">
+            <div id="videoList"></div>
+        </section>
+
+        <section class="player-panel">
+            <div class="player-head">
+                <div>
+                    <h3 id="playerTitle">NVC Men's Basketball Game</h3>
+                    <p id="playerSub">Selected game • Wildcats video library</p>
+                </div>
+                <span class="player-badge">NOW PLAYING</span>
+            </div>
+            <div class="player-frame" id="playerFrame">
+                <div class="player-placeholder">
+                    <div class="big-play">▶</div>
+                    <strong>Select a game to watch</strong>
+                    <p>Choose a video card on the left to load the game here.</p>
+                </div>
+            </div>
+            <div style="padding:0 18px 14px;text-align:right">
+                <a id="youtubeFallback" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" style="color:#91d1ff;font-size:12px;font-weight:800">Open video on YouTube ↗</a>
+            </div>
+            <div class="player-foot">
+                <span>🔊 Sound on for the full game-day experience</span>
+                <span>GO WILDCATS</span>
+            </div>
+        </section>
+    </div>
+</main>
+
+<!-- FOOTER -->
+<footer id="about">
+    <span>© NVC Wildcats Athletics • Game Day, Every Day</span>
+    <span>Built for Wildcats fans.</span>
+</footer>
+</div>
+
+<!-- PAGE JAVASCRIPT -->
 <script>
 const videos = [
- {id:"isajoC-4bRw",embedUrl:"https://www.youtube.com/embed/isajoC-4bRw?si=92KjgA4_TznL5glU",title:"NVC Men's Basketball Game",sport:"Basketball",team:"Men",date:"Game video",description:"Watch the Wildcats in action."},
- {id:"SyVPDE2ky5Y",title:"NVC Women's Basketball Game",sport:"Basketball",team:"Women",date:"Game video",description:"Watch the Wildcats in action."},
-  {id:"Q-Y4AkY6iqY",title:"NVC Women's Volleyball Game",sport:"Volleyball",team:"Women",description:"Women's volleyball game highlights"}
+    {
+        id: "isajoC-4bRw",
+        embedUrl: "https://www.youtube.com/embed/isajoC-4bRw?si=92KjgA4_TznL5glU",
+        title: "NVC Men's Basketball Game",
+        sport: "Basketball",
+        team: "Men",
+        date: "Game video",
+        description: "Watch the Wildcats in action."
+    },
+    {
+        id: "SyVPDE2ky5Y",
+        title: "NVC Women's Basketball Game",
+        sport: "Basketball",
+        team: "Women",
+        date: "Game video",
+        description: "Watch the Wildcats in action."
+    },
+    {
+        id: "Q-Y4AkY6iqY",
+        title: "NVC Women's Volleyball Game",
+        sport: "Volleyball",
+        team: "Women",
+        description: "Women's volleyball game highlights"
+    }
 ];
-let sport="Basketball",team="Men",selectedId=null;
-const list=document.getElementById("videoList"), search=document.getElementById("search");
-function render(){
- const q=search.value.trim().toLowerCase();
- const found=videos.filter(v=>v.sport===sport&&v.team===team&&(v.title+" "+v.description).toLowerCase().includes(q));
- document.getElementById("libraryTitle").textContent=team+"'s "+sport;
- document.getElementById("videoCount").textContent=found.length+" VIDEO"+(found.length===1?"":"S");
- list.innerHTML="";
- if(!found.length){list.innerHTML='<div class="empty">No videos in this section yet. Choose another team or sport to explore the library.</div>';return;}
- found.forEach(v=>{
-  const card=document.createElement("button");card.className="video-card"+(selectedId===v.id?" selected":"");
-  card.innerHTML=`<div class="thumb"><img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="${v.title} thumbnail" onerror="this.onerror=null;this.src='https://img.youtube.com/vi/${v.id}/mqdefault.jpg'"><span class="play">▶</span></div><div class="video-info"><strong>${v.title}</strong><small>${v.team}'s ${v.sport} &nbsp; • &nbsp; ${v.date}</small></div>`;
-  card.addEventListener("click",()=>play(v.id));list.appendChild(card);
- });
+
+let sport = "Basketball";
+let team = "Men";
+let selectedId = null;
+
+const list = document.getElementById("videoList");
+const search = document.getElementById("search");
+
+function render() {
+    const q = search.value.trim().toLowerCase();
+    const found = videos.filter(v =>
+        v.sport === sport &&
+        v.team === team &&
+        (v.title + " " + v.description).toLowerCase().includes(q)
+    );
+
+    document.getElementById("libraryTitle").textContent = team + "'s " + sport;
+    document.getElementById("videoCount").textContent =
+        found.length + " VIDEO" + (found.length === 1 ? "" : "S");
+
+    list.innerHTML = "";
+
+    if (!found.length) {
+        list.innerHTML = '<div class="empty">No videos in this section yet. Choose another team or sport to explore the library.</div>';
+        return;
+    }
+
+    found.forEach(v => {
+        const card = document.createElement("button");
+        card.className = "video-card" + (selectedId === v.id ? " selected" : "");
+
+        card.innerHTML = `
+            <div class="thumb">
+                <img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg"
+                     alt="${v.title} thumbnail"
+                     onerror="this.onerror=null;this.src='https://img.youtube.com/vi/${v.id}/mqdefault.jpg'">
+                <span class="play">▶</span>
+            </div>
+            <div class="video-info">
+                <strong>${v.title}</strong>
+                <small>${v.team}'s ${v.sport} &nbsp; • &nbsp; ${v.date}</small>
+            </div>`;
+
+        card.addEventListener("click", () => play(v.id));
+        list.appendChild(card);
+    });
 }
-function play(id){
- const v=videos.find(x=>x.id===id);if(!v)return;selectedId=id;
- document.getElementById("playerTitle").textContent=v.title;
- document.getElementById("playerSub").textContent=v.team+"'s "+v.sport+" • "+v.description;
- const embedSrc="https://www.youtube.com/embed/"+v.id+"?playsinline=1&rel=0";
- document.getElementById("playerFrame").innerHTML=`<iframe src="${embedSrc}" title="${v.title}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="origin" allowfullscreen></iframe>`;
- const fallback=document.getElementById("youtubeFallback");
- if(fallback){fallback.href="https://www.youtube.com/watch?v="+v.id;fallback.textContent="If the video won't play, open it on YouTube ↗";}
- render();
+
+function play(id) {
+    const v = videos.find(x => x.id === id);
+    if (!v) return;
+
+    selectedId = id;
+
+    document.getElementById("playerTitle").textContent = v.title;
+    document.getElementById("playerSub").textContent =
+        v.team + "'s " + v.sport + " • " + v.description;
+
+    const embedSrc = "https://www.youtube.com/embed/" + v.id + "?playsinline=1&rel=0";
+
+    document.getElementById("playerFrame").innerHTML = `
+        <iframe src="${embedSrc}"
+                title="${v.title}"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="origin"
+                allowfullscreen></iframe>`;
+
+    const fallback = document.getElementById("youtubeFallback");
+    if (fallback) {
+        fallback.href = "https://www.youtube.com/watch?v=" + v.id;
+        fallback.textContent = "If the video won't play, open it on YouTube ↗";
+    }
+
+    render();
 }
-document.querySelectorAll("[data-sport]").forEach(b=>b.addEventListener("click",()=>{sport=b.dataset.sport;document.querySelectorAll("[data-sport]").forEach(x=>x.classList.toggle("active",x===b));selectedId=null;document.getElementById("youtubeFallback").href="https://www.youtube.com/";document.getElementById("youtubeFallback").textContent="Open video on YouTube ↗";document.getElementById("playerTitle").textContent="Choose a "+sport+" game";document.getElementById("playerSub").textContent="Selected category • Wildcats video library";document.getElementById("playerFrame").innerHTML='<div class="player-placeholder"><div class="big-play">▶</div><strong>Select a game to watch</strong><p>Choose a video card on the left to load the game here.</p></div>';render();}));
-document.querySelectorAll("[data-team]").forEach(b=>b.addEventListener("click",()=>{team=b.dataset.team;document.querySelectorAll("[data-team]").forEach(x=>x.classList.toggle("active",x===b));selectedId=null;document.getElementById("youtubeFallback").href="https://www.youtube.com/";document.getElementById("youtubeFallback").textContent="Open video on YouTube ↗";document.getElementById("playerTitle").textContent="Choose a "+team+"'s "+sport+" game";document.getElementById("playerFrame").innerHTML='<div class="player-placeholder"><div class="big-play">▶</div><strong>Select a game to watch</strong><p>Choose a video card on the left to load the game here.</p></div>';render();}));
-search.addEventListener("input",render);render();
+
+document.querySelectorAll("[data-sport]").forEach(b => {
+    b.addEventListener("click", () => {
+        sport = b.dataset.sport;
+
+        document.querySelectorAll("[data-sport]").forEach(x =>
+            x.classList.toggle("active", x === b)
+        );
+
+        selectedId = null;
+        document.getElementById("youtubeFallback").href = "https://www.youtube.com/";
+        document.getElementById("youtubeFallback").textContent = "Open video on YouTube ↗";
+        document.getElementById("playerTitle").textContent = "Choose a " + sport + " game";
+        document.getElementById("playerSub").textContent = "Selected category • Wildcats video library";
+        document.getElementById("playerFrame").innerHTML = '<div class="player-placeholder"><div class="big-play">▶</div><strong>Select a game to watch</strong><p>Choose a video card on the left to load the game here.</p></div>';
+
+        render();
+    });
+});
+
+document.querySelectorAll("[data-team]").forEach(b => {
+    b.addEventListener("click", () => {
+        team = b.dataset.team;
+
+        document.querySelectorAll("[data-team]").forEach(x =>
+            x.classList.toggle("active", x === b)
+        );
+
+        selectedId = null;
+        document.getElementById("youtubeFallback").href = "https://www.youtube.com/";
+        document.getElementById("youtubeFallback").textContent = "Open video on YouTube ↗";
+        document.getElementById("playerTitle").textContent = "Choose a " + team + "'s " + sport + " game";
+        document.getElementById("playerSub").textContent = "Selected category • Wildcats video library";
+        document.getElementById("playerFrame").innerHTML = '<div class="player-placeholder"><div class="big-play">▶</div><strong>Select a game to watch</strong><p>Choose a video card on the left to load the game here.</p></div>';
+
+        render();
+    });
+});
+
+search.addEventListener("input", render);
+render();
 play("isajoC-4bRw");
 </script>
+
+<!-- SHARED NAVBAR SCRIPT -->
+<script src="/navbar.js" defer></script>
+
 </body>
 </html>
