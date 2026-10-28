@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <title>Website Feedback</title>
 
+  <!-- NAVBAR STYLES -->
+  <link rel="stylesheet" href="/navbar.css">
+
+  <!-- PAGE STYLES -->
   <style>
     * {
       margin: 0;
@@ -143,6 +147,10 @@
 
 <body>
 
+  <!-- NAVBAR -->
+  <div id="site-navbar"></div>
+
+   <!-- FEEDBACK FORM -->
   <div class="container">
 
     <section class="text-center">
@@ -222,6 +230,7 @@
 
   </div>
 
+   <!-- FOOTER -->
   <footer>
     <div class="page-views">
       Wildcats AI and Cloud Technology Club Feedback
@@ -231,7 +240,7 @@
     </div>
   </footer>
 
-  <!-- WORKING AWS SUBMISSION SCRIPT -->
+ <!-- FEEDBACK SUBMISSION SCRIPT -->
   <script>
 document.getElementById("feedbackForm").addEventListener("submit", async function(e) {
   e.preventDefault();
@@ -283,6 +292,9 @@ document.getElementById("feedbackForm").addEventListener("submit", async functio
   }
 });
 </script>
+
+<!-- SHARED NAVBAR SCRIPT -->
+  <script src="/navbar.js" defer></script>
 
 </body>
 </html>
