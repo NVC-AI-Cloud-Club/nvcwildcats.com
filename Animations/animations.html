@@ -1,2604 +1,4848 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
 
     <title>THE AI VAULT — Wildcats AI & Cloud Computing Club</title>
 
+    <!-- SHARED NAVBAR STYLES -->
+    <link rel="stylesheet" href="/navbar.css">
+
+
+
     <!-- Google Font -->
+
     <link
+
         href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+
         rel="stylesheet"
+
     >
+
+
 
     <!-- Font Awesome -->
+
     <link
+
         rel="stylesheet"
+
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+
     >
+
+
 
     <!-- AOS -->
+
     <link
+
         rel="stylesheet"
+
         href="https://unpkg.com/aos@2.3.1/dist/aos.css"
+
     >
 
+
+
     <style>
+
         * {
+
             margin: 0;
+
             padding: 0;
+
             box-sizing: border-box;
+
         }
+
+
 
         html {
+
             scroll-behavior: smooth;
+
         }
+
+
 
         body {
+
             font-family: "Roboto", sans-serif;
+
             background: #08090b;
+
             color: #f4f5f7;
+
             overflow-x: hidden;
+
         }
+
+
 
         body.modal-open {
+
             overflow: hidden;
+
         }
+
+
 
         :root {
+
             --bg: #08090b;
+
             --bg-soft: #0d0f12;
+
             --card: #111419;
+
             --text: #f4f5f7;
+
             --muted: #9298a3;
+
             --blue: #1e8cff;
+
             --blue-bright: #49a6ff;
+
             --line: rgba(255,255,255,0.09);
+
         }
 
-        /* =========================
-           NAV
-        ========================= */
 
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 76px;
-            z-index: 1000;
 
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        /* HERO */
 
-            padding: 0 5vw;
+/* =========================
 
-            background: rgba(8, 9, 11, 0.82);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .nav-logo {
-            color: white;
-            text-decoration: none;
-
-            font-size: 14px;
-            font-weight: 700;
-
-            letter-spacing: 0.18em;
-        }
-
-        .nav-logo span {
-            color: var(--blue);
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 34px;
-        }
-
-        .nav-links a {
-            color: #b9bec7;
-            text-decoration: none;
-
-            font-size: 11px;
-            font-weight: 500;
-
-            letter-spacing: 0.16em;
-
-            transition: 0.25s ease;
-        }
-
-        .nav-links a:hover {
-            color: white;
-        }
-
-        .nav-menu {
-            display: none;
-            color: white;
-            font-size: 22px;
-            cursor: pointer;
-        }
-
-        /* =========================
            HERO
+
         ========================= */
+
+
 
         .hero {
+
             position: relative;
 
+
+
             padding:
+
                 150px
+
                 5vw
+
                 100px;
+
+
 
             overflow: hidden;
 
+
+
             background:
+
                 radial-gradient(
+
                     circle at 70% 30%,
+
                     rgba(30,140,255,0.10),
+
                     transparent 35%
+
                 );
+
         }
 
+
+
         .hero-grid {
+
             position: absolute;
+
             inset: 0;
 
+
+
             background-image:
+
                 linear-gradient(
+
                     rgba(255,255,255,0.025) 1px,
+
                     transparent 1px
+
                 ),
+
                 linear-gradient(
+
                     90deg,
+
                     rgba(255,255,255,0.025) 1px,
+
                     transparent 1px
+
                 );
+
+
 
             background-size: 70px 70px;
 
+
+
             mask-image: linear-gradient(
+
                 to bottom,
+
                 black,
+
                 transparent
+
             );
 
+
+
             pointer-events: none;
+
         }
 
+
+
         .hero-content {
+
             position: relative;
+
             z-index: 2;
+
+
 
             max-width: 1000px;
 
+
+
             margin: 0 auto;
 
+
+
             text-align: center;
+
         }
 
+
+
         .eyebrow {
+
             color: var(--blue-bright);
 
+
+
             font-size: 11px;
+
             font-weight: 700;
+
+
 
             letter-spacing: 0.28em;
 
+
+
             text-transform: uppercase;
 
+
+
             margin-bottom: 25px;
+
         }
 
+
+
         .hero h1 {
+
             font-size: clamp(60px, 9vw, 130px);
+
+
 
             line-height: 0.88;
 
+
+
             font-weight: 900;
 
+
+
             letter-spacing: -0.07em;
+
         }
+
+
 
         .hero h1 span {
+
             color: var(--blue);
+
         }
 
+
+
         .hero-description {
+
             max-width: 700px;
+
+
 
             margin: 35px auto 0;
 
+
+
             color: #a8adb6;
 
+
+
             font-size: 16px;
+
             line-height: 1.7;
+
         }
 
+
+
         /* =========================
+
            ONE HERO VIDEO
+
         ========================= */
 
+
+
         .hero-video-container {
+
             position: relative;
+
             z-index: 3;
+
+
 
             width: min(1200px, 100%);
 
+
+
             margin: 70px auto 0;
+
         }
 
+
+
         .hero-video {
+
             position: relative;
+
+
 
             overflow: hidden;
 
+
+
             background: #030405;
+
+
 
             border: 1px solid rgba(255,255,255,0.12);
 
+
+
             box-shadow:
+
                 0 40px 100px rgba(0,0,0,0.55),
+
                 0 0 80px rgba(30,140,255,0.08);
+
         }
 
+
+
         .hero-video video {
+
             display: block;
 
+
+
             width: 100%;
+
+
 
             aspect-ratio: 16 / 9;
 
+
+
             object-fit: cover;
 
+
+
             background: #030405;
+
         }
 
+
+
         .hero-play-button {
+
             position: absolute;
 
+
+
             left: 50%;
+
             top: 50%;
+
+
 
             transform: translate(-50%, -50%);
 
+
+
             width: 90px;
+
             height: 90px;
 
+
+
             border-radius: 50%;
+
+
 
             border: 1px solid rgba(255,255,255,0.55);
 
+
+
             background: rgba(5,6,8,0.72);
+
+
 
             color: white;
 
+
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
+
 
             cursor: pointer;
 
+
+
             backdrop-filter: blur(12px);
 
+
+
             transition:
+
                 transform 0.3s ease,
+
                 background 0.3s ease,
+
                 border-color 0.3s ease;
 
+
+
             z-index: 5;
+
         }
 
+
+
         .hero-play-button:hover {
+
             transform: translate(-50%, -50%) scale(1.08);
+
+
 
             background: var(--blue);
 
+
+
             border-color: var(--blue);
+
         }
+
+
 
         .hero-play-button i {
+
             font-size: 25px;
+
             margin-left: 4px;
+
         }
 
+
+
         .video-label {
+
             position: absolute;
 
+
+
             left: 20px;
+
             bottom: 20px;
 
+
+
             z-index: 4;
+
+
 
             padding: 8px 12px;
 
+
+
             background: rgba(0,0,0,0.65);
+
+
 
             border: 1px solid rgba(255,255,255,0.12);
 
+
+
             font-size: 9px;
+
+
 
             letter-spacing: 0.18em;
 
+
+
             text-transform: uppercase;
+
         }
+
+
 
         /* =========================
+
            SECTIONS
+
         ========================= */
 
+
+
         section:not(.hero) {
+
             padding: 130px 5vw;
+
         }
 
+
+
         .section-header {
+
             display: flex;
+
             justify-content: space-between;
+
             align-items: flex-end;
+
+
 
             gap: 40px;
 
+
+
             margin-bottom: 55px;
+
         }
 
+
+
         .section-number {
+
             color: var(--blue);
 
+
+
             font-size: 10px;
+
             font-weight: 700;
+
+
 
             letter-spacing: 0.2em;
 
+
+
             margin-bottom: 15px;
+
         }
 
+
+
         .section-title {
+
             font-size: clamp(45px, 6vw, 80px);
+
+
 
             line-height: 0.92;
 
+
+
             letter-spacing: -0.055em;
 
+
+
             font-weight: 800;
+
         }
 
+
+
         .section-description {
+
             max-width: 450px;
 
+
+
             color: var(--muted);
+
+
 
             font-size: 14px;
 
+
+
             line-height: 1.7;
+
         }
+
+
 
         /* =========================
+
            VAULT
+
         ========================= */
 
+
+
         .vault {
+
             background: var(--bg-soft);
+
         }
 
+
+
         .vault-grid {
+
             display: grid;
 
+
+
             grid-template-columns:
+
                 repeat(2, minmax(0, 1fr));
+
+
 
             gap: 2px;
 
+
+
             background: rgba(255,255,255,0.05);
+
         }
 
+
+
         .project-card {
+
             position: relative;
+
+
 
             background: var(--card);
 
+
+
             overflow: hidden;
+
+
 
             cursor: pointer;
 
+
+
             transition:
+
                 background 0.35s ease,
+
                 transform 0.35s ease;
+
         }
+
+
 
         .project-card:hover {
+
             background: #15191f;
+
         }
 
+
+
         .project-media {
+
             position: relative;
+
+
 
             height: 310px;
 
+
+
             background: #050608;
 
+
+
             overflow: hidden;
+
         }
 
+
+
         .project-media video {
+
             display: block;
 
+
+
             width: 100%;
+
             height: 100%;
+
+
 
             object-fit: cover;
 
+
+
             background: #050608;
 
+
+
             transition:
+
                 transform 0.6s ease,
+
                 filter 0.6s ease;
+
         }
+
+
 
         .project-card:hover video {
+
             transform: scale(1.035);
+
             filter: brightness(1.08);
+
         }
+
+
 
         .project-overlay {
+
             position: absolute;
+
             inset: 0;
 
+
+
             background:
+
                 linear-gradient(
+
                     to bottom,
+
                     transparent 40%,
+
                     rgba(0,0,0,0.75)
+
                 );
 
+
+
             pointer-events: none;
+
         }
 
+
+
         .project-number {
+
             position: absolute;
 
+
+
             top: 18px;
+
             left: 18px;
+
+
 
             padding: 7px 9px;
 
+
+
             background: rgba(0,0,0,0.6);
+
+
 
             border: 1px solid rgba(255,255,255,0.12);
 
+
+
             font-size: 10px;
+
+
 
             letter-spacing: 0.15em;
 
+
+
             z-index: 3;
+
         }
 
+
+
         .card-play-button {
+
             position: absolute;
 
+
+
             left: 50%;
+
             top: 50%;
+
+
 
             transform: translate(-50%, -50%);
 
+
+
             width: 70px;
+
             height: 70px;
 
+
+
             border-radius: 50%;
+
+
 
             border: 1px solid rgba(255,255,255,0.45);
 
+
+
             background: rgba(5,6,8,0.75);
+
+
 
             color: white;
 
+
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
 
+
+
             cursor: pointer;
+
+
 
             z-index: 4;
 
+
+
             transition:
+
                 transform 0.3s ease,
+
                 background 0.3s ease;
+
         }
+
+
 
         .card-play-button:hover {
+
             transform: translate(-50%, -50%) scale(1.1);
 
+
+
             background: var(--blue);
+
         }
+
+
 
         .card-play-button i {
+
             margin-left: 3px;
+
         }
+
+
 
         .project-info {
+
             padding: 28px 30px 35px;
+
         }
 
+
+
         .project-category {
+
             color: var(--blue-bright);
 
+
+
             font-size: 9px;
+
             font-weight: 700;
+
+
 
             letter-spacing: 0.18em;
 
+
+
             text-transform: uppercase;
 
+
+
             margin-bottom: 12px;
+
         }
 
+
+
         .project-info h3 {
+
             font-size: 27px;
+
+
 
             font-weight: 500;
 
+
+
             letter-spacing: -0.03em;
+
         }
 
+
+
         .project-info p {
+
             color: var(--muted);
+
+
 
             font-size: 13px;
 
+
+
             line-height: 1.6;
 
+
+
             margin-top: 10px;
+
         }
+
+
 
         /* =========================
+
            STATS
+
         ========================= */
 
+
+
         .stats {
+
             display: grid;
 
+
+
             grid-template-columns:
+
                 repeat(4, 1fr);
 
+
+
             border-top: 1px solid var(--line);
+
             border-bottom: 1px solid var(--line);
+
         }
+
+
 
         .stat {
+
             padding: 50px 30px;
 
+
+
             border-right: 1px solid var(--line);
+
         }
+
+
 
         .stat:last-child {
+
             border-right: none;
+
         }
 
+
+
         .stat-number {
+
             font-size: 52px;
+
+
 
             font-weight: 800;
 
+
+
             letter-spacing: -0.06em;
+
         }
 
+
+
         .stat-label {
+
             color: var(--muted);
+
+
 
             font-size: 10px;
 
+
+
             letter-spacing: 0.15em;
+
+
 
             text-transform: uppercase;
 
+
+
             margin-top: 8px;
+
         }
+
+
 
         /* =========================
+
            WORKFLOW
+
         ========================= */
 
+
+
         .workflow {
+
             background: #090b0e;
+
         }
 
+
+
         .workflow-grid {
+
             display: grid;
 
+
+
             grid-template-columns:
+
                 repeat(4, 1fr);
+
+
 
             gap: 2px;
 
+
+
             background: var(--line);
+
         }
 
+
+
         .workflow-card {
+
             background: var(--card);
+
+
 
             padding: 40px 30px;
 
+
+
             min-height: 280px;
+
         }
 
+
+
         .workflow-number {
+
             color: var(--blue);
+
+
 
             font-size: 11px;
 
+
+
             font-weight: 700;
 
+
+
             letter-spacing: 0.15em;
+
         }
 
+
+
         .workflow-icon {
+
             margin-top: 35px;
+
+
 
             font-size: 28px;
 
+
+
             color: white;
+
         }
 
+
+
         .workflow-card h3 {
+
             margin-top: 22px;
+
+
 
             font-size: 20px;
 
+
+
             font-weight: 500;
+
         }
 
+
+
         .workflow-card p {
+
             margin-top: 12px;
+
+
 
             color: var(--muted);
 
+
+
             font-size: 13px;
 
+
+
             line-height: 1.6;
+
         }
+
+
 
         /* =========================
+
            TECHNOLOGY
+
         ========================= */
 
+
+
         .technology-grid {
+
             display: grid;
 
+
+
             grid-template-columns:
+
                 repeat(3, 1fr);
 
+
+
             gap: 20px;
+
         }
 
+
+
         .technology-card {
+
             padding: 35px;
+
+
 
             min-height: 240px;
 
+
+
             border: 1px solid var(--line);
 
+
+
             background:
+
                 linear-gradient(
+
                     145deg,
+
                     #101318,
+
                     #0b0d10
+
                 );
 
+
+
             transition:
+
                 transform 0.3s ease,
+
                 border-color 0.3s ease;
+
         }
+
+
 
         .technology-card:hover {
+
             transform: translateY(-5px);
 
+
+
             border-color: rgba(30,140,255,0.45);
+
         }
+
+
 
         .technology-card i {
+
             color: var(--blue);
 
+
+
             font-size: 25px;
+
         }
 
+
+
         .technology-card h3 {
+
             margin-top: 28px;
+
+
 
             font-size: 21px;
 
+
+
             font-weight: 500;
+
         }
 
+
+
         .technology-card p {
+
             color: var(--muted);
+
+
 
             font-size: 13px;
 
+
+
             line-height: 1.7;
 
+
+
             margin-top: 12px;
+
         }
+
+
 
         /* =========================
+
            EVOLUTION
+
         ========================= */
 
+
+
         .evolution {
+
             background: var(--bg-soft);
+
         }
 
+
+
         .timeline {
+
             position: relative;
+
+
 
             max-width: 1000px;
 
+
+
             margin: 0 auto;
+
         }
 
+
+
         .timeline::before {
+
             content: "";
+
+
 
             position: absolute;
 
+
+
             left: 50%;
+
             top: 0;
+
             bottom: 0;
+
+
 
             width: 1px;
 
+
+
             background: var(--line);
 
+
+
             transform: translateX(-50%);
+
         }
 
+
+
         .timeline-item {
+
             position: relative;
+
+
 
             display: grid;
 
+
+
             grid-template-columns: 1fr 1fr;
+
+
 
             gap: 80px;
 
+
+
             margin-bottom: 90px;
+
         }
+
+
 
         .timeline-item:last-child {
+
             margin-bottom: 0;
+
         }
+
+
 
         .timeline-content {
+
             padding: 5px 0;
+
         }
 
+
+
         .timeline-item:nth-child(even)
+
         .timeline-content:first-child {
+
             grid-column: 2;
+
         }
 
+
+
         .timeline-item:nth-child(even)
+
         .timeline-content:last-child {
+
             grid-column: 1;
+
             grid-row: 1;
 
+
+
             text-align: right;
+
         }
 
+
+
         .timeline-year {
+
             color: var(--blue);
+
+
 
             font-size: 12px;
 
+
+
             font-weight: 700;
 
+
+
             letter-spacing: 0.2em;
+
         }
 
+
+
         .timeline-content h3 {
+
             margin-top: 12px;
+
+
 
             font-size: 30px;
 
+
+
             font-weight: 500;
+
         }
 
+
+
         .timeline-content p {
+
             margin-top: 12px;
 
+
+
             color: var(--muted);
+
+
 
             font-size: 13px;
 
+
+
             line-height: 1.7;
+
         }
 
+
+
         .timeline-dot {
+
             position: absolute;
 
+
+
             left: 50%;
+
             top: 8px;
+
+
 
             transform: translateX(-50%);
 
+
+
             width: 10px;
+
             height: 10px;
+
+
 
             border-radius: 50%;
 
+
+
             background: var(--blue);
 
+
+
             box-shadow:
+
                 0 0 0 5px rgba(30,140,255,0.1),
+
                 0 0 25px rgba(30,140,255,0.45);
+
         }
 
+
+
         /* =========================
+
            CTA
+
         ========================= */
 
+
+
         .cta {
+
             min-height: 600px;
 
+
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
+
 
             text-align: center;
 
+
+
             background:
+
                 radial-gradient(
+
                     circle at center,
+
                     rgba(30,140,255,0.13),
+
                     transparent 45%
+
                 );
+
         }
+
+
 
         .cta-inner {
+
             max-width: 850px;
+
         }
 
+
+
         .cta h2 {
+
             font-size: clamp(52px, 8vw, 110px);
+
+
 
             line-height: 0.9;
 
+
+
             letter-spacing: -0.07em;
 
+
+
             font-weight: 900;
+
         }
+
+
 
         .cta h2 span {
+
             color: var(--blue);
+
         }
 
+
+
         .cta p {
+
             max-width: 600px;
+
+
 
             margin: 30px auto 0;
 
+
+
             color: var(--muted);
 
+
+
             line-height: 1.7;
+
         }
 
+
+
         .cta-button {
+
             display: inline-flex;
 
+
+
             align-items: center;
+
+
 
             gap: 12px;
 
+
+
             margin-top: 38px;
+
+
 
             padding: 16px 25px;
 
+
+
             color: white;
 
+
+
             text-decoration: none;
+
+
 
             background: var(--blue);
 
+
+
             font-size: 11px;
 
+
+
             font-weight: 700;
+
+
 
             letter-spacing: 0.14em;
 
+
+
             text-transform: uppercase;
 
+
+
             transition:
+
                 transform 0.25s ease,
+
                 background 0.25s ease;
+
         }
+
+
 
         .cta-button:hover {
+
             transform: translateY(-3px);
 
+
+
             background: var(--blue-bright);
+
         }
 
+
+
         /* =========================
+
            FOOTER
+
         ========================= */
 
+
+
         footer {
+
             padding: 50px 5vw;
+
+
 
             border-top: 1px solid var(--line);
 
+
+
             display: flex;
+
+
 
             justify-content: space-between;
 
+
+
             align-items: center;
 
+
+
             gap: 30px;
+
         }
 
+
+
         .footer-brand {
+
             font-size: 12px;
+
+
 
             font-weight: 700;
 
+
+
             letter-spacing: 0.15em;
+
         }
+
+
 
         .footer-brand span {
+
             color: var(--blue);
+
         }
+
+
 
         .footer-copy {
+
             color: #626873;
 
+
+
             font-size: 11px;
+
         }
+
+
 
         .footer-links {
+
             display: flex;
 
+
+
             gap: 20px;
+
         }
 
+
+
         .footer-links a {
+
             color: #858b95;
+
+
 
             text-decoration: none;
 
+
+
             font-size: 12px;
 
+
+
             transition: color 0.25s ease;
+
         }
+
+
 
         .footer-links a:hover {
+
             color: white;
+
         }
 
+
+
         /* =========================
+
            MODAL
+
         ========================= */
 
+
+
         .video-modal {
+
             position: fixed;
+
+
 
             inset: 0;
 
+
+
             z-index: 3000;
+
+
 
             display: none;
 
+
+
             align-items: center;
+
             justify-content: center;
+
+
 
             padding: 30px;
 
+
+
             background: rgba(0,0,0,0.94);
 
+
+
             backdrop-filter: blur(12px);
+
         }
+
+
 
         .video-modal.active {
+
             display: flex;
+
         }
+
+
 
         .modal-inner {
+
             position: relative;
 
+
+
             width: min(1200px, 94vw);
+
         }
 
+
+
         .modal-video {
+
             display: block;
+
+
 
             width: 100%;
 
+
+
             max-height: 80vh;
+
+
 
             background: black;
 
+
+
             border: 1px solid rgba(255,255,255,0.1);
+
         }
 
+
+
         .modal-close {
+
             position: absolute;
 
+
+
             right: -10px;
+
             top: -55px;
 
+
+
             width: 42px;
+
             height: 42px;
+
+
 
             border-radius: 50%;
 
+
+
             border: 1px solid rgba(255,255,255,0.2);
+
+
 
             background: rgba(255,255,255,0.06);
 
+
+
             color: white;
+
+
 
             cursor: pointer;
 
+
+
             font-size: 17px;
+
         }
 
+
+
         .modal-title {
+
             margin-top: 15px;
+
+
 
             color: white;
 
+
+
             font-size: 16px;
 
+
+
             font-weight: 500;
+
         }
 
+
+
         /* =========================
+
            MOBILE
+
         ========================= */
+
+
 
         @media (max-width: 1000px) {
 
+
+
             .vault-grid {
+
                 grid-template-columns: 1fr;
+
             }
+
+
 
             .stats {
+
                 grid-template-columns: repeat(2, 1fr);
+
             }
+
+
 
             .workflow-grid {
+
                 grid-template-columns: repeat(2, 1fr);
+
             }
 
+
+
             .technology-grid {
+
                 grid-template-columns: 1fr;
+
             }
+
         }
+
+
 
         @media (max-width: 700px) {
 
-            nav {
-                height: 68px;
-            }
 
-            .nav-links {
-                position: fixed;
-
-                top: 68px;
-                left: 0;
-                right: 0;
-
-                display: none;
-
-                flex-direction: column;
-
-                align-items: flex-start;
-
-                padding: 30px;
-
-                background: rgba(8,9,11,0.98);
-
-                border-bottom: 1px solid var(--line);
-            }
-
-            .nav-links.active {
-                display: flex;
-            }
-
-            .nav-menu {
-                display: block;
-            }
 
             .hero {
+
                 padding:
+
                     125px
+
                     25px
+
                     80px;
+
             }
+
+
 
             .hero h1 {
+
                 font-size: clamp(52px, 16vw, 90px);
+
             }
+
+
 
             .hero-description {
+
                 font-size: 14px;
+
             }
+
+
 
             .hero-video-container {
+
                 margin-top: 45px;
+
             }
+
+
 
             .hero-play-button {
+
                 width: 68px;
+
                 height: 68px;
+
             }
+
+
 
             section:not(.hero) {
+
                 padding:
+
                     90px
+
                     25px;
+
             }
+
+
 
             .section-header {
+
                 display: block;
+
             }
+
+
 
             .section-description {
+
                 margin-top: 25px;
+
             }
+
+
 
             .project-media {
+
                 height: 230px;
+
             }
+
+
 
             .stats {
+
                 grid-template-columns: 1fr 1fr;
+
             }
+
+
 
             .stat {
+
                 padding: 35px 20px;
+
             }
+
+
 
             .stat-number {
+
                 font-size: 38px;
+
             }
+
+
 
             .workflow-grid {
+
                 grid-template-columns: 1fr;
+
             }
+
+
 
             .workflow-card {
+
                 min-height: auto;
+
             }
+
+
 
             .timeline::before {
+
                 left: 8px;
+
             }
 
+
+
             .timeline-item {
+
                 display: block;
+
+
 
                 padding-left: 35px;
 
+
+
                 margin-bottom: 60px;
+
             }
+
+
 
             .timeline-dot {
+
                 left: 8px;
+
             }
+
+
 
             .timeline-item:nth-child(even)
+
             .timeline-content:last-child {
+
                 text-align: left;
+
             }
+
+
 
             footer {
+
                 flex-direction: column;
 
+
+
                 align-items: flex-start;
+
             }
+
         }
+
     </style>
+
 </head>
+
+
+
 
 
 <body>
 
-    <!-- =========================
-         NAVIGATION
-    ========================= -->
 
-    <nav>
 
-        <a href="#top" class="nav-logo">
-            WILDCATS<span>.</span>AI
-        </a>
+    <!-- NAVBAR -->
+    <div id="site-navbar"></div>
 
-        <div class="nav-links" id="navLinks">
 
-            <a href="#vault">
-                WORK
-            </a>
 
-            <a href="#about">
-                ABOUT
-            </a>
-
-            <a href="#evolution">
-                EVOLUTION
-            </a>
-
-            <a href="#club">
-                CLUB
-            </a>
-
-            <a href="#" onclick="toggleLanguage(event)">
-                ES
-            </a>
-
-        </div>
-
-        <div
-            class="nav-menu"
-            onclick="toggleMenu()"
-        >
-            <i class="fa-solid fa-bars"></i>
-        </div>
-
-    </nav>
 
 
     <!-- =========================
+
          HERO
+
     ========================= -->
+
+
 
     <main id="top">
 
+
+
         <section class="hero">
+
+
 
             <div class="hero-grid"></div>
 
+
+
             <!-- TEXT -->
 
+
+
             <div
+
                 class="hero-content"
+
                 data-aos="fade-up"
+
             >
 
+
+
                 <div class="eyebrow">
+
                     Wildcats AI & Cloud Computing Club
+
                 </div>
 
+
+
                 <h1>
+
                     AI, MADE BY<br>
+
                     <span>STUDENTS.</span>
+
                 </h1>
 
+
+
                 <p class="hero-description">
+
                     A digital exhibition of AI-generated films,
+
                     experiments, and creative projects built by the
+
                     Wildcats AI & Cloud Computing Club.
+
                 </p>
 
+
+
             </div>
+
+
+
 
 
             <!-- ONLY BUILD WILLIE VIDEO ON TOP -->
 
+
+
             <div
+
                 class="hero-video-container"
+
                 data-aos="fade-up"
+
                 data-aos-delay="150"
+
             >
+
+
 
                 <div class="hero-video">
 
+
+
                     <video
+
                         id="heroVideo"
+
                         preload="auto"
+
                         playsinline
+
                         controls
+
                     >
 
+
+
                         <source
+
                             src="https://s3.us-east-2.amazonaws.com/nvcwildcats.com/Animations/NewAIVideos/WilcatWillieAIVideos/BuildWillie.mp4"
+
                             type="video/mp4"
+
                         >
 
+
+
                         Your browser does not support HTML5 video.
+
+
 
                     </video>
 
 
+
+
+
                     <!-- Appears only if autoplay is blocked -->
 
+
+
                     <button
+
                         id="heroPlayButton"
+
                         class="hero-play-button"
+
                         onclick="playHeroVideo()"
+
                         aria-label="Play Build Willie"
+
                     >
 
+
+
                         <i class="fa-solid fa-play"></i>
+
+
 
                     </button>
 
 
+
+
+
                     <div class="video-label">
+
                         BUILD WILLIE
+
                     </div>
+
+
 
                 </div>
 
+
+
             </div>
+
+
 
         </section>
 
 
+
+
+
         <!-- =========================
+
              VAULT
+
         ========================= -->
 
+
+
         <section
+
             class="vault"
+
             id="vault"
+
         >
 
+
+
             <div
+
                 class="section-header"
+
                 data-aos="fade-up"
+
             >
+
+
 
                 <div>
 
+
+
                     <div class="section-number">
+
                         01 / THE VAULT
+
                     </div>
 
+
+
                     <h2 class="section-title">
+
                         STUDENT<br>
+
                         WORK.
+
                     </h2>
+
+
 
                 </div>
 
+
+
                 <p class="section-description">
+
                     Explore experiments created by Wildcats using
+
                     generative AI, animation, visual storytelling,
+
                     and emerging creative technologies.
+
                 </p>
 
+
+
             </div>
+
+
+
 
 
             <div class="vault-grid">
 
 
+
+
+
                 <!-- =========================
+
                      CAREER WILLIE
+
                 ========================= -->
 
+
+
                 <article
+
                     class="project-card"
+
                     onclick="openVideo('video2')"
+
                     data-aos="fade-up"
+
                 >
+
+
 
                     <div class="project-media">
 
+
+
                         <video
+
                             preload="metadata"
+
                             playsinline
+
                         >
 
+
+
                             <source
+
                                 src="https://s3.us-east-2.amazonaws.com/nvcwildcats.com/Animations/NewAIVideos/WilcatWillieAIVideos/CareerWillie+(1).mp4"
+
                                 type="video/mp4"
+
                             >
+
+
 
                         </video>
 
+
+
                         <div class="project-overlay"></div>
 
+
+
                         <div class="project-number">
+
                             01
+
                         </div>
 
+
+
                         <button
+
                             class="card-play-button"
+
                             onclick="event.stopPropagation(); openVideo('video2')"
+
                             aria-label="Play Career Willie"
+
                         >
+
+
 
                             <i class="fa-solid fa-play"></i>
 
+
+
                         </button>
+
+
 
                     </div>
 
+
+
                     <div class="project-info">
 
+
+
                         <div class="project-category">
+
                             AI / STORYTELLING
+
                         </div>
 
+
+
                         <h3>
+
                             Career Willie
+
                         </h3>
 
+
+
                         <p>
+
                             Exploring careers and possibilities
+
                             through AI-powered storytelling.
+
                         </p>
 
+
+
                     </div>
+
+
 
                 </article>
 
 
+
+
+
                 <!-- =========================
+
                      CURIOSITY WILLIE
+
                 ========================= -->
 
+
+
                 <article
+
                     class="project-card"
+
                     onclick="openVideo('video3')"
+
                     data-aos="fade-up"
+
                     data-aos-delay="100"
+
                 >
+
+
 
                     <div class="project-media">
 
+
+
                         <video
+
                             preload="metadata"
+
                             playsinline
+
                         >
 
+
+
                             <source
+
                                 src="https://s3.us-east-2.amazonaws.com/nvcwildcats.com/Animations/NewAIVideos/WilcatWillieAIVideos/CuriosityWillie.mp4"
+
                                 type="video/mp4"
+
                             >
+
+
 
                         </video>
 
+
+
                         <div class="project-overlay"></div>
 
+
+
                         <div class="project-number">
+
                             02
+
                         </div>
 
+
+
                         <button
+
                             class="card-play-button"
+
                             onclick="event.stopPropagation(); openVideo('video3')"
+
                             aria-label="Play Curiosity Willie"
+
                         >
+
+
 
                             <i class="fa-solid fa-play"></i>
 
+
+
                         </button>
+
+
 
                     </div>
 
+
+
                     <div class="project-info">
 
+
+
                         <div class="project-category">
+
                             AI / EXPERIMENT
+
                         </div>
 
+
+
                         <h3>
+
                             Curiosity Willie
+
                         </h3>
 
+
+
                         <p>
+
                             A visual experiment about curiosity,
+
                             exploration, and artificial intelligence.
+
                         </p>
 
+
+
                     </div>
+
+
 
                 </article>
 
 
+
+
+
                 <!-- =========================
+
                      WILLIE SAMPLE
+
                 ========================= -->
 
+
+
                 <article
+
                     class="project-card"
+
                     onclick="openVideo('video4')"
+
                     data-aos="fade-up"
+
                     data-aos-delay="200"
+
                 >
+
+
 
                     <div class="project-media">
 
+
+
                         <video
+
                             preload="metadata"
+
                             playsinline
+
                         >
 
+
+
                             <source
+
                                 src="https://s3.us-east-2.amazonaws.com/nvcwildcats.com/Animations/NewAIVideos/WilcatWillieAIVideos/WillieSample.mp4"
+
                                 type="video/mp4"
+
                             >
+
+
 
                         </video>
 
+
+
                         <div class="project-overlay"></div>
 
+
+
                         <div class="project-number">
+
                             03
+
                         </div>
 
+
+
                         <button
+
                             class="card-play-button"
+
                             onclick="event.stopPropagation(); openVideo('video4')"
+
                             aria-label="Play Willie Sample"
+
                         >
+
+
 
                             <i class="fa-solid fa-play"></i>
 
+
+
                         </button>
+
+
 
                     </div>
 
+
+
                     <div class="project-info">
 
+
+
                         <div class="project-category">
+
                             AI / CREATIVE
+
                         </div>
 
+
+
                         <h3>
+
                             Willie Sample
+
                         </h3>
 
+
+
                         <p>
+
                             A sample study showing how AI can
+
                             transform familiar characters and worlds.
+
                         </p>
 
+
+
                     </div>
+
+
 
                 </article>
 
 
+
+
+
                 <!-- =========================
+
                      WELCOME TO NVC
+
                 ========================= -->
 
+
+
                 <article
+
                     class="project-card"
+
                     onclick="openVideo('video5')"
+
                     data-aos="fade-up"
+
                     data-aos-delay="300"
+
                 >
+
+
 
                     <div class="project-media">
 
+
+
                         <video
+
                             preload="metadata"
+
                             playsinline
+
                         >
 
+
+
                             <source
+
                                 src="https://s3.us-east-2.amazonaws.com/nvcwildcats.com/Animations/Welcome_to_NVC.mp4"
+
                                 type="video/mp4"
+
                             >
+
+
 
                         </video>
 
+
+
                         <div class="project-overlay"></div>
 
+
+
                         <div class="project-number">
+
                             04
+
                         </div>
 
+
+
                         <button
+
                             class="card-play-button"
+
                             onclick="event.stopPropagation(); openVideo('video5')"
+
                             aria-label="Play Welcome to NVC"
+
                         >
+
+
 
                             <i class="fa-solid fa-play"></i>
 
+
+
                         </button>
 
+
+
                     </div>
+
+
 
                     <div class="project-info">
 
+
+
                         <div class="project-category">
+
                             AI / CAMPUS
+
                         </div>
 
+
+
                         <h3>
+
                             Welcome to NVC
+
                         </h3>
 
+
+
                         <p>
+
                             A creative AI-powered introduction to
+
                             Northwest Vista College.
+
                         </p>
+
+
 
                     </div>
 
+
+
                 </article>
+
+
+
 
 
                 <!-- =========================
+
                      THE CLOUD CREW
+
                 ========================= -->
 
+
+
                 <article
+
                     class="project-card"
+
                     onclick="openVideo('video6')"
+
                     data-aos="fade-up"
+
                     data-aos-delay="400"
+
                 >
+
+
 
                     <div class="project-media">
 
+
+
                         <video
+
                             preload="metadata"
+
                             playsinline
+
                         >
 
+
+
                             <source
+
                                 src="https://s3.us-east-2.amazonaws.com/nvcwildcats.com/Animations/The_Cloud_Crew.mp4"
+
                                 type="video/mp4"
+
                             >
+
+
 
                         </video>
 
+
+
                         <div class="project-overlay"></div>
 
+
+
                         <div class="project-number">
+
                             05
+
                         </div>
 
+
+
                         <button
+
                             class="card-play-button"
+
                             onclick="event.stopPropagation(); openVideo('video6')"
+
                             aria-label="Play The Cloud Crew"
+
                         >
+
+
 
                             <i class="fa-solid fa-play"></i>
 
+
+
                         </button>
 
+
+
                     </div>
+
+
 
                     <div class="project-info">
 
+
+
                         <div class="project-category">
+
                             CLOUD / CREATIVE
+
                         </div>
 
+
+
                         <h3>
+
                             The Cloud Crew
+
                         </h3>
 
+
+
                         <p>
+
                             A creative exploration of cloud computing,
+
                             technology, and the students behind it.
+
                         </p>
+
+
 
                     </div>
 
+
+
                 </article>
+
+
 
             </div>
+
+
 
         </section>
 
 
+
+
+
         <!-- =========================
+
              STATS
+
         ========================= -->
+
+
 
         <section>
 
+
+
             <div
+
                 class="stats"
+
                 data-aos="fade-up"
+
             >
 
+
+
                 <div class="stat">
 
+
+
                     <div class="stat-number">
+
                         04
+
                     </div>
 
+
+
                     <div class="stat-label">
+
                         Featured Films
+
                     </div>
+
+
 
                 </div>
 
+
+
                 <div class="stat">
 
+
+
                     <div class="stat-number">
+
                         AI
+
                     </div>
 
+
+
                     <div class="stat-label">
+
                         Creative Technology
+
                     </div>
+
+
 
                 </div>
 
+
+
                 <div class="stat">
 
+
+
                     <div class="stat-number">
+
                         01
+
                     </div>
+
+
 
                     <div class="stat-label">
+
                         Student Community
+
                     </div>
 
+
+
                 </div>
+
+
 
                 <div class="stat">
 
+
+
                     <div class="stat-number">
+
                         ∞
+
                     </div>
+
+
 
                     <div class="stat-label">
+
                         Ideas
+
                     </div>
 
+
+
                 </div>
+
+
 
             </div>
+
+
 
         </section>
 
 
+
+
+
         <!-- =========================
+
              WORKFLOW
+
         ========================= -->
 
+
+
         <section
+
             class="workflow"
+
             id="club"
+
         >
 
+
+
             <div
+
                 class="section-header"
+
                 data-aos="fade-up"
+
             >
+
+
 
                 <div>
 
+
+
                     <div class="section-number">
+
                         02 / THE PROCESS
+
                     </div>
 
+
+
                     <h2 class="section-title">
+
                         FROM IDEA<br>
+
                         TO FRAME.
+
                     </h2>
+
+
 
                 </div>
 
+
+
                 <p class="section-description">
+
                     AI is a tool. The creative direction still comes
+
                     from people. Students experiment, iterate,
+
                     direct, and refine.
+
                 </p>
 
+
+
             </div>
+
+
+
 
 
             <div class="workflow-grid">
 
+
+
                 <div
+
                     class="workflow-card"
+
                     data-aos="fade-up"
+
                 >
 
+
+
                     <div class="workflow-number">
+
                         01
+
                     </div>
 
+
+
                     <div class="workflow-icon">
+
                         <i class="fa-regular fa-lightbulb"></i>
+
                     </div>
 
+
+
                     <h3>
+
                         Imagine
+
                     </h3>
 
+
+
                     <p>
+
                         Start with an idea, question, character,
+
                         scene, or visual concept.
+
                     </p>
+
+
 
                 </div>
 
 
+
+
+
                 <div
+
                     class="workflow-card"
+
                     data-aos="fade-up"
+
                     data-aos-delay="100"
+
                 >
 
+
+
                     <div class="workflow-number">
+
                         02
+
                     </div>
 
+
+
                     <div class="workflow-icon">
+
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
+
                     </div>
 
+
+
                     <h3>
+
                         Generate
+
                     </h3>
 
+
+
                     <p>
+
                         Use AI tools to explore visual possibilities
+
                         and generate creative material.
+
                     </p>
+
+
 
                 </div>
 
 
+
+
+
                 <div
+
                     class="workflow-card"
+
                     data-aos="fade-up"
+
                     data-aos-delay="200"
+
                 >
 
+
+
                     <div class="workflow-number">
+
                         03
+
                     </div>
+
+
 
                     <div class="workflow-icon">
+
                         <i class="fa-solid fa-sliders"></i>
+
                     </div>
 
+
+
                     <h3>
+
                         Refine
+
                     </h3>
 
+
+
                     <p>
+
                         Iterate, edit, adjust, and shape the generated
+
                         material into something intentional.
+
                     </p>
 
+
+
                 </div>
+
+
+
 
 
                 <div
+
                     class="workflow-card"
+
                     data-aos="fade-up"
+
                     data-aos-delay="300"
+
                 >
 
+
+
                     <div class="workflow-number">
+
                         04
+
                     </div>
+
+
 
                     <div class="workflow-icon">
+
                         <i class="fa-solid fa-film"></i>
+
                     </div>
 
+
+
                     <h3>
+
                         Share
+
                     </h3>
 
+
+
                     <p>
+
                         Turn experiments into films, projects,
+
                         presentations, and new ideas.
+
                     </p>
 
+
+
                 </div>
+
+
 
             </div>
+
+
 
         </section>
 
 
+
+
+
         <!-- =========================
+
              TECHNOLOGY
+
         ========================= -->
+
+
 
         <section>
 
+
+
             <div
+
                 class="section-header"
+
                 data-aos="fade-up"
+
             >
+
+
 
                 <div>
 
+
+
                     <div class="section-number">
+
                         03 / BEHIND THE GENERATION
+
                     </div>
 
+
+
                     <h2 class="section-title">
+
                         THE TOOLS<br>
+
                         BEHIND IT.
+
                     </h2>
+
+
 
                 </div>
 
+
+
                 <p class="section-description">
+
                     The AI Vault is an opportunity to explore how
+
                     emerging technology can become part of the
+
                     creative process.
+
                 </p>
 
+
+
             </div>
+
+
+
 
 
             <div class="technology-grid">
 
+
+
                 <div
+
                     class="technology-card"
+
                     data-aos="fade-up"
+
                 >
+
+
 
                     <i class="fa-solid fa-brain"></i>
 
+
+
                     <h3>
+
                         Generative AI
+
                     </h3>
 
+
+
                     <p>
+
                         Experiment with AI systems capable of
+
                         generating images, video, text, and ideas.
+
                     </p>
+
+
 
                 </div>
 
 
+
+
+
                 <div
+
                     class="technology-card"
+
                     data-aos="fade-up"
+
                     data-aos-delay="100"
+
                 >
+
+
 
                     <i class="fa-solid fa-cloud"></i>
 
+
+
                     <h3>
+
                         Cloud Computing
+
                     </h3>
 
+
+
                     <p>
+
                         Learn how cloud infrastructure can store,
+
                         process, and deliver digital experiences.
+
                     </p>
 
+
+
                 </div>
+
+
+
 
 
                 <div
+
                     class="technology-card"
+
                     data-aos="fade-up"
+
                     data-aos-delay="200"
+
                 >
+
+
 
                     <i class="fa-solid fa-code"></i>
 
+
+
                     <h3>
+
                         Creative Coding
+
                     </h3>
 
+
+
                     <p>
+
                         Combine programming, design, media, and
+
                         AI to create interactive experiences.
+
                     </p>
+
+
 
                 </div>
 
+
+
             </div>
+
+
 
         </section>
 
 
+
+
+
         <!-- =========================
+
              EVOLUTION
+
         ========================= -->
 
+
+
         <section
+
             class="evolution"
+
             id="evolution"
+
         >
 
+
+
             <div
+
                 class="section-header"
+
                 data-aos="fade-up"
+
             >
+
+
 
                 <div>
 
+
+
                     <div class="section-number">
+
                         04 / BEFORE THE VAULT
+
                     </div>
 
+
+
                     <h2 class="section-title">
+
                         THE EVOLUTION<br>
+
                         OF AI.
+
                     </h2>
+
+
 
                 </div>
 
+
+
                 <p class="section-description">
+
                     The current wave of generative AI is part of a
+
                     much longer story. These milestones provide
+
                     context for the technology students are exploring
+
                     today.
+
                 </p>
 
+
+
             </div>
+
+
+
 
 
             <div class="timeline">
 
+
+
                 <div
+
                     class="timeline-item"
+
                     data-aos="fade-up"
+
                 >
+
+
 
                     <div class="timeline-content">
 
+
+
                         <div class="timeline-year">
+
                             1950s
+
                         </div>
 
+
+
                         <h3>
+
                             The Question
+
                         </h3>
 
+
+
                         <p>
+
                             Researchers began formally exploring
+
                             whether machines could demonstrate forms
+
                             of intelligent behavior.
+
                         </p>
+
+
 
                     </div>
 
+
+
                     <div></div>
 
+
+
                     <div class="timeline-dot"></div>
+
+
 
                 </div>
 
 
+
+
+
                 <div
+
                     class="timeline-item"
+
                     data-aos="fade-up"
+
                 >
+
+
 
                     <div></div>
 
+
+
                     <div class="timeline-content">
 
+
+
                         <div class="timeline-year">
+
                             1980s–90s
+
                         </div>
 
+
+
                         <h3>
+
                             Machine Learning
+
                         </h3>
 
+
+
                         <p>
+
                             Statistical methods allowed computers
+
                             to learn patterns from increasingly large
+
                             collections of data.
+
                         </p>
+
+
 
                     </div>
 
+
+
                     <div class="timeline-dot"></div>
+
+
 
                 </div>
 
 
+
+
+
                 <div
+
                     class="timeline-item"
+
                     data-aos="fade-up"
+
                 >
+
+
 
                     <div class="timeline-content">
 
+
+
                         <div class="timeline-year">
+
                             2000s
+
                         </div>
 
+
+
                         <h3>
+
                             Data at Scale
+
                         </h3>
 
+
+
                         <p>
+
                             Powerful processors, cloud computing, and
+
                             enormous datasets accelerated the practical
+
                             development of modern AI systems.
+
                         </p>
+
+
 
                     </div>
 
+
+
                     <div></div>
+
+
 
                     <div class="timeline-dot"></div>
 
+
+
                 </div>
+
+
+
 
 
                 <div
+
                     class="timeline-item"
+
                     data-aos="fade-up"
+
                 >
+
+
 
                     <div></div>
 
+
+
                     <div class="timeline-content">
 
+
+
                         <div class="timeline-year">
+
                             TODAY
+
                         </div>
 
+
+
                         <h3>
+
                             Generative AI
+
                         </h3>
 
+
+
                         <p>
+
                             Modern systems can generate text, images,
+
                             audio, code, and video, opening new
+
                             possibilities for creative experimentation.
+
                         </p>
+
+
 
                     </div>
 
+
+
                     <div class="timeline-dot"></div>
 
+
+
                 </div>
+
+
 
             </div>
 
+
+
         </section>
+
+
+
 
 
         <!-- =========================
+
              CTA
+
         ========================= -->
+
+
 
         <section class="cta">
 
+
+
             <div
+
                 class="cta-inner"
+
                 data-aos="fade-up"
+
             >
 
+
+
                 <div class="section-number">
+
                     05 / JOIN THE EXPERIMENT
+
                 </div>
 
+
+
                 <h2>
+
                     BUILD<br>
+
                     <span>WHAT'S NEXT.</span>
+
                 </h2>
 
+
+
                 <p>
+
                     The AI Vault is not just a collection of finished
+
                     work. It is an invitation to experiment, learn,
+
                     collaborate, and create something that has not
+
                     existed before.
+
                 </p>
 
+
+
                 <a
+
                     href="#club"
+
                     class="cta-button"
+
                 >
+
                     Explore the Club
+
                     <i class="fa-solid fa-arrow-right"></i>
+
                 </a>
+
+
 
             </div>
 
+
+
         </section>
+
+
 
     </main>
 
 
+
+
+
     <!-- =========================
+
          FOOTER
+
     ========================= -->
+
+
 
     <footer>
 
+
+
         <div class="footer-brand">
+
             WILDCATS<span>.</span>AI
+
         </div>
 
+
+
         <div class="footer-copy">
+
             © 2026 Wildcats AI & Cloud Computing Club
+
         </div>
+
+
 
         <div class="footer-links">
 
+
+
             <a href="#top">
+
                 TOP
+
             </a>
+
+
 
             <a href="#vault">
+
                 WORK
+
             </a>
+
+
 
             <a href="#evolution">
+
                 EVOLUTION
+
             </a>
 
+
+
         </div>
+
+
 
     </footer>
 
+
+
     <!-- =========================
+
          VIDEO MODAL
+
     ========================= -->
 
+
+
     <div
+
         class="video-modal"
+
         id="videoModal"
+
         onclick="handleModalBackground(event)"
+
     >
+
+
 
         <div class="modal-inner">
 
+
+
             <button
+
                 class="modal-close"
+
                 onclick="closeVideo()"
+
                 aria-label="Close video"
+
             >
+
                 <i class="fa-solid fa-xmark"></i>
+
             </button>
 
+
+
             <video
+
                 id="modalVideo"
+
                 class="modal-video"
+
                 controls
+
                 playsinline
+
                 preload="metadata"
+
             ></video>
 
+
+
             <div
+
                 class="modal-title"
+
                 id="modalTitle"
+
             >
+
                 AI Vault
+
             </div>
 
+
+
         </div>
+
+
 
     </div>
 
 
+
+
+
     <!-- =========================
+
          AOS
+
     ========================= -->
+
+
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
 
+
+
+
     <script>
 
+
+
         /* =========================
+
            AOS
+
         ========================= */
 
+
+
         AOS.init({
+
             duration: 800,
+
             once: true,
+
             offset: 80
+
         });
 
 
+
+
+
         /* =========================
+
            VIDEO DATA
+
         ========================= */
+
+
 
         const videos = {
 
+
+
             video2:
+
                 "https://s3.us-east-2.amazonaws.com/nvcwildcats.com/Animations/NewAIVideos/WilcatWillieAIVideos/CareerWillie+(1).mp4",
 
+
+
             video3:
+
                 "https://s3.us-east-2.amazonaws.com/nvcwildcats.com/Animations/NewAIVideos/WilcatWillieAIVideos/CuriosityWillie.mp4",
 
+
+
             video4:
+
                 "https://s3.us-east-2.amazonaws.com/nvcwildcats.com/Animations/NewAIVideos/WilcatWillieAIVideos/WillieSample.mp4",
 
+
+
             video5:
+
                 "https://s3.us-east-2.amazonaws.com/nvcwildcats.com/Animations/Welcome_to_NVC.mp4",
 
+
+
             video6:
+
                 "https://s3.us-east-2.amazonaws.com/nvcwildcats.com/Animations/The_Cloud_Crew.mp4"
+
         };
+
+
+
 
 
         const videoTitles = {
 
+
+
             video2: "Career Willie",
+
+
 
             video3: "Curiosity Willie",
 
+
+
             video4: "Willie Sample",
+
+
 
             video5: "Welcome to NVC",
 
+
+
             video6: "The Cloud Crew"
+
         };
 
 
+
+
+
         /* =========================
+
            HERO — BUILD WILLIE
+
         ========================= */
 
+
+
         const heroVideo =
+
             document.getElementById("heroVideo");
 
+
+
         const heroPlayButton =
+
             document.getElementById("heroPlayButton");
 
 
+
+
+
         /*
+
          * Try to autoplay Build Willie
+
          * with sound when the page loads.
+
          */
+
+
 
         window.addEventListener("load", async () => {
 
+
+
             heroVideo.muted = false;
+
+
 
             heroVideo.volume = 1;
 
+
+
             try {
+
+
 
                 await heroVideo.play();
 
+
+
                 /*
+
                  * Autoplay worked.
+
                  * Hide the fallback button.
+
                  */
+
+
 
                 heroPlayButton.style.display = "none";
 
+
+
             } catch (error) {
 
+
+
                 /*
+
                  * Browser blocked autoplay
+
                  * with sound.
+
                  */
 
+
+
                 console.log(
+
                     "Browser blocked autoplay with sound."
+
                 );
 
+
+
                 heroPlayButton.style.display = "flex";
+
             }
+
+
 
         });
 
 
+
+
+
         /*
+
          * Manual fallback.
+
          */
+
+
 
         async function playHeroVideo() {
 
+
+
             heroVideo.muted = false;
+
+
 
             heroVideo.volume = 1;
 
+
+
             try {
+
+
 
                 await heroVideo.play();
 
+
+
                 heroPlayButton.style.display = "none";
+
+
 
             } catch (error) {
 
+
+
                 console.error(
+
                     "Could not play Build Willie:",
+
                     error
+
                 );
 
+
+
             }
+
+
 
         }
 
 
+
+
+
         /*
+
          * Build Willie does NOT loop.
+
          *
+
          * When it reaches the end, show
+
          * the play button again.
+
          */
 
+
+
         heroVideo.addEventListener(
+
             "ended",
+
             () => {
+
+
 
                 heroPlayButton.style.display = "flex";
 
+
+
             }
+
         );
+
+
+
 
 
         /*
+
          * Hide our custom button whenever
+
          * the video starts playing.
+
          */
 
+
+
         heroVideo.addEventListener(
+
             "play",
+
             () => {
+
+
 
                 heroPlayButton.style.display = "none";
 
+
+
             }
+
         );
 
 
+
+
+
         /* =========================
+
            MODAL VIDEOS
+
         ========================= */
 
+
+
         const videoModal =
+
             document.getElementById("videoModal");
 
+
+
         const modalVideo =
+
             document.getElementById("modalVideo");
 
+
+
         const modalTitle =
+
             document.getElementById("modalTitle");
+
+
+
 
 
         function openVideo(videoId) {
 
+
+
             const source =
+
                 videos[videoId];
 
+
+
             if (!source) {
+
                 return;
+
             }
+
+
 
             modalVideo.pause();
 
+
+
             modalVideo.src = source;
+
+
 
             modalVideo.muted = false;
 
+
+
             modalVideo.volume = 1;
 
+
+
             modalTitle.textContent =
+
                 videoTitles[videoId] || "AI Vault";
+
+
 
             videoModal.classList.add("active");
 
+
+
             document.body.classList.add("modal-open");
+
+
 
             modalVideo.load();
 
+
+
             /*
+
              * This play is triggered by the
+
              * user's click on the project.
+
              */
 
+
+
             const playPromise =
+
                 modalVideo.play();
+
+
 
             if (playPromise !== undefined) {
 
+
+
                 playPromise.catch(error => {
 
+
+
                     console.log(
+
                         "Video playback requires user interaction."
+
                     );
+
+
 
                 });
 
+
+
             }
 
+
+
         }
+
+
+
 
 
         function closeVideo() {
 
+
+
             modalVideo.pause();
+
+
 
             modalVideo.removeAttribute("src");
 
+
+
             modalVideo.load();
+
+
 
             videoModal.classList.remove("active");
 
+
+
             document.body.classList.remove("modal-open");
 
+
+
         }
+
+
+
 
 
         function handleModalBackground(event) {
 
+
+
             if (event.target === videoModal) {
+
+
 
                 closeVideo();
 
+
+
             }
 
+
+
         }
+
+
+
 
 
         document.addEventListener(
+
             "keydown",
+
             event => {
 
+
+
                 if (
+
                     event.key === "Escape" &&
+
                     videoModal.classList.contains("active")
+
                 ) {
+
+
 
                     closeVideo();
 
+
+
                 }
 
+
+
             }
+
         );
 
 
-        /* =========================
-           MOBILE NAV
-        ========================= */
-
-        function toggleMenu() {
-
-            document
-                .getElementById("navLinks")
-                .classList.toggle("active");
-
-        }
 
 
-        document
-            .querySelectorAll(".nav-links a")
-            .forEach(link => {
 
-                link.addEventListener(
-                    "click",
-                    () => {
-
-                        document
-                            .getElementById("navLinks")
-                            .classList.remove("active");
-
-                    }
-                );
-
-            });
+        
 
 
-        /* =========================
-           LANGUAGE
-        ========================= */
-
-        function toggleLanguage(event) {
-
-            event.preventDefault();
-
-            alert(
-                "Spanish translation coming soon."
-            );
-
-        }
 
     </script>
 
+
+
+    <!-- SHARED NAVBAR SCRIPT -->
+    <script src="/navbar.js" defer></script>
+
 </body>
+
 </html>
