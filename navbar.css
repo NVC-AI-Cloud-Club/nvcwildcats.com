@@ -1,4 +1,5 @@
 
+
 /* NVC Wildcats shared navigation */
 :root {
   --nvc-navy: #101827;
@@ -136,18 +137,36 @@
 
 /* GTRANSLATE LANGUAGE SELECTOR */
 .gtranslate_wrapper {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   margin-left: 8px;
   position: relative;
+  inset: auto;
   z-index: 1001;
 }
 
 .gtranslate_wrapper,
 .gtranslate_wrapper * {
   box-sizing: border-box;
+}
+
+/* OVERRIDE GTRANSLATE FLOATING POSITION */
+#gt_float_wrapper {
+  position: relative !important;
+  inset: auto !important;
+  display: inline-flex !important;
+  width: auto !important;
+  margin: 0 !important;
+  z-index: 1001 !important;
+}
+
+#gt_float_wrapper .gt_float_switcher {
+  position: relative !important;
+  inset: auto !important;
+  margin: 0 !important;
+  box-shadow: none !important;
 }
 
 /* MOBILE NAVIGATION */
@@ -185,6 +204,10 @@
   .gtranslate_wrapper {
     margin: 12px 0;
     justify-content: flex-start;
+  }
+
+  #gt_float_wrapper {
+    align-self: flex-start;
   }
 }
 
