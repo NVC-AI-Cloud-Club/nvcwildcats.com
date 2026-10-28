@@ -1,0 +1,171 @@
+/* NVC Wildcats shared navigation */
+:root {
+  --nvc-navy: #101827;
+  --nvc-navy-light: #172338;
+  --nvc-purple: #6d28d9;
+  --nvc-white: #ffffff;
+  --nvc-muted: #cbd5e1;
+}
+
+.nvc-header,
+.nvc-header * {
+  box-sizing: border-box;
+}
+
+.nvc-header {
+  position: relative;
+  z-index: 1000;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 14px clamp(18px, 4vw, 56px);
+  color: var(--nvc-white);
+  background: var(--nvc-navy);
+  border-bottom: 3px solid var(--nvc-purple);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.nvc-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: max-content;
+  color: inherit;
+  text-decoration: none;
+}
+
+.nvc-brand-mark {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  background: var(--nvc-purple);
+  color: var(--nvc-white);
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+}
+
+.nvc-brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.nvc-brand-copy strong {
+  font-size: clamp(14px, 1.5vw, 18px);
+  font-weight: 900;
+  letter-spacing: 1.1px;
+  line-height: 1.1;
+}
+
+.nvc-brand-copy small {
+  color: var(--nvc-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.nvc-header .nvc-nav {
+  /* Reset generic nav rules that may exist in individual page stylesheets. */
+  position: static;
+  top: auto;
+  z-index: auto;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(4px, 1vw, 14px);
+}
+
+.nvc-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 10px 13px;
+  border-radius: 7px;
+  color: var(--nvc-white);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 160ms ease, background 160ms ease;
+}
+
+.nvc-nav a:hover,
+.nvc-nav a:focus-visible {
+  background: var(--nvc-navy-light);
+  color: var(--nvc-purple);
+  outline: none;
+}
+
+.nvc-nav a[aria-current="page"] {
+  background: var(--nvc-purple);
+  color: var(--nvc-navy);
+}
+
+.nvc-menu-toggle {
+  display: none;
+  width: 44px;
+  height: 42px;
+  padding: 10px;
+  border: 1px solid #475569;
+  border-radius: 7px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.nvc-menu-toggle span {
+  display: block;
+  height: 2px;
+  margin: 4px 0;
+  background: var(--nvc-white);
+  border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+  .nvc-header {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .nvc-menu-toggle {
+    display: block;
+    margin-left: auto;
+  }
+
+  .nvc-header .nvc-nav {
+    display: none;
+    flex: 0 0 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    padding-top: 8px;
+    border-top: 1px solid #334155;
+  }
+
+  .nvc-header .nvc-nav.nvc-nav-open {
+    display: flex;
+  }
+
+  .nvc-nav a {
+    width: 100%;
+    white-space: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nvc-nav a {
+    transition: none;
+  }
+}
