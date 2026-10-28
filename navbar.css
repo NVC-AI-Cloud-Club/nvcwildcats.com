@@ -1,3 +1,4 @@
+
 /* NVC Wildcats shared navigation */
 :root {
   --nvc-navy: #101827;
@@ -70,7 +71,7 @@
 }
 
 .nvc-header .nvc-nav {
-  /* Reset generic nav rules that may exist in individual page stylesheets. */
+  /* Reset generic nav rules from individual page stylesheets. */
   position: static;
   top: auto;
   z-index: auto;
@@ -111,7 +112,7 @@
 
 .nvc-nav a[aria-current="page"] {
   background: var(--nvc-purple);
-  color: var(--nvc-navy);
+  color: var(--nvc-white);
 }
 
 .nvc-menu-toggle {
@@ -133,6 +134,23 @@
   border-radius: 2px;
 }
 
+/* GTRANSLATE LANGUAGE SELECTOR */
+.gtranslate_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: 8px;
+  position: relative;
+  z-index: 1001;
+}
+
+.gtranslate_wrapper,
+.gtranslate_wrapper * {
+  box-sizing: border-box;
+}
+
+/* MOBILE NAVIGATION */
 @media (max-width: 900px) {
   .nvc-header {
     flex-wrap: wrap;
@@ -161,6 +179,12 @@
   .nvc-nav a {
     width: 100%;
     white-space: normal;
+  }
+
+  /* KEEP THE TRANSLATOR INSIDE THE MOBILE MENU */
+  .gtranslate_wrapper {
+    margin: 12px 0;
+    justify-content: flex-start;
   }
 }
 

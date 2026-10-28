@@ -1,3 +1,4 @@
+
 (() => {
   const links = [
     { label: "Home", href: "/" },
@@ -34,11 +35,16 @@
 
         <nav class="nvc-nav" id="nvc-main-nav" aria-label="Main navigation">
           ${links.map(link => {
-            const linkPath = normalizePath(new URL(link.href, window.location.origin).pathname);
+            const linkPath = normalizePath(
+              new URL(link.href, window.location.origin).pathname
+            );
             const active = currentPath === linkPath ||
               (link.label === "Home" && currentPath === "/");
             return `<a href="${link.href}"${active ? ' aria-current="page"' : ""}>${link.label}</a>`;
           }).join("")}
+
+          <!-- LANGUAGE TRANSLATOR -->
+          <div class="gtranslate_wrapper"></div>
         </nav>
       </header>
     `;
@@ -68,9 +74,43 @@
     return decoded || "/";
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", renderNavbar);
-  } else {
+  // GTRANSLATE SETTINGS
+  window.gtranslateSettings = {
+    default_language: "en",
+    languages: ["en", "es", "fr", "de", "it", "zh-CN"],
+    wrapper_selector: ".gtranslate_wrapper",
+    flag_size: 24,
+    switcher_text_color: "#f7f7f7",
+    switcher_arrow_color: "#f2f2f2",
+    switcher_border_color: "#161616",
+    switcher_background_color: "#303030",
+    switcher_background_shadow_color: "#474747",
+    switcher_background_hover_color: "#3a3a3a",
+    dropdown_text_color: "#eaeaea",
+    dropdown_hover_color: "#748393",
+    dropdown_background_color: "#474747"
+  };
+
+  // LOAD GTRANSLATE SCRIPT ONCE
+  function loadTranslator() {
+    if (document.querySelector("script[data-gtranslate]")) return;
+
+    const script = document.createElement("script");
+    script.src = "https://cdn.gtranslate.net/widgets/latest/dwf.js";
+    script.defer = true;
+    script.dataset.gtranslate = "true";
+    document.body.appendChild(script);
+  }
+
+  // START NAVBAR AND TRANSLATOR
+  function init() {
     renderNavbar();
+    loadTranslator();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
   }
 })();
