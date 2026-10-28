@@ -96,7 +96,7 @@
     if (document.querySelector("script[data-gtranslate]")) return;
 
     const script = document.createElement("script");
-    script.src = "https://cdn.gtranslate.net/widgets/latest/dwf.js";
+    script.src = "https://cdn.gtranslate.net/widgets/latest/dropdown.js";
     script.defer = true;
     script.dataset.gtranslate = "true";
     document.body.appendChild(script);
