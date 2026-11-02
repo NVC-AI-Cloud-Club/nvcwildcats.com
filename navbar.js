@@ -6,7 +6,7 @@
     { label: "Animations", href: "/Animations/animations.html" },
     {
       label: "Featured Members",
-      href: "/Featured-Members/featured%20members/frontend/RevisedFeaturedMembers.html"
+      href: "/Featured-Members/RevisedFeaturedMembers.html"
     },
     { label: "Feedback", href: "/feedback-page/feedbackindex2.html" }
   ];
