@@ -4,6 +4,7 @@
     { label: "Home", href: "/" },
     { label: "Sports", href: "/sports-page/NewSportsPage.html" },
     { label: "Animations", href: "/Animations/animations.html" },
+    { label: "Resources", href: "Resource-page/resource-page.html"}
     {
       label: "Featured Members",
       href: "/Featured-Members/RevisedFeaturedMembers.html"
