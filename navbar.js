@@ -1,10 +1,9 @@
-
 (() => {
   const links = [
     { label: "Home", href: "/" },
     { label: "Sports", href: "/sports-page/NewSportsPage.html" },
     { label: "Animations", href: "/Animations/animations.html" },
-    { label: "Resources", href: "Resource-page/resource-page.html"}
+    { label: "Resources", href: "/resources" },
     {
       label: "Featured Members",
       href: "/Featured-Members/RevisedFeaturedMembers.html"
@@ -41,10 +40,10 @@
             );
             const active = currentPath === linkPath ||
               (link.label === "Home" && currentPath === "/");
+
             return `<a href="${link.href}"${active ? ' aria-current="page"' : ""}>${link.label}</a>`;
           }).join("")}
 
-          <!-- LANGUAGE TRANSLATOR -->
           <div class="gtranslate_wrapper"></div>
         </nav>
       </header>
